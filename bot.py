@@ -1,13 +1,13 @@
 import os
-from telegram.ext import Updater, MessageHandler, Filters
+from telegram.ext import Application, MessageHandler, filters
 from database import Session, Product, Order
 from products import products_data
 from datetime import datetime
 import pytz
 
 # Configuración
-TOKEN = os.getenv("TELEGRAM_TOKEN")  # Usa variables de entorno
-TIMEZONE = pytz.timezone("America/Lima")  # Ajusta según tu zona horaria
+TOKEN = os.getenv("7553810124:AAEnfkfQekmzmc5LAXQxWathpFcnMXoUR9w")  # Usa variables de entorno
+TIMEZONE = pytz.timezone("America/Quito")  # Ajusta según tu zona horaria
 
 # Cargar productos predefinidos en la base de datos
 def initialize_products():
@@ -71,6 +71,6 @@ if __name__ == "__main__":
     initialize_products()  # Asegurar que los productos existan
     updater = Updater(TOKEN, use_context=True)
     dispatcher = updater.dispatcher
-    dispatcher.add_handler(MessageHandler(Filters.text, handle_message))
+    application.add_handler(MessageHandler(filters.TEXT, handle_message))
     updater.start_polling()
     updater.idle()
