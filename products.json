@@ -1,5 +1,4 @@
-
-products_data = [
+[
     {
         "name": "Michelada Siembra Inti",
         "price": 4.25

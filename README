@@ -2,4 +2,5 @@
 
 ejecutar una terminal con el comando 
 pip install -r requirements.txt
-
+pip install openpyxl
+pip install pandas
