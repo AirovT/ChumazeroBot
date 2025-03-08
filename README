@@ -1,0 +1,5 @@
+#Instalar las dependencias
+
+ejecutar una terminal con el comando 
+pip install -r requirements.txt
+
