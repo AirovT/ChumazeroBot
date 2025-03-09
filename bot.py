@@ -55,9 +55,14 @@ def process_order(order_text, user):
         order_id = lines[0].split()[1].strip()  # Extrae el número de pedido
         items = [line.strip() for line in lines[1:] if line.strip()]
         
+        # Validar si hay productos en el pedido
+        if not items:
+            return "❌ No hay productos en el pedido."
+        
         session = Session()
         total = 0.0
         products_list = []
+        productos_no_encontrados = []
         
         for item in items:
             parts = item.split(" ", 1)
@@ -74,7 +79,14 @@ def process_order(order_text, user):
                     "cantidad": int(quantity),
                     "precio_unitario": product.price
                 })
+            else:
+                productos_no_encontrados.append(product_name)
         
+        # Validar si no se encontraron productos válidos
+        if not products_list:
+            return "❌ No se encontraron productos válidos en el pedido."
+        
+        # Crear el pedido
         new_order = Order(
             products=products_list,
             total=total,
@@ -84,7 +96,14 @@ def process_order(order_text, user):
         session.add(new_order)
         session.commit()
         
-        return f"📝 Pedido {order_id} registrado!\nTotal: ${total:.2f}"
+        # Construir respuesta
+        response = f"📝 Pedido {order_id} registrado!\nTotal: ${total:.2f}\n"
+        if productos_no_encontrados:
+            response += "❌ Productos no encontrados:\n"
+            for producto in productos_no_encontrados:
+                response += f"- {producto}\n"
+        
+        return response
         
     except Exception as e:
         print(f"Error: {e}")
