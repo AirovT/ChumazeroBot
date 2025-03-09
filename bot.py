@@ -14,41 +14,38 @@ PEDIDO_CONFIRM = 1
 TOKEN = "7675712119:AAFQobgdRBko6_k4dZhZoxSbRVXOQBo12a4"
 TIMEZONE = pytz.timezone("America/Guayaquil")
 
-# Función para reiniciar la base de datos
-def reset_database():
+# Función para reiniciar solo los pedidos pendientes (deudores)
+def reset_deudores():
     """
-    Elimina todos los registros de las tablas Product y Order,
-    dejando la base de datos en cero.
+    Elimina todos los registros de la tabla Order que estén pendientes,
+    pero no afecta la tabla Product ni los pedidos pagados.
     """
     session = Session()
     
     try:
-        # Eliminar todos los registros de la tabla Order
-        session.query(Order).delete()
-        
-        # Eliminar todos los registros de la tabla Product
-        session.query(Product).delete()
+        # Eliminar solo los pedidos pendientes
+        session.query(Order).filter(Order.status == "pendiente").delete()
         
         # Confirmar los cambios
         session.commit()
         
-        print("✅ Base de datos reiniciada correctamente.")
+        print("✅ Pedidos pendientes (deudores) reiniciados correctamente.")
         
     except Exception as e:
         # Revertir cambios en caso de error
         session.rollback()
-        print(f"❌ Error al reiniciar la base de datos: {e}")
+        print(f"❌ Error al reiniciar los pedidos pendientes: {e}")
         
     finally:
         # Cerrar la sesión
         session.close()
 
-# Comando para reiniciar la base de datos
+# Comando para reiniciar solo los pedidos pendientes
 async def reset_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Verificar si el usuario es un administrador (opcional)
+    # Verificar si el usuario es un administrador
     if update.message.from_user.username == "Bastian029":
-        reset_database()
-        await update.message.reply_text("✅ Base de datos reiniciada correctamente.")
+        reset_deudores()
+        await update.message.reply_text("✅ Pedidos pendientes (deudores) reiniciados correctamente.")
     else:
         await update.message.reply_text("❌ No tienes permisos para ejecutar este comando.")
 
@@ -58,9 +55,14 @@ def process_order(order_text, user, custom_id):
         lines = order_text.split("\n")
         items = [line.strip() for line in lines[1:] if line.strip()]
         
+        # Validar si hay productos en el pedido
+        if not items:
+            return "❌ No hay productos en el pedido."
+        
         session = Session()
         total = 0.0
         products_list = []
+        productos_no_encontrados = []
         
         # Verificar si el ID ya existe
         existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
@@ -83,7 +85,14 @@ def process_order(order_text, user, custom_id):
                     "cantidad": int(quantity),
                     "precio_unitario": product.price
                 })
+            else:
+                productos_no_encontrados.append(product_name)
         
+        # Validar si no se encontraron productos válidos
+        if not products_list:
+            return "❌ No se encontraron productos válidos en el pedido."
+        
+        # Crear el pedido
         new_order = Order(
             custom_id=custom_id,  # Usamos el ID personalizado
             products=products_list,
@@ -94,7 +103,14 @@ def process_order(order_text, user, custom_id):
         session.add(new_order)
         session.commit()
         
-        return f"📝 Pedido {custom_id} registrado!\nTotal: ${total:.2f}"
+        # Construir respuesta
+        response = f"📝 Pedido {custom_id} registrado!\nTotal: ${total:.2f}\n"
+        if productos_no_encontrados:
+            response += "❌ Productos no encontrados:\n"
+            for producto in productos_no_encontrados:
+                response += f"- {producto}\n"
+        
+        return response
         
     except Exception as e:
         print(f"Error: {e}")
@@ -248,8 +264,7 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
         await update.message.reply_text(f"❌ Error: {str(e)}")
     
     finally:
-        if 'pending_order' in context.user_data:
-            del context.user_data['pending_order']
+        if 'pending_order' in context.user_data:           del context.user_data['pending_order']
         session.close()
     
     return ConversationHandler.END
@@ -262,8 +277,6 @@ conv_handler = ConversationHandler(
     },
     fallbacks=[]
 )
-
-
 
 if __name__ == "__main__":
     initialize_products()
