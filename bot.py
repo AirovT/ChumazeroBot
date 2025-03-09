@@ -10,6 +10,44 @@ from datetime import datetime
 TOKEN = "7675712119:AAFQobgdRBko6_k4dZhZoxSbRVXOQBo12a4"
 TIMEZONE = pytz.timezone("America/Guayaquil")
 
+# Función para reiniciar la base de datos
+def reset_database():
+    """
+    Elimina todos los registros de las tablas Product y Order,
+    dejando la base de datos en cero.
+    """
+    session = Session()
+    
+    try:
+        # Eliminar todos los registros de la tabla Order
+        session.query(Order).delete()
+        
+        # Eliminar todos los registros de la tabla Product
+        session.query(Product).delete()
+        
+        # Confirmar los cambios
+        session.commit()
+        
+        print("✅ Base de datos reiniciada correctamente.")
+        
+    except Exception as e:
+        # Revertir cambios en caso de error
+        session.rollback()
+        print(f"❌ Error al reiniciar la base de datos: {e}")
+        
+    finally:
+        # Cerrar la sesión
+        session.close()
+
+# Comando para reiniciar la base de datos
+async def reset_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Verificar si el usuario es un administrador (opcional)
+    if update.message.from_user.username == "tu_usuario_admin":
+        reset_database()
+        await update.message.reply_text("✅ Base de datos reiniciada correctamente.")
+    else:
+        await update.message.reply_text("❌ No tienes permisos para ejecutar este comando.")
+
 # Función para procesar pedidos
 def process_order(order_text, user):
     try:
@@ -128,9 +166,6 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await update.message.reply_text(respuesta)
 
-# Añade el handler al bot (en el main)
-
-
 if __name__ == "__main__":
     initialize_products()
     application = Application.builder().token(TOKEN).build()
@@ -138,6 +173,7 @@ if __name__ == "__main__":
     # Handlers
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     application.add_handler(CommandHandler("deudores", list_deudores))
+    application.add_handler(CommandHandler("resetdb", reset_db_command))  # Nuevo comando
     application.add_handler(CommandHandler("cierrecaja", cierre_caja))
     
     application.run_polling()
