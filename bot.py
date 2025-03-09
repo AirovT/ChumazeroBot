@@ -129,7 +129,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(respuesta)
 
 # Añade el handler al bot (en el main)
-application.add_handler(CommandHandler("cierrecaja", cierre_caja))
+
 
 if __name__ == "__main__":
     initialize_products()
@@ -138,5 +138,6 @@ if __name__ == "__main__":
     # Handlers
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     application.add_handler(CommandHandler("deudores", list_deudores))
+    application.add_handler(CommandHandler("cierrecaja", cierre_caja))
     
     application.run_polling()
