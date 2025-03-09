@@ -250,22 +250,45 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
             existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
             if existing_order:
                 session.delete(existing_order)
-                session.commit()  # <-- ¡Añade esto para guardar los cambios!
+                session.commit()
             
-            # Procesar el nuevo pedido
             response = process_order(pending_data['text'], update.message.from_user.username, custom_id)
             await update.message.reply_text(f"✅ Pedido {custom_id} actualizado!\n{response}")
         
-        # ... resto del código ...
+        elif choice == '2':  # Siguiente ID disponible (CORREGIDO)
+            next_id = custom_id + 1
+            while True:
+                existing = session.query(Order).filter(Order.custom_id == next_id).first()
+                if not existing:
+                    break
+                next_id += 1
+            
+            # Crear nuevo texto con el ID actualizado
+            new_lines = pending_data['text'].split("\n")
+            new_lines[0] = f"Pedido {next_id}"
+            new_text = "\n".join(new_lines)
+            
+            # Procesar el nuevo pedido
+            response = process_order(new_text, update.message.from_user.username, next_id)
+            if response:
+                await update.message.reply_text(f"✅ Usando ID {next_id}:\n{response}")
+            else:
+                await update.message.reply_text("❌ Error al crear el nuevo pedido.")
+        
+        elif choice == '3':  # Cancelar
+            await update.message.reply_text("❌ Operación cancelada.")
+        
+        else:
+            await update.message.reply_text("❌ Opción no válida. Elige 1, 2 o 3.")
+            return PEDIDO_CONFIRM
     
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {str(e)}")
     
     finally:
-        session.close()  # <-- Cierra la sesión siempre
+        session.close()
         if 'pending_order' in context.user_data:
             del context.user_data['pending_order']
-
 
 # Configura el ConversationHandler
 conv_handler = ConversationHandler(

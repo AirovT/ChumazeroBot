@@ -1,7 +1,7 @@
 
 products_data = [
     {
-        "name": "Michelada Siembra Inti",
+        "name": "Michelada Siembra",
         "price": 4.25
     },
     {
@@ -37,11 +37,11 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Michelada Maracumango",
+        "name": "Maracumango",
         "price": 5.5
     },
     {
-        "name": "Michelada Mango Biche",
+        "name": "Mango Biche",
         "price": 5.5
     },
     {
@@ -49,15 +49,15 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Granilada ManzanaVerde",
+        "name": "Granilada Manzana Verde",
         "price": 5.5
     },
     {
-        "name": "Parchilada Maracuya",
+        "name": "Parchilada",
         "price": 3.5
     },
     {
-        "name": "Lulada Mango",
+        "name": "Lulada",
         "price": 3.5
     },
     {
@@ -69,7 +69,7 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Especial Jagemeister",
+        "name": "Especial Jager",
         "price": 5.5
     },
     {
@@ -105,7 +105,7 @@ products_data = [
         "price": 3.0
     },
     {
-        "name": "Corona 330ml",
+        "name": "Corona",
         "price": 2.0
     },
     {
@@ -153,7 +153,7 @@ products_data = [
         "price": 6.5
     },
     {
-        "name": "Barbados Mythological Drink",
+        "name": "Barbados Mitologico",
         "price": 6.5
     },
     {
@@ -161,7 +161,7 @@ products_data = [
         "price": 4.0
     },
     {
-        "name": "Cartago Guaraná",
+        "name": "Cartago Guarana",
         "price": 6.5
     },
     {
@@ -245,11 +245,11 @@ products_data = [
         "price": 10.0
     },
     {
-        "name": "Bucanas",
+        "name": "Buchanans",
         "price": 78.0
     },
     {
-        "name": "Something Sepcial",
+        "name": "Something Special",
         "price": 25.0
     },
     {
@@ -257,7 +257,7 @@ products_data = [
         "price": 19.5
     },
     {
-        "name": "Jagermaiste",
+        "name": "Jager 1L",
         "price": 39.0
     },
     {
@@ -305,7 +305,7 @@ products_data = [
         "price": 4.5
     },
     {
-        "name": "Switch Maracuyá",
+        "name": "Switch Maracuya",
         "price": 4.5
     },
     {
@@ -321,15 +321,15 @@ products_data = [
         "price": 4.5
     },
     {
-        "name": "Cubata Guaraná",
+        "name": "Cubata Guarana",
         "price": 4.5
     },
     {
-        "name": "Cubata Lima Limón",
+        "name": "Cubata Lima Limon",
         "price": 4.5
     },
     {
-        "name": "Cubata Maracuyá",
+        "name": "Cubata Maracuya",
         "price": 4.5
     },
     {
@@ -381,7 +381,7 @@ products_data = [
         "price": 0.5
     },
     {
-        "name": "Malboro",
+        "name": "Marlboro",
         "price": 0.5
     },
     {
@@ -393,7 +393,7 @@ products_data = [
         "price": 3.0
     },
     {
-        "name": "Cartago Guaraná TG",
+        "name": "Cartago Guarana TG",
         "price": 5.5
     },
     {
@@ -425,7 +425,7 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Barbados Mythological Drink TG",
+        "name": "Barbados Mitologico TG",
         "price": 5.5
     },
     {
@@ -441,7 +441,7 @@ products_data = [
         "price": 3.0
     },
     {
-        "name": "Switch Maracuyá TG",
+        "name": "Switch Maracuya TG",
         "price": 3.0
     },
     {
@@ -465,15 +465,15 @@ products_data = [
         "price": 3.0
     },
     {
-        "name": "Cubata Guaraná TG",
+        "name": "Cubata Guarana TG",
         "price": 3.0
     },
     {
-        "name": "Cubata Lima Limón TG",
+        "name": "Cubata Lima Limon TG",
         "price": 3.0
     },
     {
-        "name": "Cubata Maracuyá TG",
+        "name": "Cubata Maracuya TG",
         "price": 3.0
     },
     {
