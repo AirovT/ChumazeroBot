@@ -13,8 +13,9 @@ class Product(Base):
     price = Column(Float)
 
 class Order(Base):
-    __tablename__ = 'orders'
+    __tablename__ = 'DEUDORES'
     id = Column(Integer, primary_key=True)
+    custom_id = Column(Integer, unique=True)  # Nuevo campo para ID personalizado
     products = Column(JSON)
     total = Column(Float)
     status = Column(String, default="pendiente")
