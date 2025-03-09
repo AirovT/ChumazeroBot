@@ -42,7 +42,7 @@ def reset_database():
 # Comando para reiniciar la base de datos
 async def reset_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Verificar si el usuario es un administrador (opcional)
-    if update.message.from_user.username == "tu_usuario_admin":
+    if update.message.from_user.username == "Bastian029":
         reset_database()
         await update.message.reply_text("✅ Base de datos reiniciada correctamente.")
     else:
