@@ -1,27 +1,35 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, JSON
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
+from products import products_data  # Asegúrate de importar products_data
 from datetime import datetime
 
 Base = declarative_base()
 
-# Tabla de Productos (predefinidos)
+# Definición de las tablas
 class Product(Base):
     __tablename__ = 'products'
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
     price = Column(Float)
 
-# Tabla de Pedidos
 class Order(Base):
     __tablename__ = 'orders'
     id = Column(Integer, primary_key=True)
-    products = Column(JSON)  # Ej: [{"name": "Michelada Club", "quantity": 2}]
+    products = Column(JSON)
     total = Column(Float)
-    status = Column(String, default="pendiente")  # "pendiente" o "pagado"
+    status = Column(String, default="pendiente")
     created_at = Column(DateTime, default=datetime.now)
 
-# Inicializar la base de datos
+# Configuración de la base de datos
 engine = create_engine('sqlite:///chumazero.db')
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
+
+# Función para inicializar productos
+def initialize_products():
+    session = Session()
+    for product in products_data:
+        if not session.query(Product).filter_by(name=product["name"]).first():
+            new_product = Product(name=product["name"], price=product["price"])
+            session.add(new_product)
+    session.commit()

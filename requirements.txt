@@ -1,5 +1,5 @@
 #Instalar las dependencias
-python-telegram-bot==13.7
+python-telegram-bot==20.0
 sqlalchemy==1.4.41
 pytz==2023.3
 python-dotenv==0.21.0
