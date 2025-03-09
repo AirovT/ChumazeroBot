@@ -97,7 +97,7 @@ def process_order(order_text, user, custom_id):
             custom_id=custom_id,  # Usamos el ID personalizado
             products=products_list,
             total=total,
-            status="pendiente",
+            status="pendiente",  # Estado inicial: pendiente
             created_at=datetime.now(TIMEZONE)
         )
         session.add(new_order)
@@ -127,10 +127,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             try:
                 order_id = text.split()[1]
                 session = Session()
-                order = session.query(Order).get(int(order_id))
+                order = session.query(Order).filter(Order.custom_id == int(order_id)).first()
                 
                 if order:
-                    order.status = "pagado"
+                    order.status = "pagado"  # Cambiar estado a pagado
                     session.commit()
                     await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO.")
                 else:
@@ -154,7 +154,7 @@ async def list_deudores(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     response = "📋 Lista de Pedidos Pendientes:\n\n"
     for order in pendientes:
-        response += f"🆔 Pedido {order.id}\n"
+        response += f"🆔 Pedido {order.custom_id}\n"
         response += f"📅 Fecha: {order.created_at.strftime('%Y-%m-%d %H:%M')}\n"
         response += f"💵 Total: ${order.total:.2f}\n"
         response += "------------------------\n"
@@ -264,7 +264,8 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
         await update.message.reply_text(f"❌ Error: {str(e)}")
     
     finally:
-        if 'pending_order' in context.user_data:           del context.user_data['pending_order']
+        if 'pending_order' in context.user_data:
+            del context.user_data['pending_order']
         session.close()
     
     return ConversationHandler.END
