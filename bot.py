@@ -1,3 +1,4 @@
+import re  # <-- Añade esto al inicio
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler
 import os
@@ -43,7 +44,7 @@ def reset_deudores():
 # Comando para reiniciar solo los pedidos pendientes
 async def reset_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Verificar si el usuario es un administrador
-    if update.message.from_user.username == "Bastian029":
+    if update.message.from_user.username == "Bastian029" or "IngAiro":
         reset_deudores()
         await update.message.reply_text("✅ Pedidos pendientes (deudores) reiniciados correctamente.")
     else:
@@ -194,33 +195,43 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
-    user = update.message.from_user.username
+    
+    # Si el mensaje es "Pedido X pagado", ignóralo
+    if "pagado" in text.lower():
+        return ConversationHandler.END
     
     try:
         lines = text.split("\n")
+        if len(lines) < 2:
+            await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nPedido 1\n2 Michelada Club")
+            return ConversationHandler.END
+        
         custom_id = int(lines[0].split()[1].strip())
+        context.user_data['pending_order'] = {
+            'text': text,
+            'custom_id': custom_id
+        }
         
-        # Procesar pedido
-        response = process_order(text, user, custom_id)
+        # Verificar si el ID ya existe
+        session = Session()
+        existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
+        session.close()
         
-        if response is None:
-            context.user_data['pending_order'] = {
-                'text': text,
-                'custom_id': custom_id
-            }
+        if existing_order:
             await update.message.reply_text(
                 f"⚠️ El Pedido {custom_id} ya existe. ¿Qué deseas hacer?\n\n"
                 "1. Sobrescribir\n"
-                "2. Usar siguiente ID disponible\n"
+                "2. Usar siguiente ID\n"
                 "3. Cancelar"
             )
             return PEDIDO_CONFIRM
         else:
+            response = process_order(text, update.message.from_user.username, custom_id)
             await update.message.reply_text(response)
             return ConversationHandler.END
             
     except Exception as e:
-        await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nPedido 1\n2 Michelada Club")
+        await update.message.reply_text(f"❌ Error: {str(e)}")
         return ConversationHandler.END
 
 async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -239,36 +250,22 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
             existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
             if existing_order:
                 session.delete(existing_order)
-                session.commit()
+                session.commit()  # <-- ¡Añade esto para guardar los cambios!
             
+            # Procesar el nuevo pedido
             response = process_order(pending_data['text'], update.message.from_user.username, custom_id)
             await update.message.reply_text(f"✅ Pedido {custom_id} actualizado!\n{response}")
         
-        elif choice == '2':  # Siguiente ID disponible
-            next_id = custom_id + 1
-            while session.query(Order).filter(Order.custom_id == next_id).first():
-                next_id += 1
-            
-            new_text = pending_data['text'].replace(str(custom_id), str(next_id))
-            response = process_order(new_text, update.message.from_user.username, next_id)
-            await update.message.reply_text(f"✅ Usando ID {next_id}:\n{response}")
-        
-        elif choice == '3':  # Cancelar
-            await update.message.reply_text("❌ Operación cancelada.")
-        
-        else:
-            await update.message.reply_text("❌ Opción no válida. Elige 1, 2 o 3.")
-            return PEDIDO_CONFIRM
+        # ... resto del código ...
     
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {str(e)}")
     
     finally:
+        session.close()  # <-- Cierra la sesión siempre
         if 'pending_order' in context.user_data:
             del context.user_data['pending_order']
-        session.close()
-    
-    return ConversationHandler.END
+
 
 # Configura el ConversationHandler
 conv_handler = ConversationHandler(
@@ -279,11 +276,39 @@ conv_handler = ConversationHandler(
     fallbacks=[]
 )
 
+async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+    try:
+        # Extraer el ID del pedido (ej. "Pedido 1 pagado" → 1)
+        order_id = int(text.split()[1])
+        session = Session()
+        order = session.query(Order).filter(Order.custom_id == order_id).first()
+        
+        if order:
+            order.status = "pagado"
+            session.commit()
+            await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO.")
+        else:
+            await update.message.reply_text("❌ Pedido no encontrado.")
+            
+    except Exception as e:
+        await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado'")
+    
+    finally:
+        session.close()
+
+
+# En la sección de handlers del main (dentro de if __name__ == "__main__":)
 if __name__ == "__main__":
     initialize_products()
     application = Application.builder().token(TOKEN).build()
     
-    # Handlers
+    # Handler para "Pedido X pagado" (regex corregido)
+    application.add_handler(MessageHandler(
+        filters.TEXT & filters.Regex(r"(?i)pedido\s+\d+\s+pagado"),
+        handle_pedido_pagado
+    ))
+    
     application.add_handler(conv_handler)
     application.add_handler(CommandHandler("deudores", list_deudores))
     application.add_handler(CommandHandler("resetdb", reset_db_command))
