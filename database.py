@@ -2,7 +2,6 @@ from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, 
 from sqlalchemy.orm import sessionmaker, declarative_base
 from products import products_data  # Asegúrate de importar products_data
 from datetime import datetime
-import os
 
 Base = declarative_base()
 
@@ -24,8 +23,7 @@ class Order(Base):
     created_at = Column(DateTime, default=datetime.now)
 
 # Configuración de la base de datos
-
-engine = create_engine(os.getenv('DATABASE_URL'))
+engine = create_engine('sqlite:///chumazero.db')
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
