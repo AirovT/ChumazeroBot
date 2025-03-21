@@ -7,6 +7,8 @@ from products import products_data
 import pytz
 from datetime import datetime
 from telegram.ext import ConversationHandler
+import re
+
 
 # Estados de la conversación
 PEDIDO_CONFIRM = 1
@@ -25,12 +27,12 @@ def reset_deudores():
     
     try:
         # Eliminar solo los pedidos pendientes
-        session.query(Order).filter(Order.status == "pendiente").delete()
+        session.query(Order).delete()
         
         # Confirmar los cambios
         session.commit()
         
-        print("✅ Pedidos pendientes (deudores) reiniciados correctamente.")
+        print("✅ Pedidos reiniciados correctamente.")
         
     except Exception as e:
         # Revertir cambios en caso de error
@@ -77,7 +79,30 @@ def process_order(order_text, user, custom_id):
                 continue
                 
             quantity, product_name = parts
-            product = session.query(Product).filter(Product.name.ilike(f"%{product_name}%")).first()
+            product_name_clean = product_name.strip().lower()  # Limpieza del nombre
+
+            # Busca coincidencia EXACTA (case-insensitive)
+            product = (
+                session.query(Product)
+                .filter(Product.name.ilike(product_name_clean))
+                .first()
+            )
+
+            if not product:
+                # Busca productos que contengan la palabra (para sugerencias)
+                sugerencias = (
+                    session.query(Product)
+                    .filter(Product.name.ilike(f"%{product_name_clean}%"))
+                    .limit(3)
+                    .all()
+                )
+                
+                if sugerencias:
+                    response = "❌ Producto no encontrado. ¿Quisiste decir?\n"
+                    for sug in sugerencias:
+                        response += f"- {sug.name}\n"
+                    return response
+            
             
             if product:
                 total += product.price * int(quantity)
@@ -98,7 +123,7 @@ def process_order(order_text, user, custom_id):
             custom_id=custom_id,  # Usamos el ID personalizado
             products=products_list,
             total=total,
-            status="pendiente",  # Estado inicial: pendiente
+            status="pendiente",  # Estado inicial: pendiente'
             created_at=datetime.now(TIMEZONE)
         )
         session.add(new_order)
@@ -167,46 +192,86 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
     session = Session()
     hoy = datetime.now(TIMEZONE).date()
     
-    # Obtener pedidos del día
-    pedidos = session.query(Order).filter(
-        Order.created_at >= hoy,
-        Order.status == "pagado"  # Solo considerar pagados
-    ).all()
+    # Comprobar si existen pedidos pendientes
+    pedidos_pendientes = session.query(Order).filter(Order.status == "pendiente").all()
+    if pedidos_pendientes:
+        respuesta = "\n⚠️ ¡Atención! Aún faltan por pagar algunos pedidos pendientes.\n"
+        await list_deudores(update, context)
     
-    # Calcular totales
-    total_ventas = sum(pedido.total for pedido in pedidos)
-    productos_vendidos = {}
-    
-    for pedido in pedidos:
-        for producto in pedido.products:
-            nombre = producto["nombre"]
-            cantidad = producto["cantidad"]
-            productos_vendidos[nombre] = productos_vendidos.get(nombre, 0) + cantidad
-    
-    # Construir respuesta
-    respuesta = "📊 **CIERRE DE CAJA**\n\n"
-    respuesta += f"💰 Total vendido hoy: ${total_ventas:.2f}\n"
-    respuesta += "🍺 Productos vendidos:\n"
-    
-    for producto, cantidad in productos_vendidos.items():
-        respuesta += f"- {producto}: {cantidad}\n"
+    else:
+        # Obtener pedidos pagados del día
+        pedidos_pagados = session.query(Order).filter(
+            Order.created_at >= hoy,
+            Order.status == "pagado"
+        ).all()
+
+        # Obtener pedidos pagados del día
+        pedidos_pagados_efectivo = session.query(Order).filter(
+            Order.created_at >= hoy,
+            Order.fpago == "efectivo"
+        ).all()
+
+        # Obtener pedidos pagados del día
+        pedidos_pagados_transferencia = session.query(Order).filter(
+            Order.created_at >= hoy,
+            Order.fpago == "transferencia"
+        ).all()
+        
+        # Calcular totales
+        total_ventas = sum(pedido.total for pedido in pedidos_pagados)
+        productos_vendidos = {}
+        for pedido in pedidos_pagados:
+            for producto in pedido.products:
+                nombre = producto["nombre"]
+                cantidad = producto["cantidad"]
+                productos_vendidos[nombre] = productos_vendidos.get(nombre, 0) + cantidad
+
+        # Calcular totales
+        total_ventas_efectivo = sum(pedido.total for pedido in pedidos_pagados_efectivo)
+        productos_vendidos_efectivo = {}
+        for pedido in pedidos_pagados_efectivo:
+            for producto in pedido.products:
+                nombre = producto["nombre"]
+                cantidad = producto["cantidad"]
+                productos_vendidos_efectivo[nombre] = productos_vendidos_efectivo.get(nombre, 0) + cantidad
+
+        # Calcular totales
+        total_ventas_transferencia = sum(pedido.total for pedido in pedidos_pagados_transferencia)
+        productos_vendidos_trans = {}
+        for pedido in pedidos_pagados_transferencia:
+            for producto in pedido.products:
+                nombre = producto["nombre"]
+                cantidad = producto["cantidad"]
+                productos_vendidos_trans[nombre] = productos_vendidos_trans.get(nombre, 0) + cantidad
+        
+        # Construir respuesta
+        respuesta = "📊 **CIERRE DE CAJA**\n\n"
+        respuesta += f"💰 Total vendido hoy: ${total_ventas:.2f}\n"
+        respuesta += f"💰 Total vendido efectivo: ${total_ventas_efectivo:.2f}\n"
+        respuesta += f"💰 Total vendido transferencia: ${total_ventas_transferencia:.2f}\n"
+        respuesta += "🍺 Productos vendidos:\n"
+        for producto, cantidad in productos_vendidos.items():
+            respuesta += f"- {producto}: {cantidad}\n"
     
     await update.message.reply_text(respuesta)
+    session.close()
 
 async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     
-    # Si el mensaje es "Pedido X pagado", ignóralo
-    if "pagado" in text.lower():
+    # Si el mensaje es "Pedido X pagado" o "PX pagado", ignóralo
+    if re.search(r"(?i)(pedido|p)\s*\d+\s+pagado", text):
         return ConversationHandler.END
     
     try:
-        lines = text.split("\n")
-        if len(lines) < 2:
-            await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nPedido 1\n2 Michelada Club")
+        # Usar regex para detectar "Pedido X" o "PX"
+        match = re.match(r"(?i)^(pedido|p)\s*(\d+)", text.split("\n")[0])
+        if not match:
+            await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nP1\n2 Michelada Club")
             return ConversationHandler.END
         
-        custom_id = int(lines[0].split()[1].strip())
+        # Extraer el ID (ej: "P1" → 1, "Pedido 2" → 2)
+        custom_id = int(match.group(2))  # El grupo 2 captura el número
         context.user_data['pending_order'] = {
             'text': text,
             'custom_id': custom_id
@@ -292,49 +357,222 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
 
 # Configura el ConversationHandler
 conv_handler = ConversationHandler(
-    entry_points=[MessageHandler(filters.TEXT & ~filters.COMMAND, handle_pedido)],
+        entry_points=[MessageHandler(
+        filters.TEXT & ~filters.COMMAND & ~filters.Regex(r"(?i)^(ver|eliminar)"),  # <-- Excluye otros comandos
+        handle_pedido
+    )],
     states={
         PEDIDO_CONFIRM: [MessageHandler(filters.TEXT, handle_pedido_confirm)]
     },
     fallbacks=[]
 )
 
+# --- COMANDO PARA VER DETALLES DE UN PEDIDO ---
+async def ver_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    texto = update.message.text.lower()
+    
+    # Detecta "pedido 2" o "ver pedido 2"
+    match = re.search(r"(?:pedido|ver pedido)\s+(\d+)", texto)
+    
+    if not match:
+        await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nPedido 2\nVer pedido 3")
+        return
+    
+    pedido_id = int(match.group(1))
+    
+    session = Session()
+    try:
+        pedido = session.query(Order).filter(Order.custom_id == pedido_id).first()
+        
+        if not pedido:
+            await update.message.reply_text(f"❌ Pedido {pedido_id} no encontrado")
+            return
+            
+        # Construir respuesta detallada
+        respuesta = f"📋 **PEDIDO {pedido_id}**\n"
+        respuesta += f"📅 Fecha: {pedido.created_at.strftime('%d/%m/%Y %H:%M')}\n"
+        respuesta += f"🔄 Estado: {pedido.status.upper()}\n"
+        respuesta += "--------------------------------\n"
+        
+        for producto in pedido.products:
+            respuesta += f"➤ {producto['nombre']}\n"
+            respuesta += f"   Cantidad: {producto['cantidad']}\n"
+            respuesta += f"   Precio: ${producto['precio_unitario']:.2f} c/u\n"
+            respuesta += f"   Subtotal: ${producto['cantidad'] * producto['precio_unitario']:.2f}\n\n"
+        
+        respuesta += f"💵 **TOTAL: ${pedido.total:.2f}**"
+        
+        await update.message.reply_text(respuesta)
+        
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error: {str(e)}")
+    finally:
+        session.close()
+
+# --- COMANDO PARA LISTAR TODOS LOS PEDIDOS ---
+async def listar_pedidos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    session = Session()
+    try:
+        pedidos = session.query(Order).order_by(Order.custom_id).all()
+        
+        if not pedidos:
+            await update.message.reply_text("📭 No hay pedidos registrados")
+            return
+        
+        respuesta = "📦 **LISTA DE TODOS LOS PEDIDOS**\n\n"
+        
+        for pedido in pedidos:
+            respuesta += f"🆔 Pedido {pedido.custom_id}\n"
+            respuesta += f"   📅 Fecha: {pedido.created_at.strftime('%d/%m/%y')}\n"
+            respuesta += f"   💵 Total: ${pedido.total:.2f}\n"
+            respuesta += f"   📌 Estado: {pedido.status.upper()}\n"
+            respuesta += "------------------------\n"
+        
+        await update.message.reply_text(respuesta)
+        
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error: {str(e)}")
+    finally:
+        session.close()
+
+# --- COMANDO PARA ELIMINAR PEDIDO (EXISTENTE) ---
+async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message.from_user.username not in ["Bastian029", "IngAiro", "admin2"]:
+        await update.message.reply_text("❌ Sin permisos")
+        return
+    texto = update.message.text
+    match = re.search(r"eliminar pedido (\d+)", texto, re.IGNORECASE)
+    
+
+    if not match:
+        await update.message.reply_text("❌ Formato incorrecto. Ejemplo: Eliminar pedido 2")
+        return
+        
+    pedido_id = int(match.group(1))
+    
+    session = Session()
+    try:
+        pedido = session.query(Order).filter(Order.custom_id == pedido_id).first()
+        
+        if pedido:
+            session.delete(pedido)
+            session.commit()
+            await update.message.reply_text(f"✅ Pedido {pedido_id} eliminado permanentemente")
+        else:
+            await update.message.reply_text(f"❌ Pedido {pedido_id} no encontrado")
+            
+    except Exception as e:
+        session.rollback()
+        await update.message.reply_text(f"❌ Error al eliminar: {str(e)}")
+    finally:
+        session.close()
+
+# --- COMANDO PARA MARCAR PEDIDO COMO PAGADO CON MÉTODO DE PAGO ---
 async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     try:
-        # Extraer el ID del pedido (ej. "Pedido 1 pagado" → 1)
-        order_id = int(text.split()[1])
+        # Se espera el formato: "pedido 1 pagado efectivo"
+        tokens = text.split()
+        if len(tokens) < 4:
+            await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
+            return
         session = Session()
+
+        order_id = int(tokens[1])
+        metodo_pago = tokens[3]  # Asume que el método de pago es la cuarta palabra
+        if metodo_pago == "e":
+            metodo_pago2 = "efectivo"
+        elif metodo_pago == "t":
+            metodo_pago2 = "transferencia"
+        else:
+            await update.message.reply_text("❌ No definido el metodo de pago. \nSeleccion e para efectivo o t para transferencia.")
+        
         order = session.query(Order).filter(Order.custom_id == order_id).first()
         
         if order:
             order.status = "pagado"
+            order.fpago = metodo_pago2  # Actualiza el campo del método de pago
             session.commit()
-            await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO.")
+            await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO con {metodo_pago2.upper()}.")
         else:
             await update.message.reply_text("❌ Pedido no encontrado.")
             
     except Exception as e:
-        await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado'")
-    
+        await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
     finally:
         session.close()
 
+
+# Función para buscar productos por término (por ejemplo, "michelada")
+async def ayuda_productos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Se espera que el mensaje sea del tipo "ayuda <palabra>"
+    text = update.message.text.strip()
+    # Extraemos la palabra después de "ayuda"
+    match = re.match(r"(?i)^ayuda\s+(.+)$", text)
+    if not match:
+        await update.message.reply_text("❌ Formato incorrecto. Usa: 'ayuda <producto>'")
+        return
+
+    termino = match.group(1).strip().lower()
+    session = Session()
+    try:
+        # Se buscan productos cuyo nombre contenga el término (sin distinguir mayúsculas/minúsculas)
+        productos = session.query(Product).filter(Product.name.ilike(f"%{termino}%")).all()
+        
+        if not productos:
+            await update.message.reply_text(f"❌ No se encontraron productos que coincidan con '{termino}'.")
+            return
+
+        respuesta = f"🔎 Productos que coinciden con '{termino}':\n\n"
+        for prod in productos:
+            respuesta += f"- {prod.name} (${'{:.2f}'.format(prod.price)})\n"
+        
+        await update.message.reply_text(respuesta)
+    
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error al buscar productos: {str(e)}")
+    
+    finally:
+        session.close()
 
 # En la sección de handlers del main (dentro de if __name__ == "__main__":)
 if __name__ == "__main__":
     initialize_products()
     application = Application.builder().token(TOKEN).build()
     
-    # Handler para "Pedido X pagado" (regex corregido)
+    # ===== HANDLERS EN ORDEN DE PRIORIDAD =====
+    # 1. Comandos CRÍTICOS primero (eliminar, marcar pagado)
     application.add_handler(MessageHandler(
-        filters.TEXT & filters.Regex(r"(?i)pedido\s+\d+\s+pagado"),
-        handle_pedido_pagado
+        filters.Regex(r"(?i)^eliminar\s+pedido\s+\d+$"),
+        eliminar_pedido
     ))
     
-    application.add_handler(conv_handler)
-    application.add_handler(CommandHandler("deudores", list_deudores))
-    application.add_handler(CommandHandler("resetdb", reset_db_command))
-    application.add_handler(CommandHandler("cierrecaja", cierre_caja))
+    application.add_handler(MessageHandler(
+    filters.TEXT & filters.Regex(r"(?i)^(pedido|p)\s*\d+\s+pagado\s+\w+$"),
+    handle_pedido_pagado
+    ))
     
+    # 2. Ver pedido
+    application.add_handler(MessageHandler(
+        filters.Regex(r"(?i)^(ver\s+pedido|pedido)\s+\d+$"),
+        ver_pedido
+    ))
+    
+    # 3. Ayuda por si no sabes como escribir el pedido
+    # --- Registrar el handler para el comando "ayuda" ---
+    application.add_handler(MessageHandler(
+        filters.Regex(r"(?i)^ayuda\s+.+"),
+        ayuda_productos
+    ))
+
+    # 4. ConversationHandler (CREAR pedidos)
+    application.add_handler(conv_handler)
+    
+    # 5. Comandos restantes
+    application.add_handler(CommandHandler("deudores", list_deudores))
+    application.add_handler(CommandHandler("reiniciar", reset_db_command))
+    application.add_handler(CommandHandler("cierrecaja", cierre_caja))
+    application.add_handler(CommandHandler("todos", listar_pedidos))
+    
+    # ===== INICIAR BOT =====
     application.run_polling()

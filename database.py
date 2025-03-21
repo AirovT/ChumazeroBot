@@ -19,6 +19,7 @@ class Order(Base):
     products = Column(JSON)
     total = Column(Float)
     status = Column(String, default="pendiente")
+    fpago = Column(String, default="vacio")
     created_at = Column(DateTime, default=datetime.now)
 
 # Configuración de la base de datos

@@ -1,7 +1,7 @@
 
 products_data = [
     {
-        "name": "Michelada Siembra",
+        "name": "Michelada Siembra Inti",
         "price": 4.25
     },
     {
@@ -37,11 +37,11 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Maracumango",
+        "name": "Michelada Maracumango",
         "price": 5.5
     },
     {
-        "name": "Mango Biche",
+        "name": "Michelada Mango Biche",
         "price": 5.5
     },
     {
@@ -49,15 +49,15 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Granilada Manzana Verde",
+        "name": "Granilada ManzanaVerde",
         "price": 5.5
     },
     {
-        "name": "Parchilada",
+        "name": "Parchilada Maracuya",
         "price": 3.5
     },
     {
-        "name": "Lulada",
+        "name": "Lulada Mango",
         "price": 3.5
     },
     {
@@ -69,7 +69,7 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Especial Jager",
+        "name": "Especial Jagermeister",
         "price": 5.5
     },
     {
@@ -98,14 +98,14 @@ products_data = [
     },
     {
         "name": "Club 330ml",
-        "price": 1.8
+        "price": 2.0
     },
     {
         "name": "Club 850ml",
-        "price": 3.0
+        "price": 3.25
     },
     {
-        "name": "Corona",
+        "name": "Corona 330ml",
         "price": 2.0
     },
     {
@@ -153,7 +153,7 @@ products_data = [
         "price": 6.5
     },
     {
-        "name": "Barbados Mitologico",
+        "name": "Barbados Mythological Drink",
         "price": 6.5
     },
     {
@@ -161,7 +161,7 @@ products_data = [
         "price": 4.0
     },
     {
-        "name": "Cartago Guarana",
+        "name": "Cartago Guaraná",
         "price": 6.5
     },
     {
@@ -245,11 +245,11 @@ products_data = [
         "price": 10.0
     },
     {
-        "name": "Buchanans",
+        "name": "Bucanas",
         "price": 78.0
     },
     {
-        "name": "Something Special",
+        "name": "Something Sepcial",
         "price": 25.0
     },
     {
@@ -257,7 +257,7 @@ products_data = [
         "price": 19.5
     },
     {
-        "name": "Jager 1L",
+        "name": "Jagermeister",
         "price": 39.0
     },
     {
@@ -305,7 +305,7 @@ products_data = [
         "price": 4.5
     },
     {
-        "name": "Switch Maracuya",
+        "name": "Switch Maracuyá",
         "price": 4.5
     },
     {
@@ -321,15 +321,15 @@ products_data = [
         "price": 4.5
     },
     {
-        "name": "Cubata Guarana",
+        "name": "Cubata Guaraná",
         "price": 4.5
     },
     {
-        "name": "Cubata Lima Limon",
+        "name": "Cubata Lima Limón",
         "price": 4.5
     },
     {
-        "name": "Cubata Maracuya",
+        "name": "Cubata Maracuyá",
         "price": 4.5
     },
     {
@@ -381,7 +381,7 @@ products_data = [
         "price": 0.5
     },
     {
-        "name": "Marlboro",
+        "name": "Malboro",
         "price": 0.5
     },
     {
@@ -393,7 +393,7 @@ products_data = [
         "price": 3.0
     },
     {
-        "name": "Cartago Guarana TG",
+        "name": "Cartago Guaraná TG",
         "price": 5.5
     },
     {
@@ -425,7 +425,7 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Barbados Mitologico TG",
+        "name": "Barbados Mythological Drink TG",
         "price": 5.5
     },
     {
@@ -441,7 +441,7 @@ products_data = [
         "price": 3.0
     },
     {
-        "name": "Switch Maracuya TG",
+        "name": "Switch Maracuyá TG",
         "price": 3.0
     },
     {
@@ -465,15 +465,15 @@ products_data = [
         "price": 3.0
     },
     {
-        "name": "Cubata Guarana TG",
+        "name": "Cubata Guaraná TG",
         "price": 3.0
     },
     {
-        "name": "Cubata Lima Limon TG",
+        "name": "Cubata Lima Limón TG",
         "price": 3.0
     },
     {
-        "name": "Cubata Maracuya TG",
+        "name": "Cubata Maracuyá TG",
         "price": 3.0
     },
     {
@@ -483,5 +483,41 @@ products_data = [
     {
         "name": "RTD TG",
         "price": 3.5
+    },
+    {
+        "name": "Picadita de Carne",
+        "price": 2.5
+    },
+    {
+        "name": "Picadita de pollo",
+        "price": 2.5
+    },
+    {
+        "name": "Picadita de Carne",
+        "price": 2.5
+    },
+    {
+        "name": "Doriloco de Carne",
+        "price": 2.5
+    },
+    {
+        "name": "Doriloco de Carne",
+        "price": 2.5
+    },
+    {
+        "name": "Hielos",
+        "price": 0.5
+    },
+    {
+        "name": "Limon",
+        "price": 0.5
+    },
+    {
+        "name": "Chamoyada",
+        "price": 2.00
+    },
+    {
+        "name": "Canguil",
+        "price": 1.0
     }
 ]

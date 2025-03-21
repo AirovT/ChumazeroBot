@@ -68,7 +68,7 @@
         "price": 5.5
     },
     {
-        "name": "Especial Jagemeister",
+        "name": "Especial Jagermeister",
         "price": 5.5
     },
     {
@@ -97,11 +97,11 @@
     },
     {
         "name": "Club 330ml",
-        "price": 1.8
+        "price": 2.0
     },
     {
         "name": "Club 850ml",
-        "price": 3.0
+        "price": 3.25
     },
     {
         "name": "Corona 330ml",
@@ -256,7 +256,7 @@
         "price": 19.5
     },
     {
-        "name": "Jagermaiste",
+        "name": "Jagermeister",
         "price": 39.0
     },
     {
@@ -482,5 +482,49 @@
     {
         "name": "RTD TG",
         "price": 3.5
+    },
+    {
+        "name": "Picadita de Carne",
+        "price": 2.5
+    }
+    ,
+    {
+        "name": "Picadita de pollo",
+        "price": 2.5
+    }
+    ,
+    {
+        "name": "Picadita de Carne",
+        "price": 2.5
+    }
+    ,
+    {
+        "name": "Doriloco de Carne",
+        "price": 2.5
+    }
+    ,
+    {
+        "name": "Doriloco de Carne",
+        "price": 2.5
+    }
+    ,
+    {
+        "name": "Hielos",
+        "price": 0.5
+    }
+    ,
+    {
+        "name": "Limon",
+        "price": 0.5
+    }
+    ,
+    {
+        "name": "Chamoyada",
+        "price": 2.00
+    }
+    ,
+    {
+        "name": "Canguil",
+        "price": 1.0
     }
 ]
