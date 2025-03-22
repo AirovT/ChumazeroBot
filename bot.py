@@ -16,7 +16,9 @@ PEDIDO_CONFIRM = 1
 # Configuración
 TOKEN = "7675712119:AAFQobgdRBko6_k4dZhZoxSbRVXOQBo12a4"
 TIMEZONE = pytz.timezone("America/Guayaquil")
-
+# Configuración
+# PRODUCTION_CHAT_ID = -4683968841  # ⬅️ Sin comillas, es un número entero negativo
+PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
 # Función para reiniciar solo los pedidos pendientes (deudores)
 def reset_deudores():
     """
@@ -467,40 +469,40 @@ async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     finally:
         session.close()
 
-# --- COMANDO PARA MARCAR PEDIDO COMO PAGADO CON MÉTODO DE PAGO ---
-async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text
-    try:
-        # Se espera el formato: "pedido 1 pagado efectivo"
-        tokens = text.split()
-        if len(tokens) < 4:
-            await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
-            return
-        session = Session()
+# # --- COMANDO PARA MARCAR PEDIDO COMO PAGADO CON MÉTODO DE PAGO ---
+# async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYPE):
+#     text = update.message.text
+#     try:
+#         # Se espera el formato: "pedido 1 pagado efectivo"
+#         tokens = text.split()
+#         if len(tokens) < 4:
+#             await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
+#             return
+#         session = Session()
 
-        order_id = int(tokens[1])
-        metodo_pago = tokens[3]  # Asume que el método de pago es la cuarta palabra
-        if metodo_pago == "e":
-            metodo_pago2 = "efectivo"
-        elif metodo_pago == "t":
-            metodo_pago2 = "transferencia"
-        else:
-            await update.message.reply_text("❌ No definido el metodo de pago. \nSeleccion e para efectivo o t para transferencia.")
+#         order_id = int(tokens[1])
+#         metodo_pago = tokens[3]  # Asume que el método de pago es la cuarta palabra
+#         if metodo_pago == "e":
+#             metodo_pago2 = "efectivo"
+#         elif metodo_pago == "t":
+#             metodo_pago2 = "transferencia"
+#         else:
+#             await update.message.reply_text("❌ No definido el metodo de pago. \nSeleccion e para efectivo o t para transferencia.")
         
-        order = session.query(Order).filter(Order.custom_id == order_id).first()
+#         order = session.query(Order).filter(Order.custom_id == order_id).first()
         
-        if order:
-            order.status = "pagado"
-            order.fpago = metodo_pago2  # Actualiza el campo del método de pago
-            session.commit()
-            await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO con {metodo_pago2.upper()}.")
-        else:
-            await update.message.reply_text("❌ Pedido no encontrado.")
+#         if order:
+#             order.status = "pagado"
+#             order.fpago = metodo_pago2  # Actualiza el campo del método de pago
+#             session.commit()
+#             await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO con {metodo_pago2.upper()}.")
+#         else:
+#             await update.message.reply_text("❌ Pedido no encontrado.")
             
-    except Exception as e:
-        await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
-    finally:
-        session.close()
+#     except Exception as e:
+#         await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
+#     finally:
+#         session.close()
 
 
 # Función para buscar productos por término (por ejemplo, "michelada")
@@ -535,6 +537,66 @@ async def ayuda_productos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     finally:
         session.close()
 
+#Envio de mensaje
+async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+    try:
+        tokens = text.split()
+        if len(tokens) < 4:
+            await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
+            return
+            
+        session = Session()
+        order_id = int(tokens[1])
+        metodo_pago = tokens[3].lower()
+
+        if metodo_pago == "e":
+            metodo_pago2 = "efectivo"
+        elif metodo_pago == "t":
+            metodo_pago2 = "transferencia"
+        else:
+            await update.message.reply_text("❌ Método no válido. Usa 'e' para efectivo o 't' para transferencia.")
+            return
+
+        order = session.query(Order).filter(Order.custom_id == order_id).first()
+        
+        if order:
+            order.status = "pagado"
+            order.fpago = metodo_pago2
+            session.commit()
+            
+            # Construir mensaje para producción
+            msg_produccion = f"🚨 **NUEVO PEDIDO PAGADO ({metodo_pago2.upper()})**\n"
+            msg_produccion += f"🆔 Pedido: {order_id}\n"
+            msg_produccion += "🍺 Productos:\n"
+            
+            for producto in order.products:
+                msg_produccion += f"- {producto['cantidad']}x {producto['nombre']}\n"
+            
+            msg_produccion += f"\n💵 Total: ${order.total:.2f}"
+            
+            # Enviar a grupo de producción (con manejo de errores)
+            try:
+                await context.bot.send_message(
+                    chat_id=PRODUCTION_CHAT_ID,
+                    text=msg_produccion
+                )
+            except Exception as e:
+                print(f"Error al enviar a producción: {str(e)}")  # Para debug
+                await update.message.reply_text("❌ No se pudo enviar el pedido a producción. Verifica permisos.")
+            
+            await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO con {metodo_pago2.upper()}.")
+        else:
+            await update.message.reply_text("❌ Pedido no encontrado.")
+
+    except Exception as e:
+        print(f"🚨 ERROR ENVIANDO A PRODUCCIÓN: {str(e)}")  # <-- Esto mostrará el error real
+        await update.message.reply_text(f"❌ Error técnico: {str(e)}")
+
+    finally:
+        session.close()
+
+
 # En la sección de handlers del main (dentro de if __name__ == "__main__":)
 if __name__ == "__main__":
     initialize_products()
@@ -547,9 +609,10 @@ if __name__ == "__main__":
         eliminar_pedido
     ))
     
+    # En la sección de handlers:
     application.add_handler(MessageHandler(
-    filters.TEXT & filters.Regex(r"(?i)^(pedido|p)\s*\d+\s+pagado\s+\w+$"),
-    handle_pedido_pagado
+        filters.TEXT & filters.Regex(r"(?i)^(pedido|p)\s*\d+\s+pagado\s+\w+$"),
+        handle_pedido_pagado  # ⬅️ Asegúrate de que apunte a la función corregida
     ))
     
     # 2. Ver pedido
