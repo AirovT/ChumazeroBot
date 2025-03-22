@@ -24,7 +24,7 @@
         "price": 2.75
     },
     {
-        "name": "Turbo Michelada ",
+        "name": "Turbo Michelada",
         "price": 5.5
     },
     {
@@ -526,5 +526,10 @@
     {
         "name": "Canguil",
         "price": 1.0
+    }
+    ,
+    {
+        "name": "Pitufo",
+        "price": 7.0
     }
 ]
