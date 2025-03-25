@@ -9,16 +9,16 @@ from datetime import datetime
 from telegram.ext import ConversationHandler
 import re
 
-
 # Estados de la conversación
 PEDIDO_CONFIRM = 1
 
 # Configuración
-TOKEN = "7675712119:AAFQobgdRBko6_k4dZhZoxSbRVXOQBo12a4"
+TOKEN = "7675712119:AAErbTDe5s_4TBrfjag9iX3HsdutZ_RN6GE"
 TIMEZONE = pytz.timezone("America/Guayaquil")
 # Configuración
 # PRODUCTION_CHAT_ID = -4683968841  # ⬅️ Sin comillas, es un número entero negativo
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
+MAIN_GROUP_ID = -1002366423301  # ⬅️ Este es el ID correcto
 # Función para reiniciar solo los pedidos pendientes (deudores)
 def reset_deudores():
     """
@@ -56,94 +56,90 @@ async def reset_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Función para procesar pedidos
 def process_order(order_text, user, custom_id):
+    session = Session()
     try:
         lines = order_text.split("\n")
         items = [line.strip() for line in lines[1:] if line.strip()]
         
-        # Validar si hay productos en el pedido
         if not items:
             return "❌ No hay productos en el pedido."
         
-        session = Session()
         total = 0.0
         products_list = []
-        productos_no_encontrados = []
+        errores = []
+        sugerencias_globales = []
         
-        # Verificar si el ID ya existe
-        existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
-        if existing_order:
-            return None  # Indica que hay un duplicado
+        # Validar ID duplicado primero
+        if session.query(Order).filter(Order.custom_id == custom_id).first():
+            return "❌ Este ID de pedido ya existe."
         
-        # Procesar productos
-        for item in items:
-            parts = item.split(" ", 1)
-            if len(parts) != 2:
+        # Procesar TODOS los productos primero
+        for idx, item in enumerate(items, 1):
+            # Validar formato "cantidad nombre"
+            if not re.match(r"^\d+\s+.+", item):
+                errores.append(f"Línea {idx}: Formato incorrecto. Ejemplo: '3 Cerveza'")
                 continue
                 
-            quantity, product_name = parts
-            product_name_clean = product_name.strip().lower()  # Limpieza del nombre
-
-            # Busca coincidencia EXACTA (case-insensitive)
-            product = (
-                session.query(Product)
-                .filter(Product.name.ilike(product_name_clean))
-                .first()
-            )
-
+            quantity_str, product_name = item.split(" ", 1)
+            product_name = product_name.strip().lower()
+            
+            # Validar cantidad
+            if not quantity_str.isdigit():
+                errores.append(f"Línea {idx}: Cantidad no es número: '{quantity_str}'")
+                continue
+            quantity = int(quantity_str)
+            
+            # Buscar producto EXACTO
+            product = session.query(Product).filter(Product.name.ilike(product_name)).first()
+            
             if not product:
-                # Busca productos que contengan la palabra (para sugerencias)
+                # Buscar sugerencias (solo 3)
                 sugerencias = (
                     session.query(Product)
-                    .filter(Product.name.ilike(f"%{product_name_clean}%"))
+                    .filter(Product.name.ilike(f"%{product_name}%"))
                     .limit(3)
                     .all()
                 )
-                
                 if sugerencias:
-                    response = "❌ Producto no encontrado. ¿Quisiste decir?\n"
-                    for sug in sugerencias:
-                        response += f"- {sug.name}\n"
-                    return response
+                    sugs = ", ".join([s.name for s in sugerencias])
+                    errores.append(f"Línea {idx}: '{product_name}' no existe el producto. \nSugerencias:\n {sugs}")
+                else:
+                    errores.append(f"Línea {idx}: '{product_name}' no existe y no hay sugerencias.")
+                continue
             
-            
-            if product:
-                total += product.price * int(quantity)
-                products_list.append({
-                    "nombre": product.name,
-                    "cantidad": int(quantity),
-                    "precio_unitario": product.price,
-                    "entregado": 0
-                })
-            else:
-                productos_no_encontrados.append(product_name)
+            # Si todo está bien, agregar a la lista
+            products_list.append({
+                "nombre": product.name,
+                "cantidad": quantity,
+                "precio_unitario": product.price,
+                "entregado": 0
+            })
+            total += product.price * quantity
         
-        # Validar si no se encontraron productos válidos
-        if not products_list:
-            return "❌ No se encontraron productos válidos en el pedido."
+        # Si hay errores, no crear el pedido
+        if errores:
+            response = "❌ Errores en el ingreso del pedido:\n" + "\n".join(errores)
+            return response
         
-        # Crear el pedido
+        # Crear pedido solo si no hay errores
         new_order = Order(
-            custom_id=custom_id,  # Usamos el ID personalizado
+            custom_id=custom_id,
             products=products_list,
             total=total,
-            status="pendiente",  # Estado inicial: pendiente'
+            status="pendiente",
             created_at=datetime.now(TIMEZONE)
         )
         session.add(new_order)
         session.commit()
         
-        # Construir respuesta
-        response = f"📝 Pedido {custom_id} registrado!\nTotal: ${total:.2f}\n"
-        if productos_no_encontrados:
-            response += "❌ Productos no encontrados:\n"
-            for producto in productos_no_encontrados:
-                response += f"- {producto}\n"
-        
-        return response
+        return f"📝 Pedido {custom_id} registrado!\nTotal: ${total:.2f}"
         
     except Exception as e:
+        session.rollback()
         print(f"Error: {e}")
-        return "❌ Error al procesar el pedido."
+        return "❌ Error grave al procesar el pedido."
+    finally:
+        session.close()
 
 # Manejador de mensajes
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -470,41 +466,6 @@ async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     finally:
         session.close()
 
-# # --- COMANDO PARA MARCAR PEDIDO COMO PAGADO CON MÉTODO DE PAGO ---
-# async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYPE):
-#     text = update.message.text
-#     try:
-#         # Se espera el formato: "pedido 1 pagado efectivo"
-#         tokens = text.split()
-#         if len(tokens) < 4:
-#             await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
-#             return
-#         session = Session()
-
-#         order_id = int(tokens[1])
-#         metodo_pago = tokens[3]  # Asume que el método de pago es la cuarta palabra
-#         if metodo_pago == "e":
-#             metodo_pago2 = "efectivo"
-#         elif metodo_pago == "t":
-#             metodo_pago2 = "transferencia"
-#         else:
-#             await update.message.reply_text("❌ No definido el metodo de pago. \nSeleccion e para efectivo o t para transferencia.")
-        
-#         order = session.query(Order).filter(Order.custom_id == order_id).first()
-        
-#         if order:
-#             order.status = "pagado"
-#             order.fpago = metodo_pago2  # Actualiza el campo del método de pago
-#             session.commit()
-#             await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO con {metodo_pago2.upper()}.")
-#         else:
-#             await update.message.reply_text("❌ Pedido no encontrado.")
-            
-#     except Exception as e:
-#         await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
-#     finally:
-#         session.close()
-
 
 # Función para buscar productos por término (por ejemplo, "michelada")
 async def ayuda_productos(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -597,25 +558,89 @@ async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYP
     finally:
         session.close()
 
+#La parte de los anuncios
+# Handler para anuncios
+async def handle_anuncio(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        # Extraer texto después de "anuncio"
+        anuncio_text = re.sub(r'(?i)^anuncio\s*', '', update.message.text).strip()
+        
+        # Formatear con emojis
+        formatted_msg = f"🚨⚠️ **{anuncio_text.upper()}** ⚠️🚨"
+        
+        # Determinar origen
+        chat_id = update.message.chat.id
+        
+        # Si es del grupo principal
+        if chat_id == MAIN_GROUP_ID:
+            # Enviar al grupo principal
+            await context.bot.send_message(
+                chat_id=MAIN_GROUP_ID,
+                text=formatted_msg,
+                parse_mode='Markdown'
+            )
+            # Reenviar a producción
+            await context.bot.send_message(
+                chat_id=PRODUCTION_CHAT_ID,
+                text=f"📢 ANUNCIO DEL GRUPO PRINCIPAL:\n{formatted_msg}",
+                parse_mode='Markdown'
+            )
+            
+        # Si es de producción
+        elif chat_id == PRODUCTION_CHAT_ID:
+            # Enviar al grupo principal
+            await context.bot.send_message(
+                chat_id=MAIN_GROUP_ID,
+                text=formatted_msg,
+                parse_mode='Markdown'
+            )
+
+    except Exception as e:
+        print(f"Error en anuncio: {e}")
+
+# Handler para preguntas del grupo principal
+async def forward_questions(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Si es del grupo principal y no es un comando
+    if update.message.chat.id == MAIN_GROUP_ID and not update.message.text.startswith('/'):
+        pregunta = update.message.text
+        # Enviar a producción
+        await context.bot.send_message(
+            chat_id=PRODUCTION_CHAT_ID,
+            text=f"❓ **CONSULTA DEL CLIENTE** ❓\n\n{pregunta}"
+        )
 
 # En la sección de handlers del main (dentro de if __name__ == "__main__":)
 if __name__ == "__main__":
     initialize_products()
     application = Application.builder().token(TOKEN).build()
+
+    # ===== HANDLERS EN ORDEN CORRECTO =====
+    # 1. Handler de anuncios
+    application.add_handler(MessageHandler(
+        filters.Regex(r'(?i)^anuncio\s.+'),  # <-- Corregido
+        handle_anuncio
+    ))
     
     # ===== HANDLERS EN ORDEN DE PRIORIDAD =====
     # 1. Comandos CRÍTICOS primero (eliminar, marcar pagado)
+    # 2. Eliminar pedido
     application.add_handler(MessageHandler(
-        filters.Regex(r"(?i)^eliminar\s+pedido\s+\d+$"),
+        filters.Regex(r'(?i)^eliminar pedido \d+$'),  # <-- Corregido
         eliminar_pedido
     ))
     
-    # En la sección de handlers:
+    # 3. Marcar como pagado
     application.add_handler(MessageHandler(
-        filters.TEXT & filters.Regex(r"(?i)^(pedido|p)\s*\d+\s+pagado\s+\w+$"),
-        handle_pedido_pagado  # ⬅️ Asegúrate de que apunte a la función corregida
+        filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+\w+$'),  # <-- Corregido
+        handle_pedido_pagado
     ))
     
+    # 3. Handler para preguntas del grupo principal (¡NUEVO!)
+    application.add_handler(MessageHandler(
+        filters.Chat(chat_id=MAIN_GROUP_ID) & ~filters.COMMAND,
+        forward_questions
+    ))
+
     # 2. Ver pedido
     application.add_handler(MessageHandler(
         filters.Regex(r"(?i)^(ver\s+pedido|pedido)\s+\d+$"),
