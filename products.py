@@ -49,7 +49,7 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Granilada ManzanaVerde",
+        "name": "Granilada Manzana Verde",
         "price": 5.5
     },
     {
@@ -94,6 +94,22 @@ products_data = [
     },
     {
         "name": "Granizado Manzana Verde",
+        "price": 3.5
+    },
+    {
+        "name": "Granizado Frutos Rojos sin alcohol",
+        "price": 3.5
+    },
+    {
+        "name": "Granizado Mora Azul sin alcohol",
+        "price": 3.5
+    },
+    {
+        "name": "Granizado Zarzamora sin alcohol",
+        "price": 3.5
+    },
+    {
+        "name": "Granizado Manzana Verde sin alcohol",
         "price": 3.5
     },
     {
@@ -225,23 +241,28 @@ products_data = [
         "price": 5.5
     },
     {
-        "name": "Old Time Black",
+        "name": "Vino Caliente",
+        "price": 7.0
+    }
+    ,
+    {
+        "name": "Old Times Black",
         "price": 18.0
     },
     {
-        "name": "Old Time Red",
+        "name": "Old Times Red",
         "price": 14.0
     },
     {
         "name": "Johny Walker Red",
-        "price": 30.0
+        "price": 35.0
     },
     {
-        "name": "Old Time Miel",
+        "name": "Old Times Miel",
         "price": 10.0
     },
     {
-        "name": "Old Time Manzana",
+        "name": "Old Times Manzana",
         "price": 10.0
     },
     {
@@ -293,6 +314,10 @@ products_data = [
         "price": 1.0
     },
     {
+        "name": "Gomita de switch",
+        "price": 0.5
+    },
+    {
         "name": "Switch Bongo Bongo",
         "price": 4.5
     },
@@ -335,6 +360,16 @@ products_data = [
     {
         "name": "Cubata Piña Colada",
         "price": 4.5
+    }
+    ,
+    {
+        "name": "Canelazo 1lt",
+        "price": 5.0
+    }
+    ,
+    {
+        "name": "Canelazo 500ml",
+        "price": 2.5
     },
     {
         "name": "Monster",
@@ -347,6 +382,10 @@ products_data = [
     {
         "name": "Gatorade",
         "price": 1.25
+    },
+    {
+        "name": "Gatorade 500ml",
+        "price": 0.75
     },
     {
         "name": "Vive 100",
@@ -514,10 +553,45 @@ products_data = [
     },
     {
         "name": "Chamoyada",
-        "price": 2.00
+        "price": 2.0
     },
     {
         "name": "Canguil",
         "price": 1.0
+    }
+    ,
+    {
+        "name": "Shot de tequila",
+        "price": 1.5
+    }
+    ,
+    {
+        "name": "Shot de vodka",
+        "price": 1.5
+    }
+    ,
+    {
+        "name": "V220 600ml",
+        "price": 1.5
+    }
+    ,
+    {
+        "name": "V220 330ml",
+        "price": 0.75
+    }
+    ,
+    {
+        "name": "Halls",
+        "price": 0.10
+    }
+    ,
+    {
+        "name": "Trident",
+        "price": 0.10
+    }
+    ,
+    {
+        "name": "Paquete trident",
+        "price": 0.50
     }
 ]

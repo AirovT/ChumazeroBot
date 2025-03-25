@@ -12,6 +12,7 @@ class Product(Base):
     name = Column(String, unique=True)
     price = Column(Float)
 
+
 class Order(Base):
     __tablename__ = 'DEUDORES'
     id = Column(Integer, primary_key=True)
@@ -32,6 +33,6 @@ def initialize_products():
     session = Session()
     for product in products_data:
         if not session.query(Product).filter_by(name=product["name"]).first():
-            new_product = Product(name=product["name"], price=product["price"])
+            new_product = Product(name=product["name"], price=product["price"],)
             session.add(new_product)
     session.commit()

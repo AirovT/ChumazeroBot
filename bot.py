@@ -1,4 +1,4 @@
-import re  # <-- Añade esto al inicio
+import re 
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler
 import os
@@ -111,7 +111,8 @@ def process_order(order_text, user, custom_id):
                 products_list.append({
                     "nombre": product.name,
                     "cantidad": int(quantity),
-                    "precio_unitario": product.price
+                    "precio_unitario": product.price,
+                    "entregado": 0
                 })
             else:
                 productos_no_encontrados.append(product_name)
@@ -628,10 +629,11 @@ if __name__ == "__main__":
         ayuda_productos
     ))
 
-    # 4. ConversationHandler (CREAR pedidos)
+
+    # 6. ConversationHandler (CREAR pedidos)
     application.add_handler(conv_handler)
     
-    # 5. Comandos restantes
+    # 7. Comandos restantes
     application.add_handler(CommandHandler("deudores", list_deudores))
     application.add_handler(CommandHandler("reiniciar", reset_db_command))
     application.add_handler(CommandHandler("cierrecaja", cierre_caja))
