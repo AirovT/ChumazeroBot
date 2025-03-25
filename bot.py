@@ -8,6 +8,8 @@ import pytz
 from datetime import datetime
 from telegram.ext import ConversationHandler
 import re
+from fpdf import FPDF  # Necesitarás instalar esta librería: pip install fpdf
+from sqlalchemy import func
 
 # Estados de la conversación
 PEDIDO_CONFIRM = 1
@@ -47,8 +49,8 @@ def reset_deudores():
 
 # Comando para reiniciar solo los pedidos pendientes
 async def reset_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Verificar si el usuario es un administrador
-    if update.message.from_user.username == "Bastian029" or "IngAiro":
+    # Usa "in" en lugar de "or"
+    if update.message.from_user.username in ["Bastian029", "IngAiro"]:
         reset_deudores()
         await update.message.reply_text("✅ Pedidos pendientes (deudores) reiniciados correctamente.")
     else:
@@ -189,35 +191,60 @@ async def list_deudores(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Comando para cierre de caja diario
 async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
     session = Session()
-    hoy = datetime.now(TIMEZONE).date()
-    
-    # Comprobar si existen pedidos pendientes
+    now = datetime.now(TIMEZONE)
+
+    # Calcular rango de tiempo (6 AM a 5 AM del día siguiente)
+    if now.hour < 5:  # Si es antes de las 5 AM
+        inicio_jornada = datetime(now.year, now.month, now.day - 1, 6, 0, tzinfo=TIMEZONE)  # 6 AM del día anterior
+        fin_jornada = datetime(now.year, now.month, now.day, 5, 0, tzinfo=TIMEZONE)  # 5 AM del día actual
+    else:  # Si es 5 AM o después
+        inicio_jornada = datetime(now.year, now.month, now.day, 6, 0, tzinfo=TIMEZONE)  # 6 AM del día actual
+        fin_jornada = datetime(now.year, now.month, now.day + 1, 5, 0, tzinfo=TIMEZONE)  # 5 AM del día siguiente
+
+    # Comprobar pedidos pendientes
     pedidos_pendientes = session.query(Order).filter(Order.status == "pendiente").all()
-    if pedidos_pendientes:
-        respuesta = "\n⚠️ ¡Atención! Aún faltan por pagar algunos pedidos pendientes.\n"
-        await list_deudores(update, context)
     
+    # Generar PDF
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    
+    respuesta = "📊 **CIERRE DE CAJA**\n\n"
+    pdf.cell(200, 10, txt="CIERRE DE CAJA", ln=1, align='C')
+    
+    if pedidos_pendientes:
+        respuesta += "⚠️ ¡Atención! Pedidos pendientes:\n"
+        pdf.cell(200, 10, txt="¡ATENCIÓN! Hay pedidos pendientes:", ln=1)
+        for pedido in pedidos_pendientes:
+            respuesta += f"- Pedido {pedido.custom_id} (${pedido.total:.2f})\n"
+            pdf.cell(200, 10, txt=f"Pedido {pedido.custom_id} - ${pedido.total:.2f}", ln=1)
     else:
-        # Obtener pedidos pagados del día
+        # Obtener todos los pedidos pagados en el rango horario
         pedidos_pagados = session.query(Order).filter(
-            Order.created_at >= hoy,
+            Order.created_at.between(inicio_jornada, fin_jornada),
             Order.status == "pagado"
         ).all()
 
-        # Obtener pedidos pagados del día
-        pedidos_pagados_efectivo = session.query(Order).filter(
-            Order.created_at >= hoy,
-            Order.fpago == "efectivo"
-        ).all()
-
-        # Obtener pedidos pagados del día
-        pedidos_pagados_transferencia = session.query(Order).filter(
-            Order.created_at >= hoy,
-            Order.fpago == "transferencia"
-        ).all()
-        
         # Calcular totales
-        total_ventas = sum(pedido.total for pedido in pedidos_pagados)
+        total_ventas = sum(p.total for p in pedidos_pagados)
+        total_efectivo = sum(p.total for p in pedidos_pagados if p.fpago == "efectivo")
+        total_transferencia = sum(p.total for p in pedidos_pagados if p.fpago == "transferencia")
+
+        # Texto y PDF
+        respuesta += f"🕒 Período: {inicio_jornada.strftime('%d/%m %H:%M')} - {fin_jornada.strftime('%d/%m %H:%M')}\n"
+        respuesta += f"💰 Total: ${total_ventas:.2f}\n"
+        respuesta += f"💵 Efectivo: ${total_efectivo:.2f}\n"
+        respuesta += f"📲 Transferencia: ${total_transferencia:.2f}\n"
+        respuesta += "🍺 Productos vendidos:\n"
+
+        # PDF
+        pdf.cell(200, 10, txt=f"Periodo: {inicio_jornada.strftime('%d/%m %H:%M')} a {fin_jornada.strftime('%d/%m %H:%M')}", ln=1)
+        pdf.cell(200, 10, txt=f"Total: ${total_ventas:.2f}", ln=1)
+        pdf.cell(200, 10, txt=f"Efectivo: ${total_efectivo:.2f}", ln=1)
+        pdf.cell(200, 10, txt=f"Transferencia: ${total_transferencia:.2f}", ln=1)
+        pdf.cell(200, 10, txt="Productos vendidos:", ln=1)
+
+        # Detalle productos
         productos_vendidos = {}
         for pedido in pedidos_pagados:
             for producto in pedido.products:
@@ -225,34 +252,18 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 cantidad = producto["cantidad"]
                 productos_vendidos[nombre] = productos_vendidos.get(nombre, 0) + cantidad
 
-        # Calcular totales
-        total_ventas_efectivo = sum(pedido.total for pedido in pedidos_pagados_efectivo)
-        productos_vendidos_efectivo = {}
-        for pedido in pedidos_pagados_efectivo:
-            for producto in pedido.products:
-                nombre = producto["nombre"]
-                cantidad = producto["cantidad"]
-                productos_vendidos_efectivo[nombre] = productos_vendidos_efectivo.get(nombre, 0) + cantidad
-
-        # Calcular totales
-        total_ventas_transferencia = sum(pedido.total for pedido in pedidos_pagados_transferencia)
-        productos_vendidos_trans = {}
-        for pedido in pedidos_pagados_transferencia:
-            for producto in pedido.products:
-                nombre = producto["nombre"]
-                cantidad = producto["cantidad"]
-                productos_vendidos_trans[nombre] = productos_vendidos_trans.get(nombre, 0) + cantidad
-        
-        # Construir respuesta
-        respuesta = "📊 **CIERRE DE CAJA**\n\n"
-        respuesta += f"💰 Total vendido hoy: ${total_ventas:.2f}\n"
-        respuesta += f"💰 Total vendido efectivo: ${total_ventas_efectivo:.2f}\n"
-        respuesta += f"💰 Total vendido transferencia: ${total_ventas_transferencia:.2f}\n"
-        respuesta += "🍺 Productos vendidos:\n"
         for producto, cantidad in productos_vendidos.items():
             respuesta += f"- {producto}: {cantidad}\n"
+            pdf.cell(200, 10, txt=f"{producto}: {cantidad}", ln=1)
+
+    # Guardar y enviar PDF
+    nombre_pdf = f"cierre_{now.strftime('%Y%m%d_%H%M')}.pdf"
+    pdf.output(nombre_pdf)
     
-    await update.message.reply_text(respuesta)
+    # Enviar respuestas
+    await update.message.reply_text(respuesta, parse_mode='Markdown')
+    await update.message.reply_document(document=open(nombre_pdf, 'rb'))
+    
     session.close()
 
 async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -299,12 +310,12 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return ConversationHandler.END
 
 async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if 'pending_order' not in context.user_data:  # <-- Nueva validación
+        await update.message.reply_text("❌ No hay pedido en proceso. Usa 'P1' para empezar.")
+        return ConversationHandler.END
+    
     choice = update.message.text
     pending_data = context.user_data.get('pending_order')
-    
-    if not pending_data:
-        await update.message.reply_text("❌ Error. Inicia un nuevo pedido.")
-        return ConversationHandler.END
     
     custom_id = pending_data['custom_id']
     session = Session()
@@ -354,16 +365,22 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
         if 'pending_order' in context.user_data:
             del context.user_data['pending_order']
 
+
 # Configura el ConversationHandler
 conv_handler = ConversationHandler(
-        entry_points=[MessageHandler(
-        filters.TEXT & ~filters.COMMAND & ~filters.Regex(r"(?i)^(ver|eliminar)"),  # <-- Excluye otros comandos
-        handle_pedido
-    )],
+    entry_points=[
+        MessageHandler(
+            filters.Regex(r"(?i)^(pedido|p)\s*\d+") & ~filters.COMMAND,
+            handle_pedido
+        )
+    ],
     states={
-        PEDIDO_CONFIRM: [MessageHandler(filters.TEXT, handle_pedido_confirm)]
+        PEDIDO_CONFIRM: [
+            MessageHandler(filters.TEXT, handle_pedido_confirm)
+        ]
     },
-    fallbacks=[]
+    fallbacks=[],  # Sin manejador de timeout
+    conversation_timeout=300  # 5 minutos (solo cierra la conversación en silencio)
 )
 
 # --- COMANDO PARA VER DETALLES DE UN PEDIDO ---
@@ -409,6 +426,7 @@ async def ver_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         session.close()
 
 # --- COMANDO PARA LISTAR TODOS LOS PEDIDOS ---
+# --- COMANDO PARA LISTAR TODOS LOS PEDIDOS ---
 async def listar_pedidos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     session = Session()
     try:
@@ -418,16 +436,41 @@ async def listar_pedidos(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("📭 No hay pedidos registrados")
             return
         
-        respuesta = "📦 **LISTA DE TODOS LOS PEDIDOS**\n\n"
+        # Limitar a 15 pedidos en el texto
+        max_pedidos_texto = 15
+        respuesta = "📦 **PRIMEROS 15 PEDIDOS**\n\n"
         
-        for pedido in pedidos:
+        # Generar texto con primeros 15 pedidos
+        for pedido in pedidos[:max_pedidos_texto]:
             respuesta += f"🆔 Pedido {pedido.custom_id}\n"
             respuesta += f"   📅 Fecha: {pedido.created_at.strftime('%d/%m/%y')}\n"
             respuesta += f"   💵 Total: ${pedido.total:.2f}\n"
             respuesta += f"   📌 Estado: {pedido.status.upper()}\n"
             respuesta += "------------------------\n"
         
-        await update.message.reply_text(respuesta)
+        # Si hay más de 15, generar PDF
+        if len(pedidos) > max_pedidos_texto:
+            respuesta += "\n⚠️ **Hay más de 15 pedidos. Revisa el PDF adjunto.**"
+            
+            # Crear PDF con todos los pedidos
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", size=12)
+            pdf.cell(200, 10, txt="LISTA COMPLETA DE PEDIDOS", ln=1, align='C')
+            
+            for pedido in pedidos:
+                pdf.cell(200, 10, txt=f"Pedido #{pedido.custom_id}", ln=1)
+                pdf.cell(200, 10, txt=f"Fecha: {pedido.created_at.strftime('%d/%m/%y %H:%M')}", ln=1)
+                pdf.cell(200, 10, txt=f"Total: ${pedido.total:.2f}", ln=1)
+                pdf.cell(200, 10, txt=f"Estado: {pedido.status.upper()}", ln=1)
+                pdf.cell(200, 10, txt="-"*50, ln=1)
+            
+            # Guardar y enviar PDF
+            nombre_archivo = f"Pedidos_{datetime.now(TIMEZONE).strftime('%Y%m%d')}.pdf"
+            pdf.output(nombre_archivo)
+            await update.message.reply_document(document=open(nombre_archivo, 'rb'))
+        
+        await update.message.reply_text(respuesta, parse_mode='Markdown')
         
     except Exception as e:
         await update.message.reply_text(f"❌ Error: {str(e)}")
@@ -600,69 +643,105 @@ async def handle_anuncio(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Handler para preguntas del grupo principal
 async def forward_questions(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Si es del grupo principal y no es un comando
-    if update.message.chat.id == MAIN_GROUP_ID and not update.message.text.startswith('/'):
+    # Filtro mejorado: excluye comandos y palabras clave
+    if (
+        update.message.chat.id == MAIN_GROUP_ID 
+        and not update.message.text.startswith('/')
+        and not re.match(r"(?i)^(pedido|p|ver|eliminar|ayuda|anuncio)", update.message.text)
+    ):
         pregunta = update.message.text
-        # Enviar a producción
         await context.bot.send_message(
             chat_id=PRODUCTION_CHAT_ID,
-            text=f"❓ **CONSULTA DEL CLIENTE** ❓\n\n{pregunta}"
+            text=f"❓ **PREGUNTAS** ❓\n\n{pregunta}"
         )
+
+#comando help
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    ayuda_texto = """
+🆘 **MANUAL DE USO DEL BOT** 🆘
+
+📌 **COMANDOS PRINCIPALES**:
+▫️ `/help` - Muestra este mensaje de ayuda
+▫️ `/deudores` - Lista pedidos pendientes de pago
+▫️ `/reiniciar` - Borra todos los pedidos pendientes (solo admin)
+▫️ `/cierrecaja` - Genera reporte diario con PDF
+▫️ `/todos` - Lista completa de pedidos con PDF
+
+📦 **GESTIÓN DE PEDIDOS**:
+▫️ `P1` + productos (ejemplo:
+P1
+2 Cerveza 
+3 Snacks - Crear nuevo pedido)
+▫️ `Pedido 1 pagado e/t` - Marcar como pagado (e=efectivo, t=transferencia)
+▫️ `Ver pedido 1` - Ver detalles de un pedido
+▫️ `Eliminar pedido 1` - Elimina un pedido (solo admin)
+
+🔍 **BUSQUEDA Y OTROS**:
+▫️ `Ayuda cerveza` - Busca productos similares
+▫️ `Anuncio OFERTA ESPECIAL` - Envía anuncio a ambos grupos
+
+⏰ **HORARIO DE CIERRE**:
+El cierre diario considera pedidos desde las 6 AM hasta las 5 AM del día siguiente.
+
+📄 **NOTAS**:
+- Los IDs de pedido deben ser secuenciales
+- Usa el formato exacto para cada comando
+- Reporta errores a @IngAiro
+"""
+
+    await update.message.reply_text(ayuda_texto, parse_mode='Markdown')
 
 # En la sección de handlers del main (dentro de if __name__ == "__main__":)
 if __name__ == "__main__":
     initialize_products()
     application = Application.builder().token(TOKEN).build()
 
-    # ===== HANDLERS EN ORDEN CORRECTO =====
-    # 1. Handler de anuncios
-    application.add_handler(MessageHandler(
-        filters.Regex(r'(?i)^anuncio\s.+'),  # <-- Corregido
-        handle_anuncio
-    ))
-    
     # ===== HANDLERS EN ORDEN DE PRIORIDAD =====
     # 1. Comandos CRÍTICOS primero (eliminar, marcar pagado)
-    # 2. Eliminar pedido
     application.add_handler(MessageHandler(
-        filters.Regex(r'(?i)^eliminar pedido \d+$'),  # <-- Corregido
+        filters.Regex(r'(?i)^eliminar pedido \d+$'),
         eliminar_pedido
     ))
     
-    # 3. Marcar como pagado
     application.add_handler(MessageHandler(
-        filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+\w+$'),  # <-- Corregido
+        filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+\w+$'),
         handle_pedido_pagado
     ))
-    
-    # 3. Handler para preguntas del grupo principal (¡NUEVO!)
+
+    # 2. Handler de anuncios
     application.add_handler(MessageHandler(
-        filters.Chat(chat_id=MAIN_GROUP_ID) & ~filters.COMMAND,
-        forward_questions
+        filters.Regex(r'(?i)^anuncio\s.+'),
+        handle_anuncio
     ))
 
-    # 2. Ver pedido
+    # 3. Ver pedido
     application.add_handler(MessageHandler(
         filters.Regex(r"(?i)^(ver\s+pedido|pedido)\s+\d+$"),
         ver_pedido
     ))
     
-    # 3. Ayuda por si no sabes como escribir el pedido
-    # --- Registrar el handler para el comando "ayuda" ---
+    # 4. Ayuda
     application.add_handler(MessageHandler(
         filters.Regex(r"(?i)^ayuda\s+.+"),
         ayuda_productos
     ))
 
-
-    # 6. ConversationHandler (CREAR pedidos)
+    # 5. ConversationHandler (CREAR pedidos) - ¡Ahora está ANTES de forward_questions!
     application.add_handler(conv_handler)
+
+    # 6. Handler para preguntas (solo si no coincide con nada más)
+    application.add_handler(MessageHandler(
+        filters.Chat(chat_id=MAIN_GROUP_ID) 
+        & ~filters.COMMAND 
+        & ~filters.Regex(r"(?i)^(pedido|p|ver|eliminar|ayuda|anuncio)"),  # <-- Excluye comandos
+        forward_questions
+    ))
     
-    # 7. Comandos restantes
+    # 7. Comandos restantes (deudores, reiniciar, etc.)
     application.add_handler(CommandHandler("deudores", list_deudores))
     application.add_handler(CommandHandler("reiniciar", reset_db_command))
     application.add_handler(CommandHandler("cierrecaja", cierre_caja))
     application.add_handler(CommandHandler("todos", listar_pedidos))
+    application.add_handler(CommandHandler("help", help_command))
     
-    # ===== INICIAR BOT =====
     application.run_polling()
