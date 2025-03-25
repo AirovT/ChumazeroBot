@@ -1,5 +1,5 @@
 python-telegram-bot[job-queue]==20.3
-sqlalchemy==1.4.41
+SQLAlchemy==1.4.41
 pytz==2023.3
 python-dotenv==0.21.0
-fpdf==2.7.2  # <-- ¡Nueva dependencia!
+fpdf==1.7.2
