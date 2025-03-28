@@ -425,7 +425,7 @@ products_data = [
     },
     {
         "name": "Carnival",
-        "price": 0.25
+        "price": 0.30
     },
     {
         "name": "Vodka 40 TG",
@@ -594,4 +594,15 @@ products_data = [
         "name": "Paquete trident",
         "price": 0.50
     }
+    ,
+    {
+        "name": "Pitufo",
+        "price": 7.0
+    }
+    ,
+    {
+        "name": "Chupete",
+        "price": 0.25
+    }
+    
 ]
