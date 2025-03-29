@@ -25,7 +25,7 @@ products_data = [
         "price": 2.75
     },
     {
-        "name": "Turbo Michelada ",
+        "name": "Turbo Michelada",
         "price": 5.5
     },
     {
@@ -425,7 +425,7 @@ products_data = [
     },
     {
         "name": "Carnival",
-        "price": 0.30
+        "price": 0.3
     },
     {
         "name": "Vodka 40 TG",
@@ -603,6 +603,17 @@ products_data = [
     {
         "name": "Chupete",
         "price": 0.25
+    },
+    {
+        "name": "Media Lark",
+        "price": 4.5
+    },
+    {
+        "name": "Media Malboro",
+        "price": 4.5
+    },
+    {
+        "name": "Guitig",
+        "price": 1.5
     }
-    
 ]

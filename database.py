@@ -23,6 +23,19 @@ class Order(Base):
     fpago = Column(String, default="vacio")
     created_at = Column(DateTime, default=datetime.now)
 
+# class Order(Base):
+#     __tablename__ = 'DEUDORES'
+    
+#     id = Column(Integer, primary_key=True)
+#     custom_id = Column(Integer)
+#     products = Column(JSON)
+#     total = Column(Float)
+#     status = Column(String, default="pendiente")  # 'pendiente' o 'pagado'
+#     fpago = Column(String, default="vacio")   # 'efectivo', 'transferencia', 'mixto'
+#     efectivo = Column(Float, default=0.0)
+#     transferencia = Column(Float, default=0.0)
+#     created_at = Column(DateTime, default=datetime.now)
+
 # Configuración de la base de datos
 engine = create_engine('sqlite:///chumazero.db')
 Base.metadata.create_all(engine)
