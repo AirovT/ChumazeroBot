@@ -138,8 +138,13 @@ products_data = [
     },
     {
         "name": "Gran Malo",
-        "price": 45.0
+        "price": 35.0
     },
+    {
+        "name": "Gran Malo Duo Pack",
+        "price": 65.0
+    }
+    ,
     {
         "name": "Azteca 1L",
         "price": 22.0
@@ -315,7 +320,7 @@ products_data = [
     },
     {
         "name": "Gomita de switch",
-        "price": 0.5
+        "price": 0.25
     },
     {
         "name": "Switch Bongo Bongo",
@@ -420,7 +425,7 @@ products_data = [
         "price": 0.5
     },
     {
-        "name": "Malboro",
+        "name": "Marlboro",
         "price": 0.5
     },
     {
@@ -609,7 +614,7 @@ products_data = [
         "price": 4.5
     },
     {
-        "name": "Media Malboro",
+        "name": "Media Marlboro",
         "price": 4.5
     },
     {
