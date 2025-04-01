@@ -621,4 +621,14 @@ products_data = [
         "name": "Guitig",
         "price": 1.5
     }
+    ,
+    {
+        "name": "Promo michelada",
+        "price": 1.5
+    }
+    ,
+    {
+        "name": "Pitufo Black",
+        "price": 7.0
+    }
 ]
