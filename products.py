@@ -639,4 +639,9 @@ products_data = [
         "name": "Manicho",
         "price": 0.75
     }
+    ,
+    {
+        "name": "Michelada Inti 500ml",
+        "price": 0.75
+    }
 ]
