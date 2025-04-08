@@ -642,6 +642,6 @@ products_data = [
     ,
     {
         "name": "Michelada Inti 500ml",
-        "price": 0.75
+        "price": 2.5
     }
 ]
