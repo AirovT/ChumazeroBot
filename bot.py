@@ -607,7 +607,7 @@ async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYP
             msg_produccion += "🍺 Productos:\n"
             
             for producto in order.products:
-                msg_produccion += f"- {producto['cantidad']}x {producto['nombre']}\n"
+                msg_produccion += f"\t\t- {producto['cantidad']}x {producto['nombre']}\n"
             
             # Enviar a grupo de producción (con manejo de errores)
             try:
