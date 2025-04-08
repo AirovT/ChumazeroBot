@@ -18,7 +18,6 @@ PEDIDO_CONFIRM = 1
 TOKEN = "7675712119:AAErbTDe5s_4TBrfjag9iX3HsdutZ_RN6GE"
 TIMEZONE = pytz.timezone("America/Guayaquil")
 # Configuración
-# PRODUCTION_CHAT_ID = -4683968841  # ⬅️ Sin comillas, es un número entero negativo
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
 MAIN_GROUP_ID = -1002366423301  # ⬅️ Este es el ID correcto
 # Función para reiniciar solo los pedidos pendientes (deudores)
@@ -227,8 +226,8 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         # Calcular totales
         total_ventas = sum(p.total for p in pedidos_pagados)
-        total_efectivo = sum(p.total for p in pedidos_pagados if p.fpago == "efectivo")
-        total_transferencia = sum(p.total for p in pedidos_pagados if p.fpago == "transferencia")
+        total_efectivo = sum(p.efectivo for p in pedidos_pagados)
+        total_transferencia = sum(p.transferencia for p in pedidos_pagados)
 
         # Texto y PDF
         respuesta += f"🕒 Período: {inicio_jornada.strftime('%d/%m %H:%M')} - {fin_jornada.strftime('%d/%m %H:%M')}\n"
@@ -244,7 +243,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pdf.cell(200, 10, txt=f"Transferencia: ${total_transferencia:.2f}", ln=1)
         pdf.cell(200, 10, txt="Productos vendidos:", ln=1)
 
-        # Detalle productos
+        # Detalle productos ordenados
         productos_vendidos = {}
         for pedido in pedidos_pagados:
             for producto in pedido.products:
@@ -252,7 +251,15 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 cantidad = producto["cantidad"]
                 productos_vendidos[nombre] = productos_vendidos.get(nombre, 0) + cantidad
 
-        for producto, cantidad in productos_vendidos.items():
+        # Ordenar los productos por cantidad descendente
+        productos_ordenados = sorted(
+            productos_vendidos.items(),
+            key=lambda item: item[1], 
+            reverse=True
+        )
+
+        # Generar respuesta y PDF con el orden correcto
+        for producto, cantidad in productos_ordenados:
             respuesta += f"- {producto}: {cantidad}\n"
             pdf.cell(200, 10, txt=f"{producto}: {cantidad}", ln=1)
 
@@ -426,7 +433,6 @@ async def ver_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         session.close()
 
 # --- COMANDO PARA LISTAR TODOS LOS PEDIDOS ---
-# --- COMANDO PARA LISTAR TODOS LOS PEDIDOS ---
 async def listar_pedidos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     session = Session()
     try:
@@ -546,39 +552,62 @@ async def ayuda_productos(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
     try:
-        tokens = text.split()
-        if len(tokens) < 4:
-            await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado <método>'")
+        # Usar regex para capturar todos los componentes
+        match = re.match(r"(?i)^(pedido|p)\s*(\d+)\s+pagado\s+(\w+)\s*(\d*\.?\d+)?$", text)
+        if not match:
+            await update.message.reply_text("❌ Formato incorrecto. Usa: 'Pedido X pagado [e/t] [monto]'")
             return
-            
+
+        order_id = int(match.group(2))
+        metodo = match.group(3).lower()
+        monto = float(match.group(4)) if match.group(4) else None
+
         session = Session()
-        order_id = int(tokens[1])
-        metodo_pago = tokens[3].lower()
-
-        if metodo_pago == "e":
-            metodo_pago2 = "efectivo"
-        elif metodo_pago == "t":
-            metodo_pago2 = "transferencia"
-        else:
-            await update.message.reply_text("❌ Método no válido. Usa 'e' para efectivo o 't' para transferencia.")
+        order = session.query(Order).filter(Order.custom_id == order_id).first()
+            
+        if not order:
+            await update.message.reply_text("❌ Pedido no encontrado.")
             return
 
+        # Validar método de pago
+        if metodo == 'e':
+            metodo_pago = 'efectivo'
+            monto = order.total  # Si no se especifica monto, pagar total
+            order.efectivo = monto
+            order.transferencia = 0.0
+        elif metodo == 't':
+            metodo_pago = 'transferencia'
+            monto = order.total  # Transferencias siempre son por el total
+            order.transferencia = monto
+            order.efectivo = 0.0
+        elif metodo == 'p':
+            metodo_pago = 'parcial'
+            if monto <= 0 or None:
+                await update.message.reply_text("❌ El monto debe ser mayor a 0 en pagos parciales")
+                return
+            if monto > 0:
+                order.efectivo = monto
+                order.transferencia = order.total - order.efectivo
+                msg_estado = f"💵 Pago parcial: ${monto:.2f} | Restante: ${order.transferencia:.2f}"
+        else:
+            await update.message.reply_text("❌ Método no válido. Usa 'e', 't' o 'p'")
+            return
+
+        session.commit()
         order = session.query(Order).filter(Order.custom_id == order_id).first()
         
         if order:
             order.status = "pagado"
-            order.fpago = metodo_pago2
+            order.fpago = metodo_pago
             session.commit()
             
             # Construir mensaje para producción
-            msg_produccion = f"🚨 **NUEVO PEDIDO PAGADO ({metodo_pago2.upper()})**\n"
+            msg_produccion = f"🚨 **NUEVO PEDIDO PAGADO ({metodo_pago.upper()})**\n"
             msg_produccion += f"🆔 Pedido: {order_id}\n"
             msg_produccion += "🍺 Productos:\n"
             
             for producto in order.products:
                 msg_produccion += f"- {producto['cantidad']}x {producto['nombre']}\n"
-            
-            msg_produccion += f"\n💵 Total: ${order.total:.2f}"
             
             # Enviar a grupo de producción (con manejo de errores)
             try:
@@ -589,14 +618,14 @@ async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYP
             except Exception as e:
                 print(f"Error al enviar a producción: {str(e)}")  # Para debug
                 await update.message.reply_text("❌ No se pudo enviar el pedido a producción. Verifica permisos.")
-            
-            await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO con {metodo_pago2.upper()}.")
+
+            await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO con {metodo_pago.upper()}.\n Efectivo: {order.efectivo}\n Trasnferencia: {order.transferencia}")
         else:
             await update.message.reply_text("❌ Pedido no encontrado.")
 
     except Exception as e:
         print(f"🚨 ERROR ENVIANDO A PRODUCCIÓN: {str(e)}")  # <-- Esto mostrará el error real
-        await update.message.reply_text(f"❌ Error técnico: {str(e)}")
+        await update.message.reply_text("❌ El monto debe ser mayor a 0 en pagos parciales\n Ejemplo \nPedido 1 pagado p '3 (valor pagado en efectivo)'")
 
     finally:
         session.close()
@@ -672,7 +701,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 P1
 2 Cerveza 
 3 Snacks - Crear nuevo pedido)
-▫️ `Pedido 1 pagado e/t` - Marcar como pagado (e=efectivo, t=transferencia)
+▫️ `Pedido 1 pagado e/t/p` - Marcar como pagado (e=efectivo, t=transferencia, p=parcial y se debe especificar solo el monto en efectivo)
 ▫️ `Ver pedido 1` - Ver detalles de un pedido
 ▫️ `Eliminar pedido 1` - Elimina un pedido (solo admin)
 
@@ -704,8 +733,8 @@ if __name__ == "__main__":
     ))
     
     application.add_handler(MessageHandler(
-        filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+\w+$'),
-        handle_pedido_pagado
+    filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+(\w+)\s*(\d*\.?\d+)?$'),
+    handle_pedido_pagado
     ))
 
     # 2. Handler de anuncios

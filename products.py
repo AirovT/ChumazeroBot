@@ -586,7 +586,7 @@ products_data = [
     }
     ,
     {
-        "name": "Halls",
+        "name": "Menta",
         "price": 0.10
     }
     ,
@@ -630,5 +630,13 @@ products_data = [
     {
         "name": "Pitufo Black",
         "price": 7.0
+    },
+    {
+        "name": "Coco Loko",
+        "price": 6.0
+    },
+    {
+        "name": "Manicho",
+        "price": 0.75
     }
 ]
