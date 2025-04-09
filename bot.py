@@ -15,7 +15,7 @@ from sqlalchemy import func
 PEDIDO_CONFIRM = 1
 
 # Configuración
-TOKEN = "7675712119:AAErbTDe5s_4TBrfjag9iX3HsdutZ_RN6GE"
+TOKEN = "7872872117:AAGi4620wTN6_ri1yI6oh652SShyHcMPHM8"
 TIMEZONE = pytz.timezone("America/Guayaquil")
 # Configuración
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
