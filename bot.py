@@ -15,7 +15,7 @@ from sqlalchemy import func
 PEDIDO_CONFIRM = 1
 
 # Configuración
-TOKEN = "7699246863:AAEPQJBX5RjXTHeF9mhVa73g6qTLTWHf9RM"
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TIMEZONE = pytz.timezone("America/Guayaquil")
 # Configuración
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
