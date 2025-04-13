@@ -866,8 +866,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 ▫️ `/help` - Muestra este mensaje de ayuda
 ▫️ `/deudores` - Lista pedidos pendientes de pago
 ▫️ `/reiniciar` - Borra todos los pedidos pendientes (solo admin)
-▫️ `/cierrecaja` - Genera reporte diario con PDF
+▫️ `/cierrecaja` - Genera reporte diario con PDF y Excel
 ▫️ `/todos` - Lista completa de pedidos con PDF
+▫️ `/infoventas` - Se puede ver la venta hasta ese momento y cantidad de pedidos
 
 📦 **GESTIÓN DE PEDIDOS**:
 ▫️ `P1` + productos (ejemplo:
