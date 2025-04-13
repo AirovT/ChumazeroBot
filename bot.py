@@ -1,15 +1,17 @@
-import re 
 from telegram import Update
-from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler
+from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler, ConversationHandler
 import os
 from database import Session, Product, Order, initialize_products
 from products import products_data
 import pytz
 from datetime import datetime
-from telegram.ext import ConversationHandler
 import re
 from fpdf import FPDF  # Necesitarás instalar esta librería: pip install fpdf
 from sqlalchemy import func
+from telegram.helpers import escape_markdown  # Añade este import al inicio
+import pandas as pd  # Añade esto al inicio de tus imports
+import requests  # Añade esto para obtener el clima
+
 
 # Estados de la conversación
 PEDIDO_CONFIRM = 1
@@ -19,7 +21,41 @@ TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TIMEZONE = pytz.timezone("America/Guayaquil")
 # Configuración
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
-MAIN_GROUP_ID = -1002366423301  # ⬅️ Este es el ID correcto
+GERENCIA_CHAT_ID =   -4775103529  # ⬅️ Este es el ID correcto
+MAIN_GROUP_ID =      -1002366423301  # ⬅️ Este es el ID correcto
+
+import requests
+from datetime import datetime
+
+def obtener_temperatura(fecha):
+    try:
+        latitud = -1.2491
+        longitud = -78.6167
+        fecha_str = fecha.strftime("%Y-%m-%d")
+        
+        url = f"https://api.open-meteo.com/v1/forecast?latitude={latitud}&longitude={longitud}&hourly=temperature_2m"
+        response = requests.get(url)
+        response.raise_for_status()  # Verificar errores HTTP
+        data = response.json()
+        
+        # Verificar si hay datos
+        if "hourly" not in data or "temperature_2m" not in data["hourly"]:
+            return "N/A"
+        
+        temperaturas = data["hourly"]["temperature_2m"]
+        
+        # Filtrar valores None y calcular promedio
+        temps_validas = [t for t in temperaturas if t is not None]
+        
+        if not temps_validas:
+            return "N/A"
+        
+        return round(sum(temps_validas) / len(temps_validas), 1)
+    
+    except Exception as e:
+        print(f"Error Open-Meteo: {str(e)}")
+        return "N/A"
+
 # Función para reiniciar solo los pedidos pendientes (deudores)
 def reset_deudores():
     """
@@ -210,6 +246,8 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     respuesta = "📊 **CIERRE DE CAJA**\n\n"
     pdf.cell(200, 10, txt="CIERRE DE CAJA", ln=1, align='C')
+    temperaturas_cache = {}  # Inicializar el caché de temperaturas aquí
+
     
     if pedidos_pendientes:
         respuesta += "⚠️ ¡Atención! Pedidos pendientes:\n"
@@ -243,6 +281,54 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pdf.cell(200, 10, txt=f"Transferencia: ${total_transferencia:.2f}", ln=1)
         pdf.cell(200, 10, txt="Productos vendidos:", ln=1)
 
+        #Excel data
+        excel_data = []
+        for pedido in pedidos_pagados:
+            # Obtener detalles de fecha/hora
+            fecha_completa = pedido.created_at
+            fecha = fecha_completa.strftime('%d/%m/%Y')  # Fecha separada
+            hora = fecha_completa.strftime('%H:%M')      # Hora separada
+            dia_semana = fecha_completa.strftime('%A')   # Día en inglés (ej: Monday)
+            
+            # Obtener temperatura (solo una vez por fecha para optimizar)
+            if fecha not in temperaturas_cache:
+                temperaturas_cache[fecha] = obtener_temperatura(fecha_completa)
+            temp = temperaturas_cache[fecha]
+
+            for producto in pedido.products:
+                excel_data.append({
+                    "Pedido ID": pedido.custom_id,
+                    "Fecha": fecha,          # Ej: 01/07/2023
+                    "Hora": hora,           # Ej: 14:30
+                    "Día Semana": dia_semana,
+                    "Temperatura (°C)": temp,
+                    "Total": pedido.total,
+                    "Efectivo": pedido.efectivo,
+                    "Transferencia": pedido.transferencia,
+                    "Producto": producto["nombre"],
+                    "Cantidad": producto["cantidad"]
+                })
+        # Crear DataFrame y guardar como Excel
+
+        # Crear DataFrame
+        df = pd.DataFrame(excel_data)
+        nombre_excel = f"detalle_pedidos_{now.strftime('%Y%m%d_%H%M')}.xlsx"
+        # Traducir días al español (opcional)
+        dias_ingles_espanol = {
+            "Monday": "Lunes",
+            "Tuesday": "Martes",
+            "Wednesday": "Miércoles",
+            "Thursday": "Jueves",
+            "Friday": "Viernes",
+            "Saturday": "Sábado",
+            "Sunday": "Domingo",
+
+        }
+        df["Día Semana"] = df["Día Semana"].map(dias_ingles_espanol)
+
+        # Guardar Excel
+        df.to_excel(nombre_excel, index=False)
+        
         # Detalle productos ordenados
         productos_vendidos = {}
         for pedido in pedidos_pagados:
@@ -268,10 +354,97 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
     pdf.output(nombre_pdf)
     
     # Enviar respuestas
-    await update.message.reply_text(respuesta, parse_mode='Markdown')
-    await update.message.reply_document(document=open(nombre_pdf, 'rb'))
-    
+    try:
+        # Enviar Respuesatas de pdf y Excel solo si hay pedidos pagados
+        if not pedidos_pendientes and pedidos_pagados:
+            # Enviar mensaje principal
+            await context.bot.send_message(
+                chat_id=GERENCIA_CHAT_ID,
+                text=f"📊 **CIERRE DE CAJA**\n\n{respuesta}",
+                parse_mode='Markdown'
+            )
+            
+            # Enviar PDF
+            with open(nombre_pdf, 'rb') as pdf_file:
+                await context.bot.send_document(
+                    chat_id=GERENCIA_CHAT_ID,
+                    document=pdf_file,
+                    filename=nombre_pdf
+                )
+            
+            # Enviar Excel solo si hay pedidos pagados
+            if not pedidos_pendientes and pedidos_pagados:
+                with open(nombre_excel, 'rb') as excel_file:
+                    await context.bot.send_document(
+                        chat_id=GERENCIA_CHAT_ID,
+                        document=excel_file,
+                        filename=nombre_excel
+                    )
+    except Exception as e:
+        print(f"Error al enviar mensaje: {e}")  # Para depurar
+        raise  # Opcional: re-lanza el error si quieres ver el traceback completo
     session.close()
+
+#Ver cuanto se vendio hasta ese momento y enviar como mensaje directo
+async def info_venta(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    session = Session()
+    now = datetime.now(TIMEZONE)
+
+    # Calcular rango de tiempo (6 AM a 5 AM del día siguiente)
+    if now.hour < 5:  # Si es antes de las 5 AM
+        inicio_jornada = datetime(now.year, now.month, now.day - 1, 6, 0, tzinfo=TIMEZONE)  # 6 AM del día anterior
+        fin_jornada = datetime(now.year, now.month, now.day, 5, 0, tzinfo=TIMEZONE)  # 5 AM del día actual
+    else:  # Si es 5 AM o después
+        inicio_jornada = datetime(now.year, now.month, now.day, 6, 0, tzinfo=TIMEZONE)  # 6 AM del día actual
+        fin_jornada = datetime(now.year, now.month, now.day + 1, 5, 0, tzinfo=TIMEZONE)  # 5 AM del día siguiente
+
+    # Comprobar pedidos pendientes
+    pedidos_pendientes = session.query(Order).filter(Order.status == "pendiente").all()
+    
+    respuesta = "📊 **Informacion de venta**\n\n"
+
+    
+    if pedidos_pendientes:
+        respuesta += "⚠️ ¡Atención! Pedidos pendientes:\n"
+
+        for pedido in pedidos_pendientes:
+            # Escapa caracteres especiales como * _ ` [ etc.
+            respuesta += f"- Pedido {escape_markdown(pedido.custom_id)} (${pedido.total:.2f})\n"
+
+    else:
+        # Obtener todos los pedidos pagados en el rango horario
+        pedidos_pagados = session.query(Order).filter(
+            Order.created_at.between(inicio_jornada, fin_jornada),
+            Order.status == "pagado"
+        ).all()
+
+        # Calcular totales
+        total_ventas = sum(p.total for p in pedidos_pagados)
+        total_efectivo = sum(p.efectivo for p in pedidos_pagados)
+        total_transferencia = sum(p.transferencia for p in pedidos_pagados)
+        total_pedidos = len(pedidos_pagados)  # Calcula el número total de pedidos
+
+        # Texto y PDF
+        respuesta += f"🕒 Período: {inicio_jornada.strftime('%d/%m %H:%M')} - {fin_jornada.strftime('%d/%m %H:%M')}\n"
+        respuesta += f"💰 Total: ${total_ventas:.2f}\n"
+        respuesta += f"💵 Efectivo: ${total_efectivo:.2f}\n"
+        respuesta += f"📲 Transferencia: ${total_transferencia:.2f}\n"
+        respuesta += f"🍺 Total de pedidos: {total_pedidos}\n"
+    
+    # Enviar respuestas
+    try:
+        await context.bot.send_message(
+                    chat_id=GERENCIA_CHAT_ID,
+                    text=f"Informacion de venta:\n{respuesta}",
+                )
+    except Exception as e:
+        print(f"Error al enviar mensaje: {e}")  # Para depurar
+        raise  # Opcional: re-lanza el error si quieres ver el traceback completo
+    session.close()
+
+async def get_chat_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    await update.message.reply_text(f"El chat ID es: {chat_id}")
 
 async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
@@ -770,6 +943,7 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("deudores", list_deudores))
     application.add_handler(CommandHandler("reiniciar", reset_db_command))
     application.add_handler(CommandHandler("cierrecaja", cierre_caja))
+    application.add_handler(CommandHandler("infoventa", info_venta))
     application.add_handler(CommandHandler("todos", listar_pedidos))
     application.add_handler(CommandHandler("help", help_command))
     
