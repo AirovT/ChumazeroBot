@@ -85,7 +85,7 @@ def reset_deudores():
 # Comando para reiniciar solo los pedidos pendientes
 async def reset_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Usa "in" en lugar de "or"
-    if update.message.from_user.username in ["Bastian029", "IngAiro", "Karla181117"]:
+    if update.message.from_user.username in ["Bastian029", "IngAiro", "Karla181117","Dannytxx"]:
         reset_deudores()
         await update.message.reply_text("✅ Pedidos pendientes (deudores) reiniciados correctamente.")
     else:
@@ -658,7 +658,7 @@ async def listar_pedidos(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # --- COMANDO PARA ELIMINAR PEDIDO (EXISTENTE) ---
 async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.message.from_user.username not in ["Bastian029", "IngAiro", "admin2"]:
+    if update.message.from_user.username not in ["Bastian029", "IngAiro", "Karla181117","Dannytxx"]:
         await update.message.reply_text("❌ Sin permisos")
         return
     texto = update.message.text
