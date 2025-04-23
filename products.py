@@ -1,16 +1,16 @@
 
 products_data = [
     {
-        "name": "Michelada Siembra Inti",
-        "price": 4.25
-    },
-    {
-        "name": "Michelada Pilsener",
+        "name": "Michelada Siembra",
         "price": 4.5
     },
     {
-        "name": "Michelada Club 850ml",
+        "name": "Michelada Pilsener",
         "price": 5.0
+    },
+    {
+        "name": "Michelada Club 850ml",
+        "price": 5.5
     },
     {
         "name": "Michelada Corona",
@@ -118,7 +118,7 @@ products_data = [
     },
     {
         "name": "Club 850ml",
-        "price": 3.25
+        "price": 3.5
     },
     {
         "name": "Corona 330ml",
@@ -130,6 +130,10 @@ products_data = [
     },
     {
         "name": "Pilsener",
+        "price": 3.0
+    },
+    {
+        "name": "Siembra",
         "price": 2.75
     },
     {
