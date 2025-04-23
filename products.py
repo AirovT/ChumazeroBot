@@ -10,7 +10,7 @@ products_data = [
     },
     {
         "name": "Michelada Club 850ml",
-        "price": 5.5
+        "price": 5.0
     },
     {
         "name": "Michelada Corona",
@@ -118,7 +118,7 @@ products_data = [
     },
     {
         "name": "Club 850ml",
-        "price": 3.5
+        "price": 3.25
     },
     {
         "name": "Corona 330ml",
@@ -646,6 +646,6 @@ products_data = [
     ,
     {
         "name": "Michelada Inti 500ml",
-        "price": 2.5
+        "price": 3.0
     }
 ]
