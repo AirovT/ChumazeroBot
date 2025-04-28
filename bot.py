@@ -17,8 +17,7 @@ import requests  # Añade esto para obtener el clima
 PEDIDO_CONFIRM = 1
 
 # Configuración
-# TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TOKEN = "HOLA"
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TIMEZONE = pytz.timezone("America/Guayaquil")
 # Configuración
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
