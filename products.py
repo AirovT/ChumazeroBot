@@ -118,7 +118,15 @@ products_data = [
     },
     {
         "name": "Club 850ml",
-        "price": 3.25
+        "price": 3.5
+    },
+    {
+        "name": "Club tg 850ml",
+        "price": 3.8
+    },
+    {
+        "name": "Club lata",
+        "price": 2.5
     },
     {
         "name": "Corona 330ml",
@@ -130,7 +138,11 @@ products_data = [
     },
     {
         "name": "Pilsener",
-        "price": 3.0
+        "price": 3.5
+    },
+    {
+        "name": "Pilsener tg",
+        "price": 3.8
     },
     {
         "name": "Siembra",
@@ -138,7 +150,7 @@ products_data = [
     },
     {
         "name": "Espuela",
-        "price": 20.0
+        "price": 22.75
     },
     {
         "name": "Gran Malo",
@@ -146,20 +158,19 @@ products_data = [
     },
     {
         "name": "Gran Malo Duo Pack",
-        "price": 65.0
-    }
-    ,
+        "price": 60.0
+    },
     {
         "name": "Azteca 1L",
-        "price": 22.0
+        "price": 25.0
     },
     {
         "name": "Azteca 750ml",
-        "price": 18.5
+        "price": 21.0
     },
     {
         "name": "Rancho",
-        "price": 14.75
+        "price": 17.0
     },
     {
         "name": "Canijo",
@@ -199,7 +210,7 @@ products_data = [
     },
     {
         "name": "Antioqueño 750 ml",
-        "price": 18.5
+        "price": 21.0
     },
     {
         "name": "Antioqueño 375ml",
@@ -219,19 +230,19 @@ products_data = [
     },
     {
         "name": "Norteño",
-        "price": 8.5
+        "price": 10.0
     },
     {
         "name": "Norteño Black",
-        "price": 9.5
+        "price": 11.0
     },
     {
         "name": "Norteño Gold",
-        "price": 9.5
+        "price": 11.0
     },
     {
         "name": "Norteño 375ml",
-        "price": 5.0
+        "price": 6.0
     },
     {
         "name": "Fraile",
@@ -239,7 +250,7 @@ products_data = [
     },
     {
         "name": "Cavic",
-        "price": 6.0
+        "price": 6.25
     },
     {
         "name": "Miraflores",
@@ -251,16 +262,15 @@ products_data = [
     },
     {
         "name": "Vino Caliente",
-        "price": 7.0
-    }
-    ,
+        "price": 7.5
+    },
     {
         "name": "Old Times Black",
-        "price": 18.0
+        "price": 19.0
     },
     {
         "name": "Old Times Red",
-        "price": 14.0
+        "price": 16.0
     },
     {
         "name": "Johny Walker Red",
@@ -284,11 +294,11 @@ products_data = [
     },
     {
         "name": "Gluksmaister",
-        "price": 19.5
+        "price": 22.0
     },
     {
         "name": "Jagermeister",
-        "price": 39.0
+        "price": 45.0
     },
     {
         "name": "Jager Petit",
@@ -296,7 +306,7 @@ products_data = [
     },
     {
         "name": "Azteca Petit",
-        "price": 3.0
+        "price": 3.5
     },
     {
         "name": "Jhon Morris Petit",
@@ -390,7 +400,7 @@ products_data = [
     },
     {
         "name": "Gatorade",
-        "price": 1.25
+        "price": 1.5
     },
     {
         "name": "Gatorade 500ml",
@@ -398,27 +408,27 @@ products_data = [
     },
     {
         "name": "Vive 100",
-        "price": 1.25
+        "price": 1.5
     },
     {
-        "name": "Agua Cielo 1Lt",
+        "name": "Agua Cielo gran",
         "price": 0.75
     },
     {
-        "name": "Agua Cielo 675ml",
+        "name": "Agua cielo peq",
         "price": 0.5
     },
     {
         "name": "Sprite 1Lt",
-        "price": 1.5
+        "price": 1.75
     },
     {
         "name": "Coca Cola 1L",
-        "price": 1.5
+        "price": 1.75
     },
     {
         "name": "Coca Cola 1,5L",
-        "price": 2.0
+        "price": 2.5
     },
     {
         "name": "Cifrut",
@@ -541,15 +551,11 @@ products_data = [
         "price": 2.5
     },
     {
-        "name": "Picadita de Carne",
-        "price": 2.5
-    },
-    {
         "name": "Doriloco de Carne",
         "price": 2.5
     },
     {
-        "name": "Doriloco de Carne",
+        "name": "Doriloco de Pollo",
         "price": 2.5
     },
     {
@@ -567,28 +573,23 @@ products_data = [
     {
         "name": "Canguil",
         "price": 1.0
-    }
-    ,
+    },
     {
         "name": "Shot de tequila",
         "price": 1.5
-    }
-    ,
+    },
     {
         "name": "Shot de vodka",
         "price": 1.5
-    }
-    ,
+    },
     {
         "name": "V220 600ml",
         "price": 1.5
-    }
-    ,
+    },
     {
         "name": "V220 330ml",
         "price": 0.75
-    }
-    ,
+    },
     {
         "name": "Menta",
         "price": 0.10
@@ -596,12 +597,12 @@ products_data = [
     ,
     {
         "name": "Trident",
-        "price": 0.10
+        "price": 0.15
     }
     ,
     {
         "name": "Paquete trident",
-        "price": 0.50
+        "price": 0.75
     }
     ,
     {

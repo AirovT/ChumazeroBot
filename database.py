@@ -24,6 +24,7 @@ class Order(Base):
     efectivo = Column(Float, default=0.0)
     transferencia = Column(Float, default=0.0)
     created_at = Column(DateTime, default=datetime.now)
+    
 
 
 # Configuración de la base de datos
