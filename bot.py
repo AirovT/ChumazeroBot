@@ -1257,52 +1257,56 @@ if __name__ == "__main__":
     initialize_products()
     application = Application.builder().token(TOKEN).build()
 
-    # ===== CONVERSATION HANDLERS PRIMERO =====
-    application.add_handler(conv_handler)  # Pedidos
-    application.add_handler(conv_handler_descuentos)  # Creación descuentos
-    application.add_handler(conv_handler_gestion_descuentos)  # Gestión descuentos
-
-    # ===== COMANDOS CRÍTICOS =====
-    application.add_handler(CommandHandler("reiniciar", reset_db_command))
+    # ===== HANDLERS EN ORDEN DE PRIORIDAD =====
+    # 1. Comandos CRÍTICOS primero (eliminar, marcar pagado)
     application.add_handler(MessageHandler(
         filters.Regex(r'(?i)^eliminar pedido \d+$'),
         eliminar_pedido
     ))
     
-    # ===== HANDLERS DE PAGOS =====
     application.add_handler(MessageHandler(
-        filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+(\w+)\s*(\d*\.?\d+)?$'),
-        handle_pedido_pagado
+    filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+(\w+)\s*(\d*\.?\d+)?$'),
+    handle_pedido_pagado
     ))
 
-    # ===== COMANDOS DE CONSULTA =====
-    application.add_handler(CommandHandler("deudores", list_deudores))
-    application.add_handler(CommandHandler("cierrecaja", cierre_caja))
-    application.add_handler(CommandHandler("infoventa", info_venta))
-    application.add_handler(CommandHandler("todos", listar_pedidos))
-    application.add_handler(CommandHandler("listar_descuentos", listar_descuentos))
-    application.add_handler(CommandHandler("help", help_command))
-
-    # ===== HANDLERS ESPECÍFICOS =====
-    application.add_handler(MessageHandler(
-        filters.Regex(r"(?i)^(ver\s+pedido|pedido)\s+\d+$"),
-        ver_pedido
-    ))
-    application.add_handler(MessageHandler(
-        filters.Regex(r"(?i)^ayuda\s+.+"),
-        ayuda_productos
-    ))
+    # 2. Handler de anuncios
     application.add_handler(MessageHandler(
         filters.Regex(r'(?i)^anuncio\s.+'),
         handle_anuncio
     ))
 
-    # ===== HANDLER GENÉRICO AL FINAL =====
+    # 3. Ver pedido
+    application.add_handler(MessageHandler(
+        filters.Regex(r"(?i)^(ver\s+pedido|pedido)\s+\d+$"),
+        ver_pedido
+    ))
+    
+    # 4. Ayuda
+    application.add_handler(MessageHandler(
+        filters.Regex(r"(?i)^ayuda\s+.+"),
+        ayuda_productos
+    ))
+
+    # 5. ConversationHandler (CREAR pedidos) - ¡Ahora está ANTES de forward_questions!
+    application.add_handler(conv_handler)
+
+    # 6. Handler para preguntas (solo si no coincide con nada más)
     application.add_handler(MessageHandler(
         filters.Chat(chat_id=MAIN_GROUP_ID) 
         & ~filters.COMMAND 
-        & ~filters.Regex(r"(?i)^(pedido|p|ver|eliminar|ayuda|anuncio)"),
+        & ~filters.Regex(r"(?i)^(pedido|p|ver|eliminar|ayuda|anuncio)"),  # <-- Excluye comandos
         forward_questions
     ))
+    
+    # 7. Comandos restantes (deudores, reiniciar, etc.)
+    application.add_handler(CommandHandler("deudores", list_deudores))
+    application.add_handler(CommandHandler("reiniciar", reset_db_command))
+    application.add_handler(CommandHandler("cierrecaja", cierre_caja))
+    application.add_handler(CommandHandler("infoventa", info_venta))
+    application.add_handler(CommandHandler("todos", listar_pedidos))
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(conv_handler_descuentos)
+    application.add_handler(conv_handler_gestion_descuentos)
+    application.add_handler(CommandHandler("listar_descuentos", listar_descuentos))
     
     application.run_polling()
