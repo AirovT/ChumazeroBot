@@ -1,110 +1,110 @@
 [
     {
-        "name": "Michelada Siembra Inti",
+        "name": "M Siembra",
         "price": 4.25
     },
     {
-        "name": "Michelada Pilsener",
+        "name": "M Pilsener",
         "price": 4.5
     },
     {
-        "name": "Michelada Club 850ml",
+        "name": "M Club 850",
         "price": 5.0
     },
     {
-        "name": "Michelada Corona",
+        "name": "M Corona",
         "price": 3.25
     },
     {
-        "name": "Michelada Heineken",
+        "name": "M Inti",
         "price": 3.25
     },
     {
-        "name": "Michelada Club 330ml",
+        "name": "M Club 330",
         "price": 2.75
     },
     {
-        "name": "Turbo Michelada",
+        "name": "Turbo",
         "price": 5.5
     },
     {
-        "name": "Super Coronita Michelada",
+        "name": "MSP",
         "price": 5.0
     },
     {
-        "name": "Michelada Frutos Rojos",
+        "name": "MFR",
         "price": 5.5
     },
     {
-        "name": "Michelada Maracumango",
+        "name": "MM",
         "price": 5.5
     },
     {
-        "name": "Michelada Mango Biche",
+        "name": "MMB",
         "price": 5.5
     },
     {
-        "name": "Granilada Frutos Rojos",
+        "name": "GLFR",
         "price": 5.5
     },
     {
-        "name": "Granilada ManzanaVerde",
+        "name": "GLMV",
         "price": 5.5
     },
     {
-        "name": "Parchilada Maracuya",
+        "name": "Parchi",
         "price": 3.5
     },
     {
-        "name": "Lulada Mango",
+        "name": "Lulada",
         "price": 3.5
     },
     {
-        "name": "Especial Azteca Fresa",
+        "name": "EAF",
         "price": 5.5
     },
     {
-        "name": "Especial Azteca Durazno",
+        "name": "EAD",
         "price": 5.5
     },
     {
-        "name": "Especial Jagermeister",
+        "name": "EJ",
         "price": 5.5
     },
     {
-        "name": "Especial Paloma 1L",
+        "name": "Paloma 1L",
         "price": 7.0
     },
     {
-        "name": "Especial Paloma 500ml",
+        "name": "Paloma 500ml",
         "price": 4.5
     },
     {
-        "name": "Granizado Frutos Rojos",
+        "name": "GZFR",
         "price": 3.5
     },
     {
-        "name": "Granizado Mora Azul",
+        "name": "GZMA",
         "price": 3.5
     },
     {
-        "name": "Granizado Zarzamora",
+        "name": "GZZM",
         "price": 3.5
     },
     {
-        "name": "Granizado Manzana Verde",
+        "name": "GZMV",
         "price": 3.5
     },
     {
-        "name": "Club 330ml",
+        "name": "Club 330",
         "price": 2.0
     },
     {
-        "name": "Club 850ml",
+        "name": "Club 850",
         "price": 3.25
     },
     {
-        "name": "Corona 330ml",
+        "name": "Corona",
         "price": 2.0
     },
     {
@@ -128,7 +128,7 @@
         "price": 22.0
     },
     {
-        "name": "Azteca 750ml",
+        "name": "Azteca 750",
         "price": 18.5
     },
     {
@@ -140,27 +140,27 @@
         "price": 22.0
     },
     {
-        "name": "Barbados Blue Berry",
+        "name": "BBB",
         "price": 6.5
     },
     {
-        "name": "Barbados Cannabis",
+        "name": "BCB",
         "price": 6.5
     },
     {
-        "name": "Barbados Cotton Candy",
+        "name": "BCC",
         "price": 6.5
     },
     {
-        "name": "Barbados Mythological Drink",
+        "name": "BMD",
         "price": 6.5
     },
     {
-        "name": "Vodka 40",
+        "name": "V40",
         "price": 4.0
     },
     {
-        "name": "Cartago Guaraná",
+        "name": "Cartago G",
         "price": 6.5
     },
     {
@@ -172,39 +172,39 @@
         "price": 18.0
     },
     {
-        "name": "Antioqueño 750 ml",
+        "name": "Antio 750",
         "price": 18.5
     },
     {
-        "name": "Antioqueño 375ml",
+        "name": "Antio 375",
         "price": 12.0
     },
     {
-        "name": "Zhumir Coco",
+        "name": "ZC",
         "price": 6.5
     },
     {
-        "name": "Zhumir Naranjilla",
+        "name": "ZN",
         "price": 6.5
     },
     {
-        "name": "Zhumir Pink",
+        "name": "ZP",
         "price": 6.5
     },
     {
-        "name": "Norteño",
+        "name": "Norteño 750",
         "price": 8.5
     },
     {
-        "name": "Norteño Black",
+        "name": "Norteño B",
         "price": 9.5
     },
     {
-        "name": "Norteño Gold",
+        "name": "Norteño G",
         "price": 9.5
     },
     {
-        "name": "Norteño 375ml",
+        "name": "Norteño 375",
         "price": 5.0
     },
     {
@@ -224,91 +224,91 @@
         "price": 5.5
     },
     {
-        "name": "Old Time Black",
+        "name": "OT Negro",
         "price": 18.0
     },
     {
-        "name": "Old Time Red",
+        "name": "OT Rojo",
         "price": 14.0
     },
     {
-        "name": "Johny Walker Red",
+        "name": "JW Rojo",
         "price": 30.0
     },
     {
-        "name": "Old Time Miel",
+        "name": "OT Miel",
         "price": 10.0
     },
     {
-        "name": "Old Time Manzana",
+        "name": "OT Manzana",
         "price": 10.0
     },
     {
-        "name": "Bucanas",
+        "name": "Buchanans",
         "price": 78.0
     },
     {
-        "name": "Something Sepcial",
+        "name": "SS",
         "price": 25.0
     },
     {
-        "name": "Gluksmaister",
+        "name": "Gluk",
         "price": 19.5
     },
     {
-        "name": "Jagermeister",
+        "name": "Jager 1L",
         "price": 39.0
     },
     {
-        "name": "Jager Petit",
+        "name": "Jager P",
         "price": 4.0
     },
     {
-        "name": "Azteca Petit",
+        "name": "Azteca P",
         "price": 3.0
     },
     {
-        "name": "Jhon Morris Petit",
+        "name": "John Morris P",
         "price": 3.5
     },
     {
-        "name": "Four Loko Blue",
+        "name": "FLB",
         "price": 5.5
     },
     {
-        "name": "Four Loko Gold",
+        "name": "FLG",
         "price": 5.5
     },
     {
-        "name": "Four Loko Red",
+        "name": "FLR",
         "price": 5.5
     },
     {
-        "name": "Four Loko White",
+        "name": "FLW",
         "price": 5.5
     },
     {
-        "name": "Gomita Four Loko",
+        "name": "Jelly FL",
         "price": 1.0
     },
     {
-        "name": "Switch Bongo Bongo",
+        "name": "SBB",
         "price": 4.5
     },
     {
-        "name": "Switch Daiquiri",
+        "name": "SD",
         "price": 4.5
     },
     {
-        "name": "Switch Harta Demencia",
+        "name": "SHD",
         "price": 4.5
     },
     {
-        "name": "Switch Maracuyá",
+        "name": "SM",
         "price": 4.5
     },
     {
-        "name": "Switch Tamarindo",
+        "name": "ST",
         "price": 4.5
     },
     {
@@ -316,23 +316,23 @@
         "price": 5.5
     },
     {
-        "name": "Cubata Berrylicious",
+        "name": "CB",
         "price": 4.5
     },
     {
-        "name": "Cubata Guaraná",
+        "name": "CG",
         "price": 4.5
     },
     {
-        "name": "Cubata Lima Limón",
+        "name": "CLL",
         "price": 4.5
     },
     {
-        "name": "Cubata Maracuyá",
+        "name": "CM",
         "price": 4.5
     },
     {
-        "name": "Cubata Piña Colada",
+        "name": "CPC",
         "price": 4.5
     },
     {
@@ -352,11 +352,11 @@
         "price": 1.25
     },
     {
-        "name": "Agua Cielo 1Lt",
+        "name": "Agua G",
         "price": 0.75
     },
     {
-        "name": "Agua Cielo 675ml",
+        "name": "Agua P",
         "price": 0.5
     },
     {
@@ -388,11 +388,11 @@
         "price": 0.25
     },
     {
-        "name": "Vodka 40 TG",
+        "name": "V40 TG",
         "price": 3.0
     },
     {
-        "name": "Cartago Guaraná TG",
+        "name": "Cartago G TG",
         "price": 5.5
     },
     {
@@ -412,71 +412,71 @@
         "price": 3.5
     },
     {
-        "name": "Barbados Blue Berry TG",
+        "name": "BBB TG",
         "price": 5.5
     },
     {
-        "name": "Barbados Cannabis TG",
+        "name": "BC TG",
         "price": 5.5
     },
     {
-        "name": "Barbados Cotton Candy TG",
+        "name": "BCC TG",
         "price": 5.5
     },
     {
-        "name": "Barbados Mythological Drink TG",
+        "name": "BMD TG",
         "price": 5.5
     },
     {
-        "name": "Switch Bongo Bongo TG",
+        "name": "SBB TG",
         "price": 3.0
     },
     {
-        "name": "Switch Daiquiri TG",
+        "name": "SD TG",
         "price": 3.0
     },
     {
-        "name": "Switch Harta Demencia TG",
+        "name": "SHD TG",
         "price": 3.0
     },
     {
-        "name": "Switch Maracuyá TG",
+        "name": "SM TG",
         "price": 3.0
     },
     {
-        "name": "Switch Tamarindo TG",
+        "name": "ST TG",
         "price": 3.0
     },
     {
-        "name": "Zhumir Coco TG",
+        "name": "ZC TG",
         "price": 5.5
     },
     {
-        "name": "Zhumir Naranjilla TG",
+        "name": "ZN TG",
         "price": 5.5
     },
     {
-        "name": "Zhumir Pink TG",
+        "name": "ZP TG",
         "price": 5.5
     },
     {
-        "name": "Cubata Berrylicious TG",
+        "name": "CB TG",
         "price": 3.0
     },
     {
-        "name": "Cubata Guaraná TG",
+        "name": "CG TG",
         "price": 3.0
     },
     {
-        "name": "Cubata Lima Limón TG",
+        "name": "CLL TG",
         "price": 3.0
     },
     {
-        "name": "Cubata Maracuyá TG",
+        "name": "CM TG",
         "price": 3.0
     },
     {
-        "name": "Cubata Piña Colada TG",
+        "name": "CPC TG",
         "price": 3.0
     },
     {
@@ -509,7 +509,7 @@
     }
     ,
     {
-        "name": "Hielos",
+        "name": "Hielo",
         "price": 0.5
     }
     ,
