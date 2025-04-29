@@ -370,13 +370,11 @@ products_data = [
     {
         "name": "Cubata PC",
         "price": 4.5
-    }
-    ,
+    },
     {
         "name": "Canelazo 1",
         "price": 5.0
-    }
-    ,
+    },
     {
         "name": "Canelazo 500",
         "price": 2.5
@@ -584,23 +582,19 @@ products_data = [
     {
         "name": "Menta",
         "price": 0.10
-    }
-    ,
+    },
     {
         "name": "Trident",
         "price": 0.15
-    }
-    ,
+    },
     {
         "name": "Trident Pack",
         "price": 0.75
-    }
-    ,
+    },
     {
         "name": "Pitufo",
         "price": 7.0
-    }
-    ,
+    },
     {
         "name": "Chupete",
         "price": 0.25
@@ -616,13 +610,11 @@ products_data = [
     {
         "name": "Guitig",
         "price": 1.5
-    }
-    ,
+    },
     {
         "name": "Promo Michelada",
         "price": 1.5
-    }
-    ,
+    },
     {
         "name": "Pitufo Black",
         "price": 7.0
