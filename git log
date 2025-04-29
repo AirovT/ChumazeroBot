@@ -1,0 +1,280 @@
+[33mcommit dbd637737f64453f375b29b9acac98c7f5389a5a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 29 17:19:21 2025 -0500
+
+    prueba sin el nuevo code de contructor de data
+
+[33mcommit e772b820a6d694554ed570f242934c9ace47e4dd[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 29 17:07:45 2025 -0500
+
+    Token update
+
+[33mcommit 7a0047c9e0bb5488b7e8d1de85b986f97a5a6161[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 29 16:15:39 2025 -0500
+
+    update nombres, precios y database
+
+[33mcommit b190e6ac6e3a64f810620a8a06ea3783284c48ab[m
+Merge: 4a52045 01338db
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 29 15:48:58 2025 -0500
+
+    Merge branch 'main' of https://github.com/AirovT/ChumazeroBot
+
+[33mcommit 4a52045813598fda148e2a8ff715ac8fa6c72555[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 29 15:48:55 2025 -0500
+
+    updates nombres, precios y db
+
+[33mcommit 01338db581803fc71c937253dbde13a94f3aa997[m
+Author: Baastian05 <123765840+Baastian05@users.noreply.github.com>
+Date:   Tue Apr 29 13:50:40 2025 -0500
+
+    Update products.json
+
+[33mcommit 0297779b46e59a9f3dd477894f5f889fc1a5bcc7[m
+Author: Baastian05 <123765840+Baastian05@users.noreply.github.com>
+Date:   Tue Apr 29 13:24:27 2025 -0500
+
+    Update products.json
+
+[33mcommit edc0e483a9eb48f5860f2e3ead9fc519a4369864[m
+Author: Baastian05 <123765840+Baastian05@users.noreply.github.com>
+Date:   Tue Apr 29 13:19:54 2025 -0500
+
+    Update products.json
+
+[33mcommit 7485cae96f4c1d797ca4a20e9f857acca37911c3[m
+Author: Baastian05 <123765840+Baastian05@users.noreply.github.com>
+Date:   Tue Apr 29 13:14:54 2025 -0500
+
+    Update products.json
+    
+    Cambio de nombres y precios
+
+[33mcommit 82c4c22f48f04ec31af51e7189033f6d14baa4ed[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 29 12:43:03 2025 -0500
+
+    Mejoramiento de hanlder 2
+
+[33mcommit 957c8e33d1831d66eb2ae52522dfde3ebd220481[m
+Merge: 7f57942 e14b1b5
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 29 12:30:57 2025 -0500
+
+    Merge branch 'main' of https://github.com/AirovT/ChumazeroBot
+
+[33mcommit 7f579425b61e587bc459bee5b89336460cd4ba5f[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 29 12:29:54 2025 -0500
+
+    mejor organizacion de los handlers
+
+[33mcommit e14b1b578ba76908ebf64557e8f530e3096e2a14[m
+Author: Baastian05 <123765840+Baastian05@users.noreply.github.com>
+Date:   Tue Apr 29 02:40:28 2025 -0500
+
+    Update products.json
+    
+    Cambio de nombres a siglas en su mayoria para mejorar la eficiencia del bot
+
+[33mcommit 2355aa171d99a732e246d69e3d25a560dcbff27d[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 28 19:49:16 2025 -0500
+
+    update de handles y lista de codigos de descuento
+
+[33mcommit 0a5c0c02a64eb56db2ac4b8a8b5a199cf9e3dddc[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 28 19:29:35 2025 -0500
+
+    token update
+
+[33mcommit 2fdd1ccc9cf1512de9bd3ef7aff5e31b5ee8b61c[m
+Merge: 7a257ee 2c0d30a
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 28 19:25:50 2025 -0500
+
+    Merge branch 'main' of https://github.com/AirovT/ChumazeroBot
+
+[33mcommit 7a257eee7a48319a1e4d18b753274d6c74bb29f0[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 28 19:25:44 2025 -0500
+
+    test chumazero
+
+[33mcommit 2c0d30adb951bf3123740ce9c45b52f3f97aebd0[m
+Merge: b6f85d0 b125f0b
+Author: Jairo Torres <167578156+AirovT@users.noreply.github.com>
+Date:   Mon Apr 28 17:38:25 2025 -0500
+
+    Merge pull request #2 from AirovT/Descuentos
+    
+    final test 1
+
+[33mcommit b125f0b7710919107996ce8e375233c99954bfaa[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 28 17:29:52 2025 -0500
+
+    final test 1
+
+[33mcommit b6f85d0b96e8c3eb79bb338b3177d77f81891152[m
+Merge: 7792f0a e664905
+Author: Jairo Torres <167578156+AirovT@users.noreply.github.com>
+Date:   Mon Apr 28 17:20:13 2025 -0500
+
+    Merge pull request #1 from AirovT/Descuentos
+    
+    TEST1
+
+[33mcommit e66490588e4400fd1f3f038564633238277739d4[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 28 17:17:44 2025 -0500
+
+    TEST1
+
+[33mcommit 7792f0abb3d379e7143bfffeb4ccf8d4a779724e[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 28 17:07:43 2025 -0500
+
+    ultimas actualizaciones de precios
+
+[33mcommit 21f57e707a832d4d49c583d051b8a73cd5b3f59a[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Wed Apr 23 13:51:13 2025 -0500
+
+    update cost siembra inti
+
+[33mcommit 9fbf790f04782c012b49e638fb08df73167910d3[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Wed Apr 23 12:41:39 2025 -0500
+
+    Precios actualizados de pilsener, club, siembra
+
+[33mcommit 7f57aff8a54f7284183d70a9c1f3d95185442fcc[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sun Apr 13 14:37:40 2025 -0500
+
+    Update
+
+[33mcommit 40f42c2eb0e1df2eaa900406c46b03045e8a09a4[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sun Apr 13 14:35:00 2025 -0500
+
+    Update re
+
+[33mcommit a3696bfd4478e48170debe6914bd350fc9f5741b[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sun Apr 13 14:28:35 2025 -0500
+
+    Update requierments
+
+[33mcommit 37e0c688cd161e627b4d3765b7d9057968f38e45[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sun Apr 13 14:23:49 2025 -0500
+
+    Actualizado el Help
+
+[33mcommit eb7bec87ffcc4bfd808f5554515a77c5222ef173[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sun Apr 13 14:21:47 2025 -0500
+
+    Mateo ahora es admin
+
+[33mcommit 9cc4022c02a4c781783590c07ba8f3322ffc6061[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sun Apr 13 14:18:28 2025 -0500
+
+    Mejora con excel
+
+[33mcommit 617246abb916f91ffdaebd85b2c49ae726b16989[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Thu Apr 10 17:01:38 2025 -0500
+
+    token oculto
+
+[33mcommit 59eafc0a45adf18612fdc6973d133866bbdeb712[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Thu Apr 10 16:55:15 2025 -0500
+
+    nuevo bot
+
+[33mcommit 8a9bc870c910b07eaccf9789eeee9b9bd2d9f105[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Wed Apr 9 15:30:25 2025 -0500
+
+    Nuevo bot
+
+[33mcommit b51394c67205197906dfe9ecf9b8e785f7d6f605[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Wed Apr 9 15:26:21 2025 -0500
+
+    nuevo bot
+
+[33mcommit cce9ce3bf69f6d9f839ce7fc0ff9982544e24eb9[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 7 22:34:34 2025 -0500
+
+    Ahora si a agregado inti
+
+[33mcommit 9da14cc07e19ea6bbf81eac4acae440ca6c5f24b[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 7 22:33:28 2025 -0500
+
+    Agregado inti 500ml
+
+[33mcommit e91903c86873d2a54d8577040bb06d78829e887e[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 7 22:23:43 2025 -0500
+
+    Karlita ya es admin
+
+[33mcommit 6ac035a418c5f531b3b0e57f50b1b162f32fb46b[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 7 22:20:21 2025 -0500
+
+    solo visibilidad de producto
+
+[33mcommit 48fabeebb52d273dac026b944923ae84619673df[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 7 22:18:07 2025 -0500
+
+    puesto un espacio para ver si mejora la vista de los productos
+
+[33mcommit 0dedbcce0963648a6a71ad0529a07a5ca428f67a[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Mon Apr 7 22:14:30 2025 -0500
+
+    Agregado metodo de pago parcial, agregado manicho y coco loko
+
+[33mcommit 9ec6c3d4697bd8ec788e1eac8dbb6c8236251115[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Tue Apr 1 18:00:12 2025 -0500
+
+    Agregado pitufo black y michelada de 1,5 promocion
+
+[33mcommit d74d826695505973e9c3f4ffb42c6f278937c85b[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sun Mar 30 15:07:33 2025 -0500
+
+    precios actualiados
+
+[33mcommit 6ce57479b70f5c9995efab96b752fd27f574dbd1[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sun Mar 30 15:02:36 2025 -0500
+
+    Correcion de nombre Marlboro y Gran Malo
+
+[33mcommit 7af305c507530050c84c6124ad9bf70447f84524[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Sat Mar 29 15:09:37 2025 -0500
+
+    Cargado carnival, y corregido algunos errores
+
+[33mcommit 40c739b52e4649de57298d6afe051a2eebe2f4fd[m
+Author: AirovT <jvtorres3mct@gmail.com>
+Date:   Fri Mar 28 13:25:25 2025 -
