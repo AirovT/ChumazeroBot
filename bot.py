@@ -29,6 +29,7 @@ import requests
 from datetime import datetime
 
 DESCUENTO_CODE, DESCUENTO_TYPE, DESCUENTO_VALUE, DESCUENTO_DATE, DESCUENTO_USES = range(5)
+
 DESACTIVAR_CODE, CONFIRMAR_ELIMINAR = range(2)
 
 
@@ -1044,16 +1045,43 @@ async def recibir_usos(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"❌ Error: {str(e)}. Ingresa un número válido:")
         return DESCUENTO_USES
 
+# --- HANDLER DE CANCELACIÓN ---
+async def cancelar_operacion(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if 'nuevo_descuento' in context.user_data:
+        del context.user_data['nuevo_descuento']
+        
+    await update.message.reply_text("❌ Operación cancelada")
+    return ConversationHandler.END
+
+# --- MODIFICACIÓN DEL CONVERSATION HANDLER ---
 conv_handler_descuentos = ConversationHandler(
     entry_points=[CommandHandler('nuevo_descuento', nuevo_descuento)],
     states={
-        DESCUENTO_CODE: [MessageHandler(filters.TEXT, recibir_codigo)],
-        DESCUENTO_TYPE: [MessageHandler(filters.TEXT, recibir_tipo)],
-        DESCUENTO_VALUE: [MessageHandler(filters.TEXT, recibir_valor)],
-        DESCUENTO_DATE: [MessageHandler(filters.TEXT, recibir_fecha)],
-        DESCUENTO_USES: [MessageHandler(filters.TEXT, recibir_usos)],
+        DESCUENTO_CODE: [
+            MessageHandler(filters.Regex(r'^/cancelar$'), cancelar_operacion),
+            MessageHandler(filters.TEXT, recibir_codigo)
+        ],
+        DESCUENTO_TYPE: [
+            MessageHandler(filters.Regex(r'^/cancelar$'), cancelar_operacion),
+            MessageHandler(filters.TEXT, recibir_tipo)
+        ],
+        DESCUENTO_VALUE: [
+            MessageHandler(filters.Regex(r'^/cancelar$'), cancelar_operacion),
+            MessageHandler(filters.TEXT, recibir_valor)
+        ],
+        DESCUENTO_DATE: [
+            MessageHandler(filters.Regex(r'^/cancelar$'), cancelar_operacion),
+            MessageHandler(filters.TEXT, recibir_fecha)
+        ],
+        DESCUENTO_USES: [
+            MessageHandler(filters.Regex(r'^/cancelar$'), cancelar_operacion),
+            MessageHandler(filters.TEXT, recibir_usos)
+        ],
     },
-    fallbacks=[],
+    fallbacks=[
+        CommandHandler('cancelar', cancelar_operacion),
+        MessageHandler(filters.Regex(r'^/cancelar$'), cancelar_operacion)
+    ],
     conversation_timeout=300
 )
 
@@ -1155,6 +1183,34 @@ conv_handler_gestion_descuentos = ConversationHandler(
     conversation_timeout=120
 )
 
+async def listar_descuentos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    session = Session()
+    try:
+        discounts = session.query(Discount).order_by(Discount.valid_to.desc()).all()
+        
+        if not discounts:
+            await update.message.reply_text("🎫 No hay descuentos registrados")
+            return
+            
+        respuesta = "🎟️ **LISTADO DE DESCUENTOS**\n\n"
+        for d in discounts:
+            estado = "🟢 ACTIVO" if d.is_active else "🔴 INACTIVO"
+            respuesta += (
+                f"🔖 Código: {d.code}\n"
+                f"📌 Tipo: {d.discount_type} ({d.value}%{'$' if d.discount_type == 'fixed' else ''})\n"
+                f"📅 Validez: {d.valid_from.strftime('%d/%m/%y')} - {d.valid_to.strftime('%d/%m/%y %H:%M')}\n"
+                f"👨💻 Creado por: @{d.created_by}\n"
+                f"🚀 Usos: {d.current_uses}/{d.max_uses if d.max_uses else '∞'} | Estado: {estado}\n"
+                "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n"
+            )
+        
+        await update.message.reply_text(respuesta)
+        
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error: {str(e)}")
+    finally:
+        session.close()
+
 
 #comando help
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -1201,55 +1257,52 @@ if __name__ == "__main__":
     initialize_products()
     application = Application.builder().token(TOKEN).build()
 
-    # ===== HANDLERS EN ORDEN DE PRIORIDAD =====
-    # 1. Comandos CRÍTICOS primero (eliminar, marcar pagado)
+    # ===== CONVERSATION HANDLERS PRIMERO =====
+    application.add_handler(conv_handler)  # Pedidos
+    application.add_handler(conv_handler_descuentos)  # Creación descuentos
+    application.add_handler(conv_handler_gestion_descuentos)  # Gestión descuentos
+
+    # ===== COMANDOS CRÍTICOS =====
+    application.add_handler(CommandHandler("reiniciar", reset_db_command))
     application.add_handler(MessageHandler(
         filters.Regex(r'(?i)^eliminar pedido \d+$'),
         eliminar_pedido
     ))
     
+    # ===== HANDLERS DE PAGOS =====
     application.add_handler(MessageHandler(
-    filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+(\w+)\s*(\d*\.?\d+)?$'),
-    handle_pedido_pagado
+        filters.Regex(r'(?i)^(pedido|p)\s*\d+\s+pagado\s+(\w+)\s*(\d*\.?\d+)?$'),
+        handle_pedido_pagado
     ))
 
-    # 2. Handler de anuncios
+    # ===== COMANDOS DE CONSULTA =====
+    application.add_handler(CommandHandler("deudores", list_deudores))
+    application.add_handler(CommandHandler("cierrecaja", cierre_caja))
+    application.add_handler(CommandHandler("infoventa", info_venta))
+    application.add_handler(CommandHandler("todos", listar_pedidos))
+    application.add_handler(CommandHandler("listar_descuentos", listar_descuentos))
+    application.add_handler(CommandHandler("help", help_command))
+
+    # ===== HANDLERS ESPECÍFICOS =====
+    application.add_handler(MessageHandler(
+        filters.Regex(r"(?i)^(ver\s+pedido|pedido)\s+\d+$"),
+        ver_pedido
+    ))
+    application.add_handler(MessageHandler(
+        filters.Regex(r"(?i)^ayuda\s+.+"),
+        ayuda_productos
+    ))
     application.add_handler(MessageHandler(
         filters.Regex(r'(?i)^anuncio\s.+'),
         handle_anuncio
     ))
 
-    # 3. Ver pedido
-    application.add_handler(MessageHandler(
-        filters.Regex(r"(?i)^(ver\s+pedido|pedido)\s+\d+$"),
-        ver_pedido
-    ))
-    
-    # 4. Ayuda
-    application.add_handler(MessageHandler(
-        filters.Regex(r"(?i)^ayuda\s+.+"),
-        ayuda_productos
-    ))
-
-    # 5. ConversationHandler (CREAR pedidos) - ¡Ahora está ANTES de forward_questions!
-    application.add_handler(conv_handler)
-
-    # 6. Handler para preguntas (solo si no coincide con nada más)
+    # ===== HANDLER GENÉRICO AL FINAL =====
     application.add_handler(MessageHandler(
         filters.Chat(chat_id=MAIN_GROUP_ID) 
         & ~filters.COMMAND 
-        & ~filters.Regex(r"(?i)^(pedido|p|ver|eliminar|ayuda|anuncio)"),  # <-- Excluye comandos
+        & ~filters.Regex(r"(?i)^(pedido|p|ver|eliminar|ayuda|anuncio)"),
         forward_questions
     ))
-    
-    # 7. Comandos restantes (deudores, reiniciar, etc.)
-    application.add_handler(CommandHandler("deudores", list_deudores))
-    application.add_handler(CommandHandler("reiniciar", reset_db_command))
-    application.add_handler(CommandHandler("cierrecaja", cierre_caja))
-    application.add_handler(CommandHandler("infoventa", info_venta))
-    application.add_handler(CommandHandler("todos", listar_pedidos))
-    application.add_handler(CommandHandler("help", help_command))
-    application.add_handler(conv_handler_descuentos)
-    application.add_handler(conv_handler_gestion_descuentos)
     
     application.run_polling()
