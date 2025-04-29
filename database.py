@@ -57,3 +57,7 @@ def initialize_products():
             new_product = Product(name=product["name"], price=product["price"],)
             session.add(new_product)
     session.commit()
+
+# Al final del archivo database.py, añade:
+if __name__ == "__main__":
+    initialize_products()  # <-- Esto ejecutará la inicialización

@@ -61,7 +61,11 @@ products_data = [
         "price": 3.5
     },
     {
-        "name": "Especial Azteca",
+        "name": "Especial Azteca fresa",
+        "price": 5.5
+    },
+    {
+        "name": "Especial Azteca durazno",
         "price": 5.5
     },
     {
