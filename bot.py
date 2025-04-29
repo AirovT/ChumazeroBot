@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes, CommandHandler, ConversationHandler
 import os
-from database import Session, Product, Order, initialize_products
+from database import Session, Product, Order, initialize_products,Discount
 from products import products_data
 import pytz
 from datetime import datetime
@@ -11,13 +11,14 @@ from sqlalchemy import func
 from telegram.helpers import escape_markdown  # Añade este import al inicio
 import pandas as pd  # Añade esto al inicio de tus imports
 import requests  # Añade esto para obtener el clima
-
-
+from typing import Dict  # Si no está presente
+# prueba
 # Estados de la conversación
 PEDIDO_CONFIRM = 1
 
 # Configuración
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+# TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+TOKEN = "8048340171:AAHywLaqwm_lNAaqPX-7D2KkmGM0fNOOzvk"
 TIMEZONE = pytz.timezone("America/Guayaquil")
 # Configuración
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
@@ -26,6 +27,10 @@ MAIN_GROUP_ID =      -1002366423301  # ⬅️ Este es el ID correcto
 
 import requests
 from datetime import datetime
+
+DESCUENTO_CODE, DESCUENTO_TYPE, DESCUENTO_VALUE, DESCUENTO_DATE, DESCUENTO_USES = range(5)
+DESACTIVAR_CODE, CONFIRMAR_ELIMINAR = range(2)
+
 
 def obtener_temperatura(fecha):
     try:
@@ -87,12 +92,12 @@ async def reset_db_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Usa "in" en lugar de "or"
     if update.message.from_user.username in ["Bastian029", "IngAiro", "Karla181117","Dannytxx"]:
         reset_deudores()
-        await update.message.reply_text("✅ Pedidos pendientes (deudores) reiniciados correctamente.")
+        await update.message.reply_text("✅ Base de datos eliminada, buen incio de trabajo")
     else:
         await update.message.reply_text("❌ No tienes permisos para ejecutar este comando.")
 
 # Función para procesar pedidos
-def process_order(order_text, user, custom_id):
+def process_order(order_text, user, custom_id,discount_code=None):
     session = Session()
     try:
         lines = order_text.split("\n")
@@ -149,7 +154,8 @@ def process_order(order_text, user, custom_id):
                 "nombre": product.name,
                 "cantidad": quantity,
                 "precio_unitario": product.price,
-                "entregado": 0
+                "entregado": 0,
+                "Meser@": user
             })
             total += product.price * quantity
         
@@ -158,19 +164,49 @@ def process_order(order_text, user, custom_id):
             response = "❌ Errores en el ingreso del pedido:\n" + "\n".join(errores)
             return response
         
+        discount_amount = 0.0
+
+        if discount_code:
+            session = Session()
+            discount = session.query(Discount).filter(
+                Discount.code == discount_code.upper(),
+                Discount.valid_from <= datetime.now(TIMEZONE),
+                Discount.valid_to >= datetime.now(TIMEZONE),
+                Discount.is_active == True,
+                (Discount.max_uses > Discount.current_uses) | (Discount.max_uses.is_(None))
+            ).first()
+
+            if discount:
+                if discount.discount_type == 'percent':
+                    discount_amount = total * (discount.value / 100)
+                else:
+                    discount_amount = discount.value
+                
+                total -= discount_amount
+                discount.current_uses += 1
+                session.commit()
+            else:
+                session.close()
+                return f"❌ Código inválido o expirado: {discount_code}"
+            
+            session.close()
+            
         # Crear pedido solo si no hay errores
         new_order = Order(
             custom_id=custom_id,
             products=products_list,
             total=total,
             status="pendiente",
-            created_at=datetime.now(TIMEZONE)
+            created_at=datetime.now(TIMEZONE),
+            discount_code=discount_code,
+            discount_amount=discount_amount,
+            mesero = user
         )
         session.add(new_order)
         session.commit()
         
         return f"📝 Pedido {custom_id} registrado!\nTotal: ${total:.2f}"
-        
+
     except Exception as e:
         session.rollback()
         print(f"Error: {e}")
@@ -227,18 +263,24 @@ async def list_deudores(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
     session = Session()
     now = datetime.now(TIMEZONE)
+    # Obtener todos los pedidos pagados
+    pedidos_pagados = session.query(Order).filter(Order.status == "pagado").all()
 
-    # Calcular rango de tiempo (6 AM a 5 AM del día siguiente)
-    if now.hour < 5:  # Si es antes de las 5 AM
-        inicio_jornada = datetime(now.year, now.month, now.day - 1, 6, 0, tzinfo=TIMEZONE)  # 6 AM del día anterior
-        fin_jornada = datetime(now.year, now.month, now.day, 5, 0, tzinfo=TIMEZONE)  # 5 AM del día actual
-    else:  # Si es 5 AM o después
-        inicio_jornada = datetime(now.year, now.month, now.day, 6, 0, tzinfo=TIMEZONE)  # 6 AM del día actual
-        fin_jornada = datetime(now.year, now.month, now.day + 1, 5, 0, tzinfo=TIMEZONE)  # 5 AM del día siguiente
+    if not pedidos_pagados:
+        await update.message.reply_text("📭 No hay pedidos pagados para generar reporte")
+        session.close()
+        return
 
     # Comprobar pedidos pendientes
     pedidos_pendientes = session.query(Order).filter(Order.status == "pendiente").all()
     
+    # Encontrar primer y último pedido
+    primer_pedido = min(pedidos_pagados, key=lambda x: x.created_at)
+    ultimo_pedido = max(pedidos_pagados, key=lambda x: x.created_at)
+    
+    # Obtener fecha de referencia (del primer pedido)
+    fecha_referencia = primer_pedido.created_at.date()
+
     # Generar PDF
     pdf = FPDF()
     pdf.add_page()
@@ -256,26 +298,22 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
             respuesta += f"- Pedido {pedido.custom_id} (${pedido.total:.2f})\n"
             pdf.cell(200, 10, txt=f"Pedido {pedido.custom_id} - ${pedido.total:.2f}", ln=1)
     else:
-        # Obtener todos los pedidos pagados en el rango horario
-        pedidos_pagados = session.query(Order).filter(
-            Order.created_at.between(inicio_jornada, fin_jornada),
-            Order.status == "pagado"
-        ).all()
-
         # Calcular totales
         total_ventas = sum(p.total for p in pedidos_pagados)
         total_efectivo = sum(p.efectivo for p in pedidos_pagados)
         total_transferencia = sum(p.transferencia for p in pedidos_pagados)
 
         # Texto y PDF
-        respuesta += f"🕒 Período: {inicio_jornada.strftime('%d/%m %H:%M')} - {fin_jornada.strftime('%d/%m %H:%M')}\n"
+        hora_inicio = primer_pedido.created_at.strftime('%d/%m/%Y %H:%M')
+        hora_fin = ultimo_pedido.created_at.strftime('%d/%m/%Y %H:%M')
+        respuesta += f"🕒 Período: {hora_inicio} - {hora_fin}\n"
         respuesta += f"💰 Total: ${total_ventas:.2f}\n"
         respuesta += f"💵 Efectivo: ${total_efectivo:.2f}\n"
         respuesta += f"📲 Transferencia: ${total_transferencia:.2f}\n"
         respuesta += "🍺 Productos vendidos:\n"
 
         # PDF
-        pdf.cell(200, 10, txt=f"Periodo: {inicio_jornada.strftime('%d/%m %H:%M')} a {fin_jornada.strftime('%d/%m %H:%M')}", ln=1)
+        pdf.cell(200, 10, txt=f"Periodo: {hora_inicio} a {hora_fin}", ln=1)
         pdf.cell(200, 10, txt=f"Total: ${total_ventas:.2f}", ln=1)
         pdf.cell(200, 10, txt=f"Efectivo: ${total_efectivo:.2f}", ln=1)
         pdf.cell(200, 10, txt=f"Transferencia: ${total_transferencia:.2f}", ln=1)
@@ -306,7 +344,9 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     "Efectivo": pedido.efectivo,
                     "Transferencia": pedido.transferencia,
                     "Producto": producto["nombre"],
-                    "Cantidad": producto["cantidad"]
+                    "Cantidad": producto["cantidad"],
+                    "Código Descuento": pedido.discount_code,
+                    "Monto Descuento": pedido.discount_amount,
                 })
         # Crear DataFrame y guardar como Excel
 
@@ -448,12 +488,27 @@ async def get_chat_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = update.message.text
+    # Dividir el texto en líneas
+    user = update.message.from_user.username
     
-    # Si el mensaje es "Pedido X pagado" o "PX pagado", ignóralo
-    if re.search(r"(?i)(pedido|p)\s*\d+\s+pagado", text):
-        return ConversationHandler.END
+    # Dividir en líneas
+    lines = text.split('\n')
+    first_line = lines[0].strip() if lines else ""
     
     try:
+        # Regex mejorado para capturar código de descuento
+        match = re.match(r"(?i)^(pedido|p)\s*(\d+)(?:\s+([a-zA-Z0-9]+))?", first_line)
+        if not match:
+            await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nP1 CLIENTE10\n2 Michelada Club")
+            return ConversationHandler.END
+        
+        custom_id = int(match.group(2))
+        discount_code = match.group(3).upper() if match.group(3) else None  # Inicialización correcta
+    
+        # Si el mensaje es "Pedido X pagado" o "PX pagado", ignóralo
+        if re.search(r"(?i)(pedido|p)\s*\d+\s+pagado", text):
+            return ConversationHandler.END
+        
         # Usar regex para detectar "Pedido X" o "PX"
         match = re.match(r"(?i)^(pedido|p)\s*(\d+)", text.split("\n")[0])
         if not match:
@@ -471,7 +526,12 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         session = Session()
         existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
         session.close()
-        
+
+        match = re.match(r"(?i)^(pedido|p)\s*(\d+)(?:\s+(.*))?", first_line)
+        if match:
+            custom_id = int(match.group(2))
+            discount_code = match.group(3).strip() if match.group(3) else None
+
         if existing_order:
             await update.message.reply_text(
                 f"⚠️ El Pedido {custom_id} ya existe. ¿Qué deseas hacer?\n\n"
@@ -481,7 +541,7 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             return PEDIDO_CONFIRM
         else:
-            response = process_order(text, update.message.from_user.username, custom_id)
+            response = process_order(text, update.message.from_user.username, custom_id, discount_code)
             await update.message.reply_text(response)
             return ConversationHandler.END
             
@@ -588,6 +648,8 @@ async def ver_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         respuesta = f"📋 **PEDIDO {pedido_id}**\n"
         respuesta += f"📅 Fecha: {pedido.created_at.strftime('%d/%m/%Y %H:%M')}\n"
         respuesta += f"🔄 Estado: {pedido.status.upper()}\n"
+        respuesta += f"👨🏻‍💼 Atendido por: {pedido.mesero.upper()}\n"
+        respuesta += f"👉 Descuto de: {pedido.discount_code.upper()}\n"
         respuesta += "--------------------------------\n"
         
         for producto in pedido.products:
@@ -857,6 +919,243 @@ async def forward_questions(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text=f"❓ **PREGUNTAS** ❓\n\n{pregunta}"
         )
 
+#permisos para crear descuentos
+async def nuevo_descuento(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.message.from_user.username
+    if user not in ["IngAiro"]:
+        await update.message.reply_text("❌ Solo administradores pueden crear descuentos")
+        return ConversationHandler.END
+    
+    await update.message.reply_text(
+        "🛠 Creando nuevo descuento:\n\n"
+        "1. Ingresa el código del descuento (ej: VERANO20):"
+    )
+    return DESCUENTO_CODE
+
+async def recibir_codigo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    code = update.message.text.upper()
+    session = Session()
+    
+    # Verificar si el código ya existe
+    exists = session.query(Discount).filter(Discount.code == code).first()
+    session.close()
+    
+    if exists:
+        await update.message.reply_text("❌ Este código ya existe. Ingresa otro:")
+        return DESCUENTO_CODE
+    
+    context.user_data['nuevo_descuento'] = {'code': code}
+    
+    await update.message.reply_text(
+        "2. Selecciona el tipo de descuento:\n\n"
+        "🅿️ Porcentaje (ej: 10%)\n"
+        "🔢 Monto fijo (ej: $5)\n\n"
+        "Responde con 'p' o 'f':"
+    )
+    return DESCUENTO_TYPE
+
+async def recibir_tipo(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    tipo = update.message.text.lower()
+    if tipo not in ['p', 'f']:
+        await update.message.reply_text("❌ Opción inválida. Usa 'p' o 'f':")
+        return DESCUENTO_TYPE
+    
+    context.user_data['nuevo_descuento']['type'] = 'percent' if tipo == 'p' else 'fixed'
+    
+    await update.message.reply_text(
+        "3. Ingresa el valor del descuento:\n\n"
+        "Ejemplos:\n"
+        "Para 10% → 10\n"
+        "Para $5 → 5"
+    )
+    return DESCUENTO_VALUE
+
+async def recibir_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        value = float(update.message.text)
+        discount_type = context.user_data['nuevo_descuento']['type']
+        
+        if discount_type == 'percent' and (value <= 0 or value > 100):
+            raise ValueError("El porcentaje debe ser entre 0 y 100")
+            
+        context.user_data['nuevo_descuento']['value'] = value
+        
+        await update.message.reply_text(
+            "4. Ingresa la fecha de caducidad (DD/MM/AAAA HH:MM):\n\n"
+            "Ejemplo: 31/12/2024 23:59"
+        )
+        return DESCUENTO_DATE
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error: {str(e)}. Ingresa un valor válido:")
+        return DESCUENTO_VALUE
+
+async def recibir_fecha(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        fecha_str = update.message.text
+        fecha = datetime.strptime(fecha_str, "%d/%m/%Y %H:%M").astimezone(TIMEZONE)
+        
+        if fecha < datetime.now(TIMEZONE):
+            raise ValueError("La fecha debe ser futura")
+            
+        context.user_data['nuevo_descuento']['valid_to'] = fecha
+        
+        await update.message.reply_text(
+            "5. Ingresa el máximo de usos (o 0 para ilimitados):"
+        )
+        return DESCUENTO_USES
+    except Exception as e:
+        await update.message.reply_text(f"❌ Formato incorrecto: {str(e)}. Intenta nuevamente:")
+        return DESCUENTO_DATE
+
+async def recibir_usos(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        max_uses = int(update.message.text)
+        if max_uses < 0:
+            raise ValueError
+        
+        # Crear el descuento
+        data = context.user_data['nuevo_descuento']
+        session = Session()
+        
+        new_discount = Discount(
+            code=data['code'],
+            discount_type=data['type'],
+            value=data['value'],
+            valid_from=datetime.now(TIMEZONE),
+            valid_to=data['valid_to'],
+            max_uses=max_uses if max_uses > 0 else None,
+            created_by=update.message.from_user.username
+        )
+        
+        session.add(new_discount)
+        session.commit()
+        
+        await update.message.reply_text(
+            f"✅ Descuento creado!\n\n"
+            f"Código: {data['code']}\n"
+            f"Tipo: {data['type']}\n"
+            f"Valor: {data['value']}\n"
+            f"Válido hasta: {data['valid_to'].strftime('%d/%m/%Y %H:%M')}\n"
+            f"Usos máximos: {max_uses if max_uses > 0 else 'Ilimitado'}"
+        )
+        
+        return ConversationHandler.END
+    except Exception as e:
+        await update.message.reply_text(f"❌ Error: {str(e)}. Ingresa un número válido:")
+        return DESCUENTO_USES
+
+conv_handler_descuentos = ConversationHandler(
+    entry_points=[CommandHandler('nuevo_descuento', nuevo_descuento)],
+    states={
+        DESCUENTO_CODE: [MessageHandler(filters.TEXT, recibir_codigo)],
+        DESCUENTO_TYPE: [MessageHandler(filters.TEXT, recibir_tipo)],
+        DESCUENTO_VALUE: [MessageHandler(filters.TEXT, recibir_valor)],
+        DESCUENTO_DATE: [MessageHandler(filters.TEXT, recibir_fecha)],
+        DESCUENTO_USES: [MessageHandler(filters.TEXT, recibir_usos)],
+    },
+    fallbacks=[],
+    conversation_timeout=300
+)
+
+# 1. Handler para desactivar descuentos
+async def desactivar_descuento(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.message.from_user.username
+    if user not in ["IngAiro"]:
+        await update.message.reply_text("❌ Solo administradores pueden gestionar descuentos")
+        return ConversationHandler.END
+    
+    await update.message.reply_text(
+        "🔒 Ingresa el código del descuento a desactivar/eliminar:"
+    )
+    return DESACTIVAR_CODE
+
+async def manejar_codigo_descuento(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    code = update.message.text.upper()
+    session = Session()
+    
+    discount = session.query(Discount).filter(Discount.code == code).first()
+    
+    if not discount:
+        session.close()
+        await update.message.reply_text("❌ Código no encontrado")
+        return ConversationHandler.END
+    
+    context.user_data['discount_action'] = {
+        'code': code,
+        'discount_id': discount.id
+    }
+    
+    # Mostrar detalles del descuento
+    respuesta = (
+        f"🔎 Descuento encontrado:\n\n"
+        f"Código: {discount.code}\n"
+        f"Tipo: {discount.discount_type}\n"
+        f"Valor: {discount.value}\n"
+        f"Usos: {discount.current_uses}/{discount.max_uses if discount.max_uses else '∞'}\n"
+        f"Estado: {'🟢 Activo' if discount.is_active else '🔴 Inactivo'}\n\n"
+        "Elige una acción:\n"
+        "1. Desactivar/Reactivar\n"
+        "2. Eliminar permanentemente\n"
+        "3. Cancelar"
+    )
+    
+    session.close()
+    
+    await update.message.reply_text(respuesta)
+    return CONFIRMAR_ELIMINAR
+
+async def confirmar_accion(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    choice = update.message.text
+    data = context.user_data.get('discount_action')
+    
+    if not data or 'code' not in data:
+        await update.message.reply_text("❌ Error en los datos")
+        return ConversationHandler.END
+    
+    session = Session()
+    discount = session.query(Discount).get(data['discount_id'])
+    
+    try:
+        if choice == '1':  # Toggle activo/inactivo
+            discount.is_active = not discount.is_active
+            session.commit()
+            estado = "activado" if discount.is_active else "desactivado"
+            await update.message.reply_text(f"✅ Descuento {data['code']} {estado} correctamente")
+            
+        elif choice == '2':  # Eliminar
+            session.delete(discount)
+            session.commit()
+            await update.message.reply_text(f"🗑️ Descuento {data['code']} eliminado permanentemente")
+            
+        elif choice == '3':  # Cancelar
+            await update.message.reply_text("❌ Operación cancelada")
+            
+        else:
+            await update.message.reply_text("❌ Opción inválida")
+            
+    except Exception as e:
+        session.rollback()
+        await update.message.reply_text(f"🚨 Error: {str(e)}")
+        
+    finally:
+        session.close()
+        if 'discount_action' in context.user_data:
+            del context.user_data['discount_action']
+        
+    return ConversationHandler.END
+
+# 2. Añade este ConversationHandler
+conv_handler_gestion_descuentos = ConversationHandler(
+    entry_points=[CommandHandler('gestionar_descuento', desactivar_descuento)],
+    states={
+        DESACTIVAR_CODE: [MessageHandler(filters.TEXT, manejar_codigo_descuento)],
+        CONFIRMAR_ELIMINAR: [MessageHandler(filters.TEXT, confirmar_accion)]
+    },
+    fallbacks=[],
+    conversation_timeout=120
+)
+
+
 #comando help
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ayuda_texto = """
@@ -869,6 +1168,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 ▫️ `/cierrecaja` - Genera reporte diario con PDF y Excel
 ▫️ `/todos` - Lista completa de pedidos con PDF
 ▫️ `/infoventas` - Se puede ver la venta hasta ese momento y cantidad de pedidos
+🔒 **GESTIÓN DE DESCUENTOS (Admin)**:
+▫️ `/gestionar_descuento` - Desactivar o eliminar un descuento @IngAiro
+▫️ `/nuevo_descuento` - Crea un codigo de descuento solo lo puede hacer @IngAiro
 
 📦 **GESTIÓN DE PEDIDOS**:
 ▫️ `P1` + productos (ejemplo:
@@ -947,5 +1249,7 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("infoventa", info_venta))
     application.add_handler(CommandHandler("todos", listar_pedidos))
     application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(conv_handler_descuentos)
+    application.add_handler(conv_handler_gestion_descuentos)
     
     application.run_polling()
