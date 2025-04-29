@@ -1223,7 +1223,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 ▫️ `/reiniciar` - Borra todos los pedidos pendientes (solo admin)
 ▫️ `/cierrecaja` - Genera reporte diario con PDF y Excel
 ▫️ `/todos` - Lista completa de pedidos con PDF
-▫️ `/infoventas` - Se puede ver la venta hasta ese momento y cantidad de pedidos
+▫️ `/infoventa` - Se puede ver la venta hasta ese momento y cantidad de pedidos
 🔒 **GESTIÓN DE DESCUENTOS (Admin)**:
 ▫️ `/gestionar_descuento` - Desactivar o eliminar un descuento @IngAiro
 ▫️ `/nuevo_descuento` - Crea un codigo de descuento solo lo puede hacer @IngAiro
