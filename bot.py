@@ -1227,6 +1227,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🔒 **GESTIÓN DE DESCUENTOS (Admin)**:
 ▫️ `/gestionar_descuento` - Desactivar o eliminar un descuento @IngAiro
 ▫️ `/nuevo_descuento` - Crea un codigo de descuento solo lo puede hacer @IngAiro
+▫️ `/descuentos` - Muestra lista de descuentos
 
 📦 **GESTIÓN DE PEDIDOS**:
 ▫️ `P1` + productos (ejemplo:
@@ -1287,6 +1288,9 @@ if __name__ == "__main__":
         ayuda_productos
     ))
 
+    application.add_handler(conv_handler_descuentos)
+    application.add_handler(conv_handler_gestion_descuentos)
+
     # 5. ConversationHandler (CREAR pedidos) - ¡Ahora está ANTES de forward_questions!
     application.add_handler(conv_handler)
 
@@ -1305,8 +1309,6 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("infoventa", info_venta))
     application.add_handler(CommandHandler("todos", listar_pedidos))
     application.add_handler(CommandHandler("help", help_command))
-    application.add_handler(conv_handler_descuentos)
-    application.add_handler(conv_handler_gestion_descuentos)
-    application.add_handler(CommandHandler("listar_descuentos", listar_descuentos))
+    application.add_handler(CommandHandler("descuentos", listar_descuentos))
     
     application.run_polling()
