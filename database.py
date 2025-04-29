@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, JSON, Boolean
 from typing import Dict
 from sqlalchemy.orm import sessionmaker, declarative_base
-from products import products_data  # Asegúrate de importar products_data
+from products import products_datas  # Asegúrate de importar products_data
 from datetime import datetime
 
 Base = declarative_base()
@@ -52,7 +52,7 @@ Session = sessionmaker(bind=engine)
 def initialize_products():
     session = Session()
     Base.metadata.create_all(bind=engine)  # Esto creará todas las tablas
-    for product in products_data:
+    for product in products_datas:
         if not session.query(Product).filter_by(name=product["name"]).first():
             new_product = Product(name=product["name"], price=product["price"],)
             session.add(new_product)
