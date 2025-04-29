@@ -17,8 +17,8 @@ from typing import Dict  # Si no está presente
 PEDIDO_CONFIRM = 1
 
 # Configuración
-# TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TOKEN = "8048340171:AAHywLaqwm_lNAaqPX-7D2KkmGM0fNOOzvk"
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+# TOKEN = ""s""
 TIMEZONE = pytz.timezone("America/Guayaquil")
 # Configuración
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
