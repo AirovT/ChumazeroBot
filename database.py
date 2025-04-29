@@ -58,6 +58,6 @@ def initialize_products():
             session.add(new_product)
     session.commit()
 
-# Al final del archivo database.py, añade:
-if __name__ == "__main__":
-    initialize_products()  # <-- Esto ejecutará la inicialización
+# # Al final del archivo database.py, añade:
+# if __name__ == "__main__":
+#     initialize_products()  # <-- Esto ejecutará la inicialización
