@@ -74,11 +74,11 @@ products_datas = [
     },
     {
         "name": "Paloma 1",
-        "price": 7.0
+        "price": 7.5
     },
     {
         "name": "Paloma 500",
-        "price": 4.5
+        "price": 5.0
     },
     {
         "name": "Granizado FR",
@@ -582,7 +582,7 @@ products_datas = [
     },
     {
         "name": "V220 P",
-        "price": 0.75
+        "price": 1.0
     },
     {
         "name": "Menta",
@@ -631,5 +631,101 @@ products_datas = [
     {
         "name": "Manicho",
         "price": 0.75
+    },
+    {
+        "name": "P casa 1",
+        "price": 8.5
+    },
+    {
+        "name": "P casa 2",
+        "price": 9.0
+    },
+    {
+        "name": "P casa 3",
+        "price": 9.0
+    },
+    {
+        "name": "P casa 4",
+        "price": 5.0
+    },
+    {
+        "name": "P casa 5",
+        "price": 10.0
+    },
+    {
+        "name": "P casa 6",
+        "price": 10.0
+    },
+    {
+        "name": "P cerveza 1",
+        "price": 10.0
+    },
+    {
+        "name": "P cerveza 2",
+        "price": 10.0
+    },
+    {
+        "name": "P cerveza 3",
+        "price": 7.5
+    },
+    {
+        "name": "P cerveza 4",
+        "price": 11.5
+    },
+    {
+        "name": "P cerveza 5",
+        "price": 8.0
+    },
+    {
+        "name": "P tequila 1",
+        "price": 60.0
+    },
+    {
+        "name": "P tequila 2",
+        "price": 25.0
+    },
+    {
+        "name": "P tequila 3",
+        "price": 25.0
+    },
+    {
+        "name": "P aguardiente 1",
+        "price": 20.0
+    },
+    {
+        "name": "P aguardiente 2",
+        "price": 12.0
+    },
+    {
+        "name": "P aguardiente 3",
+        "price": 12.0
+    },
+    {
+        "name": "P vinos 1",
+        "price": 12.0
+    },
+    {
+        "name": "P vinos 2",
+        "price": 14.0
+    },
+    {
+        "name": "P vinos 3",
+        "price": 12.0
+    },
+    {
+        "name": "P vinos 4",
+        "price": 10.0
+    },
+    {
+        "name": "P varios 1",
+        "price": 11.0
+    },
+    {
+        "name": "P varios 2",
+        "price": 12.0
+    },
+    {
+        "name": "P varios 3",
+        "price": 11.5
     }
 ]
