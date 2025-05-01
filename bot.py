@@ -478,9 +478,6 @@ async def info_venta(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 respuesta += f"💵 Efectivo: ${total_efectivo:.2f}\n"
                 respuesta += f"📲 Transferencia: ${total_transferencia:.2f}\n"
                 respuesta += f"🍺 Total de pedidos: {total_pedidos}\n"
-
-        # 6. Enviar respuesta al usuario que ejecutó el comando
-        await update.message.reply_text(respuesta)
         
         # 7. Opcional: Enviar copia a gerencia
         if 'GERENCIA_CHAT_ID' in globals():
