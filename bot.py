@@ -334,6 +334,12 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 temperaturas_cache[fecha] = obtener_temperatura(fecha_completa)
             temp = temperaturas_cache[fecha]
 
+            if pedido.efectivo > 0 and pedido.transferencia == 0:
+                forma_pago= "efectivo"
+            elif pedido.transferencia > 0 and  pedido.efectivo == 0:
+                forma_pago= "Trasnferencia"
+            elif pedido.transferencia > 0 and  pedido.efectivo > 0:
+                forma_pago= "Ambos"
             for producto in pedido.products:
                 excel_data.append({
                     "Pedido ID": pedido.custom_id,
@@ -344,6 +350,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     "Total": pedido.total,
                     "Efectivo": pedido.efectivo,
                     "Transferencia": pedido.transferencia,
+                    "Forma de pago":forma_pago,
                     "Producto": producto["nombre"],
                     "Cantidad": producto["cantidad"],
                     "Código Descuento": pedido.discount_code,
@@ -431,17 +438,18 @@ async def info_venta(update: Update, context: ContextTypes.DEFAULT_TYPE):
     session = Session()
     now = datetime.now(TIMEZONE)
 
-    # Calcular rango de tiempo (6 AM a 5 AM del día siguiente)
-    if now.hour < 5:  # Si es antes de las 5 AM
-        inicio_jornada = datetime(now.year, now.month, now.day - 1, 6, 0, tzinfo=TIMEZONE)  # 6 AM del día anterior
-        fin_jornada = datetime(now.year, now.month, now.day, 5, 0, tzinfo=TIMEZONE)  # 5 AM del día actual
-    else:  # Si es 5 AM o después
-        inicio_jornada = datetime(now.year, now.month, now.day, 6, 0, tzinfo=TIMEZONE)  # 6 AM del día actual
-        fin_jornada = datetime(now.year, now.month, now.day + 1, 5, 0, tzinfo=TIMEZONE)  # 5 AM del día siguiente
-
     # Comprobar pedidos pendientes
     pedidos_pendientes = session.query(Order).filter(Order.status == "pendiente").all()
     
+    # Encontrar primer y último pedido
+    primer_pedido = min(pedidos_pagados, key=lambda x: x.created_at)
+    ultimo_pedido = max(pedidos_pagados, key=lambda x: x.created_at)
+    hora_inicio = primer_pedido.created_at.strftime('%d/%m/%Y %H:%M')
+    hora_fin = ultimo_pedido.created_at.strftime('%d/%m/%Y %H:%M')
+    
+    # Obtener fecha de referencia (del primer pedido)
+    fecha_referencia = primer_pedido.created_at.date()
+
     respuesta = "📊 **Informacion de venta**\n\n"
 
     
@@ -451,11 +459,12 @@ async def info_venta(update: Update, context: ContextTypes.DEFAULT_TYPE):
         for pedido in pedidos_pendientes:
             # Escapa caracteres especiales como * _ ` [ etc.
             respuesta += f"- Pedido {escape_markdown(pedido.custom_id)} (${pedido.total:.2f})\n"
+            await update.message.reply_text("Hay pedidos pendientes.")
 
     else:
         # Obtener todos los pedidos pagados en el rango horario
         pedidos_pagados = session.query(Order).filter(
-            Order.created_at.between(inicio_jornada, fin_jornada),
+            Order.created_at.between(hora_inicio, hora_fin),
             Order.status == "pagado"
         ).all()
 
@@ -466,7 +475,7 @@ async def info_venta(update: Update, context: ContextTypes.DEFAULT_TYPE):
         total_pedidos = len(pedidos_pagados)  # Calcula el número total de pedidos
 
         # Texto y PDF
-        respuesta += f"🕒 Período: {inicio_jornada.strftime('%d/%m %H:%M')} - {fin_jornada.strftime('%d/%m %H:%M')}\n"
+        respuesta += f"🕒 Período: {hora_inicio} - {hora_fin}\n"
         respuesta += f"💰 Total: ${total_ventas:.2f}\n"
         respuesta += f"💵 Efectivo: ${total_efectivo:.2f}\n"
         respuesta += f"📲 Transferencia: ${total_transferencia:.2f}\n"
@@ -649,8 +658,9 @@ async def ver_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         respuesta = f"📋 **PEDIDO {pedido_id}**\n"
         respuesta += f"📅 Fecha: {pedido.created_at.strftime('%d/%m/%Y %H:%M')}\n"
         respuesta += f"🔄 Estado: {pedido.status.upper()}\n"
-        respuesta += f"👨🏻‍💼 Atendido por: {pedido.mesero.upper()}\n"
-        respuesta += f"👉 Descuto de: {pedido.discount_code.upper()}\n"
+        # Por esto:
+        respuesta += f"👨🏻‍💼 Atendido por: {(pedido.mesero or 'SIN ASIGNAR').upper()}\n"
+        respuesta += f"👉 Descuento de: {(pedido.discount_code or 'SIN DESCUENTO').upper()}\n"
         respuesta += "--------------------------------\n"
         
         for producto in pedido.products:

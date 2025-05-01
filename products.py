@@ -406,11 +406,11 @@ products_datas = [
     },
     {
         "name": "Agua G",
-        "price": 0.75
+        "price": 1.0
     },
     {
         "name": "Agua P",
-        "price": 0.5
+        "price": 0.75
     },
     {
         "name": "Sprite 1",
@@ -727,5 +727,9 @@ products_datas = [
     {
         "name": "P varios 3",
         "price": 11.5
+    },
+    {
+        "name": "Dorito",
+        "price": 1.25
     }
 ]
