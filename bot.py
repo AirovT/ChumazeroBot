@@ -436,61 +436,64 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
 #Ver cuanto se vendio hasta ese momento y enviar como mensaje directo
 async def info_venta(update: Update, context: ContextTypes.DEFAULT_TYPE):
     session = Session()
-    now = datetime.now(TIMEZONE)
+    respuesta = "📊 **Información de venta**\n\n"
 
-    # Comprobar pedidos pendientes
-    pedidos_pendientes = session.query(Order).filter(Order.status == "pendiente").all()
-    
-    # Encontrar primer y último pedido
-    primer_pedido = min(pedidos_pagados, key=lambda x: x.created_at)
-    ultimo_pedido = max(pedidos_pagados, key=lambda x: x.created_at)
-    hora_inicio = primer_pedido.created_at.strftime('%d/%m/%Y %H:%M')
-    hora_fin = ultimo_pedido.created_at.strftime('%d/%m/%Y %H:%M')
-    
-    # Obtener fecha de referencia (del primer pedido)
-    fecha_referencia = primer_pedido.created_at.date()
-
-    respuesta = "📊 **Informacion de venta**\n\n"
-
-    
-    if pedidos_pendientes:
-        respuesta += "⚠️ ¡Atención! Pedidos pendientes:\n"
-
-        for pedido in pedidos_pendientes:
-            # Escapa caracteres especiales como * _ ` [ etc.
-            respuesta += f"- Pedido {escape_markdown(pedido.custom_id)} (${pedido.total:.2f})\n"
-            await update.message.reply_text("Hay pedidos pendientes.")
-
-    else:
-        # Obtener todos los pedidos pagados en el rango horario
-        pedidos_pagados = session.query(Order).filter(
-            Order.created_at.between(hora_inicio, hora_fin),
-            Order.status == "pagado"
-        ).all()
-
-        # Calcular totales
-        total_ventas = sum(p.total for p in pedidos_pagados)
-        total_efectivo = sum(p.efectivo for p in pedidos_pagados)
-        total_transferencia = sum(p.transferencia for p in pedidos_pagados)
-        total_pedidos = len(pedidos_pagados)  # Calcula el número total de pedidos
-
-        # Texto y PDF
-        respuesta += f"🕒 Período: {hora_inicio} - {hora_fin}\n"
-        respuesta += f"💰 Total: ${total_ventas:.2f}\n"
-        respuesta += f"💵 Efectivo: ${total_efectivo:.2f}\n"
-        respuesta += f"📲 Transferencia: ${total_transferencia:.2f}\n"
-        respuesta += f"🍺 Total de pedidos: {total_pedidos}\n"
-    
-    # Enviar respuestas
     try:
-        await context.bot.send_message(
-                    chat_id=GERENCIA_CHAT_ID,
-                    text=f"Informacion de venta:\n{respuesta}",
-                )
+        # 1. Verificar pedidos pendientes primero
+        pedidos_pendientes = session.query(Order).filter(Order.status == "pendiente").all()
+        
+        if pedidos_pendientes:
+            respuesta += "⚠️ ¡Atención! Pedidos pendientes:\n"
+            for pedido in pedidos_pendientes:
+                respuesta += f"- Pedido {pedido.custom_id} (${pedido.total:.2f})\n"
+            # Mensaje adicional de alerta
+            await update.message.reply_text("Hay pedidos pendientes. Revisa los detalles en el reporte.")
+        else:
+            # 2. Obtener TODOS los pedidos pagados del día
+            hoy = datetime.now(TIMEZONE).date()
+            pedidos_pagados = session.query(Order).filter(
+                func.date(Order.created_at) == hoy,
+                Order.status == "pagado"
+            ).all()
+
+            if not pedidos_pagados:
+                respuesta += "ℹ️ No hay pedidos pagados hoy."
+            else:
+                # 3. Calcular tiempos
+                primer_pedido = min(pedidos_pagados, key=lambda x: x.created_at)
+                ultimo_pedido = max(pedidos_pagados, key=lambda x: x.created_at)
+                
+                hora_inicio = primer_pedido.created_at.strftime('%d/%m/%Y %H:%M')
+                hora_fin = ultimo_pedido.created_at.strftime('%d/%m/%Y %H:%M')
+
+                # 4. Calcular totales
+                total_ventas = sum(p.total for p in pedidos_pagados)
+                total_efectivo = sum(p.efectivo for p in pedidos_pagados)
+                total_transferencia = sum(p.transferencia for p in pedidos_pagados)
+                total_pedidos = len(pedidos_pagados)
+
+                # 5. Construir respuesta
+                respuesta += f"🕒 Período: {hora_inicio} - {hora_fin}\n"
+                respuesta += f"💰 Total: ${total_ventas:.2f}\n"
+                respuesta += f"💵 Efectivo: ${total_efectivo:.2f}\n"
+                respuesta += f"📲 Transferencia: ${total_transferencia:.2f}\n"
+                respuesta += f"🍺 Total de pedidos: {total_pedidos}\n"
+
+        # 6. Enviar respuesta al usuario que ejecutó el comando
+        await update.message.reply_text(respuesta)
+        
+        # 7. Opcional: Enviar copia a gerencia
+        if 'GERENCIA_CHAT_ID' in globals():
+            await context.bot.send_message(
+                chat_id=GERENCIA_CHAT_ID,
+                text=f"Información de venta:\n{respuesta}"
+            )
+
     except Exception as e:
-        print(f"Error al enviar mensaje: {e}")  # Para depurar
-        raise  # Opcional: re-lanza el error si quieres ver el traceback completo
-    session.close()
+        await update.message.reply_text(f"❌ Error generando el reporte: {str(e)}")
+        print(f"Error en info_venta: {e}")  # Log para depuración
+    finally:
+        session.close()
 
 async def get_chat_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
