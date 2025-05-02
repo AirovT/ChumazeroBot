@@ -449,12 +449,7 @@ async def info_venta(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # Mensaje adicional de alerta
             await update.message.reply_text("Hay pedidos pendientes. Revisa los detalles en el reporte.")
         else:
-            # 2. Obtener TODOS los pedidos pagados del día
-            hoy = datetime.now(TIMEZONE).date()
-            pedidos_pagados = session.query(Order).filter(
-                func.date(Order.created_at) == hoy,
-                Order.status == "pagado"
-            ).all()
+            pedidos_pagados = session.query(Order).filter(Order.status == "pagado").all()
 
             if not pedidos_pagados:
                 respuesta += "ℹ️ No hay pedidos pagados hoy."

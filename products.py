@@ -158,7 +158,7 @@ products_datas = [
     },
     {
         "name": "Gran Malo",
-        "price": 32.5
+        "price": 35.0
     },
     {
         "name": "Azteca 1",
@@ -406,7 +406,7 @@ products_datas = [
     },
     {
         "name": "Agua G",
-        "price": 1.0
+        "price": 1.25
     },
     {
         "name": "Agua P",
@@ -614,7 +614,7 @@ products_datas = [
     },
     {
         "name": "Guitig",
-        "price": 1.5
+        "price": 1.75
     },
     {
         "name": "Promo Michelada",
