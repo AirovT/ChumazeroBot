@@ -352,7 +352,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     "Efectivo": pedido.efectivo,
                     "Transferencia": pedido.transferencia,
                     "Forma de pago":forma_pago,
-                    "Producto": producto["nombre"],
+                    "Producto": producto["Descripcion"],
                     "Cantidad": producto["cantidad"],
                     "Código Descuento": pedido.discount_code,
                     "Monto Descuento": pedido.discount_amount,
