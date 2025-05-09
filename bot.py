@@ -156,7 +156,8 @@ def process_order(order_text, user, custom_id,discount_code=None):
                 "cantidad": quantity,
                 "precio_unitario": product.price,
                 "entregado": 0,
-                "Meser@": user
+                "Meser@": user,
+                "Descripcion": product.descripcion
             })
             total += product.price * quantity
         
@@ -848,7 +849,7 @@ async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYP
             msg_produccion += "🍺 Productos:\n"
             
             for producto in order.products:
-                msg_produccion += f"\t\t\t\t\t\t {producto['cantidad']} x {producto['nombre']}\n"
+                msg_produccion += f"\t\t\t\t\t\t {producto['cantidad']} x {producto['Descripcion']}\n"
             
             # Enviar a grupo de producción (con manejo de errores)
             try:
