@@ -382,7 +382,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
         productos_vendidos = {}
         for pedido in pedidos_pagados:
             for producto in pedido.products:
-                nombre = producto["nombre"]
+                nombre = producto["Descripcion"]
                 cantidad = producto["cantidad"]
                 productos_vendidos[nombre] = productos_vendidos.get(nombre, 0) + cantidad
 
