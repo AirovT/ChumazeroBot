@@ -158,7 +158,7 @@ products_datas = [
     },
     {
         "name": "Gran Malo",
-        "price": 35.0
+        "price": 38.0
     },
     {
         "name": "Azteca 1",
