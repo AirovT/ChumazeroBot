@@ -330,6 +330,13 @@
     },
     {
         "Tipo":"Tequila",
+        "name":"Smirnoff",
+        "price":18.0,
+        "Nombre completo":"Smirnoff",
+        "Descripcion":"Smirnoff + Hielos"
+    },
+    {
+        "Tipo":"Tequila",
         "name":"Azteca P",
         "price":3.5,
         "Nombre completo":"Azteca miniatura 50ml",
@@ -1286,5 +1293,33 @@
         "price":1.75,
         "Nombre completo":"Hot dog",
         "Descripcion":"Hot dog"
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"J pitufo p",
+        "price":12.0,
+        "Nombre completo":"Jarra de pitufo pequeña",
+        "Descripcion":"Jarra de pitufo pequeña"
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"J pitufo g",
+        "price":18.0,
+        "Nombre completo":"Jarra de pitufo Grande",
+        "Descripcion":"Jarra de pitufo Grande"
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"J paloma p",
+        "price":12.0,
+        "Nombre completo":"Jarra de paloma pequeña",
+        "Descripcion":"Jarra de paloma pequeña"
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"J paloma g",
+        "price":18.0,
+        "Nombre completo":"Jarra de paloma grande",
+        "Descripcion":"Jarra de paloma grande"
     }
 ]
