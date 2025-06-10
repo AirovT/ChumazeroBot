@@ -1,15 +1,15 @@
-import gspread
-from google.oauth2.service_account import Credentials
-import os
-import json
+# import gspread
+# from google.oauth2.service_account import Credentials
+# import os
+# import json
 
-# Configuración
-SCOPES = [
-    'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive'
-]
-# CREDS_FILE = 'controlbotbar-creds.json'  # El archivo que descargaste habilitar para pruebas remotas %%%%%%%%%%%%%%%%%%%%%
-SPREADSHEET_NAME = 'ControlBotBar'
+# # Configuración
+# SCOPES = [
+#     'https://www.googleapis.com/auth/spreadsheets',
+#     'https://www.googleapis.com/auth/drive'
+# ]
+# # CREDS_FILE = 'controlbotbar-creds.json'  # El archivo que descargaste habilitar para pruebas remotas %%%%%%%%%%%%%%%%%%%%%
+# SPREADSHEET_NAME = 'ControlBotBar'
 
 # def initialize_sheets(): HABILITAR PREUBAS REMOTAS %%%%%%%%%%%%%%%%%%
 #     """Inicializa la conexión y crea hojas si no existen"""
