@@ -2053,7 +2053,7 @@ if __name__ == "__main__":
     application.run_webhook(
         listen="0.0.0.0",
         port=PORT,
-        webhook_url=f"https://{DOMAIN}/{os.environ['TELEGRAM_BOT_TOKEN']}",
-        url_path=os.environ['TELEGRAM_BOT_TOKEN'],
+        webhook_url=f"https://{DOMAIN}/{TOKEN}",
+        url_path=TOKEN,
         drop_pending_updates=True
     )
