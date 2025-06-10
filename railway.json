@@ -3,7 +3,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "python tu_archivo_principal.py",
+    "startCommand": "python bot.py",
     "webhook": {
       "enabled": true
     },
