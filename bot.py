@@ -2045,4 +2045,15 @@ if __name__ == "__main__":
     application.add_handler(CommandHandler("pagar_gasto", pagar_gasto))
     application.add_handler(CommandHandler("editar_gasto", editar_gasto))
     application.add_handler(CommandHandler("reponer", reponer_stock))
-    application.run_polling()
+        # ===== CONFIGURACIÓN WEBHOOK PARA RAILWAY =====
+    PORT = int(os.environ.get("PORT", 8443))
+    DOMAIN = "chumazerobot-production.up.railway.app"  # Reemplaza con tu dominio real de Railway
+    
+    # Configuración webhook
+    application.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        webhook_url=f"https://{DOMAIN}/{os.environ['TELEGRAM_BOT_TOKEN']}",
+        url_path=os.environ['TELEGRAM_BOT_TOKEN'],
+        drop_pending_updates=True
+    )

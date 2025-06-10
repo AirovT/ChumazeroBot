@@ -1,0 +1,15 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "python tu_archivo_principal.py",
+    "webhook": {
+      "enabled": true
+    },
+    "scale": {
+      "min": 1,
+      "max": 1
+    }
+  }
+}
