@@ -1569,15 +1569,15 @@ async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYP
             for producto in order.products:
                 msg_produccion += f"\t\t\t\t\t\t {producto['cantidad']} x {producto['Descripcion']}\n"
             
-            #  # Enviar a grupo de producción (con manejo de errores)
-            # try:
-            #     await context.bot.send_message(
-            #         chat_id=PRODUCTION_CHAT_ID,
-            #         text=msg_produccion
-            #     )
-            # except Exception as e:
-            #     print(f"Error al enviar a producción: {str(e)}")  # Para debug
-            #     await update.message.reply_text("❌ No se pudo enviar el pedido a producción. Verifica permisos.")
+             # Enviar a grupo de producción (con manejo de errores)
+            try:
+                await context.bot.send_message(
+                    chat_id=PRODUCTION_CHAT_ID,
+                    text=msg_produccion
+                )
+            except Exception as e:
+                print(f"Error al enviar a producción: {str(e)}")  # Para debug
+                await update.message.reply_text("❌ No se pudo enviar el pedido a producción. Verifica permisos.")
 
             await update.message.reply_text(f"✅ Pedido {order_id} marcado como PAGADO con {metodo_pago.upper()}.\n Efectivo: {order.efectivo}\n Trasnferencia: {order.transferencia}")
         else:
