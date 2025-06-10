@@ -1,0 +1,1902 @@
+[
+    {
+        "Tipo":"Coctel",
+        "name":"M Siembra",
+        "price":4.5,
+        "Nombre completo":"Michelada Siembra 1 lt",
+        "Descripcion":"Michelada Siembra 1 lt",
+        "ingredientes":"{\"Siembra 1lt\":1}",
+        "Nombre del ingrediente":"Siembra 1lt",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"M Pilsener",
+        "price":5.0,
+        "Nombre completo":"Michelada Pilsener 1lt",
+        "Descripcion":"Michelada Pilsener 1lt",
+        "ingredientes":"{\"Pilsener 1 Lt\":1}",
+        "Nombre del ingrediente":"Pilsener 1 Lt",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"M Club 850",
+        "price":5.0,
+        "Nombre completo":"Michelada Club 850ml",
+        "Descripcion":"Michelada Club 850ml",
+        "ingredientes":"{\"Club 850ml\":1}",
+        "Nombre del ingrediente":"Club 850ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"M Corona",
+        "price":3.25,
+        "Nombre completo":"Michelada Corona 355ml",
+        "Descripcion":"Michelada Corona 355ml",
+        "ingredientes":"{\"Corona 330ml\":1}",
+        "Nombre del ingrediente":"Corona 330ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"M Inti",
+        "price":3.0,
+        "Nombre completo":"Michelada inti 550ml",
+        "Descripcion":"Michelada inti 550ml",
+        "ingredientes":"{\"Inti 500ml\":1}",
+        "Nombre del ingrediente":"Inti 500ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"M Club 330",
+        "price":2.75,
+        "Nombre completo":"Michelada Club 330ml",
+        "Descripcion":"Michelada Club 330ml",
+        "ingredientes":"{\"Club 330ml\":1}",
+        "Nombre del ingrediente":"Club 330ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Turbo",
+        "price":5.5,
+        "Nombre completo":"Turbo michelada antioqueño",
+        "Descripcion":"Turbo michelada antioqueño",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Super Coronita",
+        "price":6.0,
+        "Nombre completo":"Super coronita michelada",
+        "Descripcion":"Super coronita michelada",
+        "ingredientes":"{\"Coronita 210ml\":1}",
+        "Nombre del ingrediente":"Coronita 210ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"M Frutos Rojos",
+        "price":5.5,
+        "Nombre completo":"Michelada frutos rojos",
+        "Descripcion":"Michelada frutos rojos",
+        "ingredientes":"{\"Inti 500ml\":1.5}",
+        "Nombre del ingrediente":"Inti 500ml",
+        "Catidad":1.5
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"M Maracumango",
+        "price":5.5,
+        "Nombre completo":"Michelada Maracumango",
+        "Descripcion":"Michelada Maracumango",
+        "ingredientes":"{\"Inti 500ml\":1.5}",
+        "Nombre del ingrediente":"Inti 500ml",
+        "Catidad":1.5
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"M Mango Biche",
+        "price":5.5,
+        "Nombre completo":"Michelada mango biche",
+        "Descripcion":"Michelada mango biche",
+        "ingredientes":"{\"Inti 500ml\":1.5}",
+        "Nombre del ingrediente":"Inti 500ml",
+        "Catidad":1.5
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granilada FR",
+        "price":5.5,
+        "Nombre completo":"Granilada frutos rojos",
+        "Descripcion":"Granilada frutos rojos",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granilada MV",
+        "price":5.5,
+        "Nombre completo":"Granilada manzana verde",
+        "Descripcion":"Granilada manzana verde",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Parchilada",
+        "price":3.5,
+        "Nombre completo":"Parchilada",
+        "Descripcion":"Parchilada",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Lulada",
+        "price":3.5,
+        "Nombre completo":"Lulada",
+        "Descripcion":"Lulada",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Especial Azteca fresa",
+        "price":5.5,
+        "Nombre completo":"Especial Azteca fresa",
+        "Descripcion":"Especial Azteca fresa",
+        "ingredientes":"{\"Azteca miniatura 50ml\":1}",
+        "Nombre del ingrediente":"Azteca miniatura 50ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Especial Azteca durazno",
+        "price":5.5,
+        "Nombre completo":"Especial Azteca durazno",
+        "Descripcion":"Especial Azteca durazno",
+        "ingredientes":"{\"Azteca miniatura 50ml\":1}",
+        "Nombre del ingrediente":"Azteca miniatura 50ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Especial Jager",
+        "price":5.5,
+        "Nombre completo":"Especial Jager",
+        "Descripcion":"Especial Jager",
+        "ingredientes":"{\"Jagermeister Miniatura\":1}",
+        "Nombre del ingrediente":"Jagermeister Miniatura",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Paloma 1",
+        "price":7.5,
+        "Nombre completo":"Paloma 1lt",
+        "Descripcion":"Paloma 1lt",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Paloma 500",
+        "price":5.0,
+        "Nombre completo":"Paloma 500ml",
+        "Descripcion":"Paloma 500ml",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granizado FR",
+        "price":3.5,
+        "Nombre completo":"Granizado Frutos rojos",
+        "Descripcion":"Granizado Frutos rojos",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granizado MA",
+        "price":3.5,
+        "Nombre completo":"Granizado Mora azul",
+        "Descripcion":"Granizado Mora azul",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granizado ZM",
+        "price":3.5,
+        "Nombre completo":"Granizado Zarzamora",
+        "Descripcion":"Granizado Zarzamora",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granizado MV",
+        "price":3.5,
+        "Nombre completo":"Granizado manzana verde",
+        "Descripcion":"Granizado manzana verde",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granizado FR SA",
+        "price":3.5,
+        "Nombre completo":"Granizado frutos rojos SIN ALCOHOL",
+        "Descripcion":"Granizado frutos rojos SIN ALCOHOL",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granizado MA SA",
+        "price":3.5,
+        "Nombre completo":"Granizado Mora azul SIN ALCOHOL",
+        "Descripcion":"Granizado Mora azul SIN ALCOHOL",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granizado ZM SA",
+        "price":3.5,
+        "Nombre completo":"Granizado Zaramora SIN ALCOHOL",
+        "Descripcion":"Granizado Zaramora SIN ALCOHOL",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Granizado MV SA",
+        "price":3.5,
+        "Nombre completo":"Granizado manzana verde SIN ALCOHOL",
+        "Descripcion":"Granizado manzana verde SIN ALCOHOL",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Pitufo",
+        "price":7.0,
+        "Nombre completo":"Pitufo",
+        "Descripcion":"Pitufo",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Promo Michelada",
+        "price":1.5,
+        "Nombre completo":"Promo michelada 1,5",
+        "Descripcion":"Promo michelada 1,5",
+        "ingredientes":"{\"Inti 500ml\":0.5}",
+        "Nombre del ingrediente":"Inti 500ml",
+        "Catidad":0.5
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Pitufo Black",
+        "price":7.0,
+        "Nombre completo":"Pitufo Black",
+        "Descripcion":"Pitufo Black",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Club 330",
+        "price":2.0,
+        "Nombre completo":"Club 330ml",
+        "Descripcion":"Club 330ml",
+        "ingredientes":"{\"Club 330ml\":1}",
+        "Nombre del ingrediente":"Club 330ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Club 850",
+        "price":3.75,
+        "Nombre completo":"Club 850ml",
+        "Descripcion":"Club 850ml",
+        "ingredientes":"{\"Club 850ml\":1}",
+        "Nombre del ingrediente":"Club 850ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Club 850 TG",
+        "price":3.8,
+        "Nombre completo":"Club 850ml PARA LLEVAR",
+        "Descripcion":"Club 850ml PARA LLEVAR",
+        "ingredientes":"{\"Club 850ml\":1}",
+        "Nombre del ingrediente":"Club 850ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Club Lata",
+        "price":2.5,
+        "Nombre completo":"Club lata",
+        "Descripcion":"Club lata",
+        "ingredientes":"{\"Club lata\":1}",
+        "Nombre del ingrediente":"Club lata",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Corona",
+        "price":2.0,
+        "Nombre completo":"Corona 330ml",
+        "Descripcion":"Corona 330ml",
+        "ingredientes":"{\"Corona 330ml\":1}",
+        "Nombre del ingrediente":"Corona 330ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Coronita",
+        "price":1.5,
+        "Nombre completo":"Coronita 210ml",
+        "Descripcion":"Coronita 210ml",
+        "ingredientes":"{\"Coronita 210ml\":1}",
+        "Nombre del ingrediente":"Coronita 210ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Pilsener",
+        "price":3.5,
+        "Nombre completo":"Pilsener 1 Lt",
+        "Descripcion":"Pilsener 1 Lt",
+        "ingredientes":"{\"Pilsener 1 Lt\":1}",
+        "Nombre del ingrediente":"Pilsener 1 Lt",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Pilsener TG",
+        "price":3.8,
+        "Nombre completo":"Pilsener 1 Lt PARA LLEVAR",
+        "Descripcion":"Pilsener 1 Lt PARA LLEVAR",
+        "ingredientes":"{\"Pilsener 1 Lt\":1}",
+        "Nombre del ingrediente":"Pilsener 1 Lt",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Siembra",
+        "price":2.75,
+        "Nombre completo":"Siembra 1lt",
+        "Descripcion":"Siembra 1lt",
+        "ingredientes":"{\"Siembra 1lt\":1}",
+        "Nombre del ingrediente":"Siembra 1lt",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cerveza",
+        "name":"Siembra TG",
+        "price":3.05,
+        "Nombre completo":"Siembra 1lt PARA LLEVAR",
+        "Descripcion":"Siembra 1lt PARA LLEVAR",
+        "ingredientes":"{\"Siembra 1lt\":1}",
+        "Nombre del ingrediente":"Siembra 1lt",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tequila",
+        "name":"Espuela",
+        "price":22.75,
+        "Nombre completo":"Espuela 750ml",
+        "Descripcion":"Espuela 750ml + Hielos",
+        "ingredientes":"{\"Espuela 750ml\":1}",
+        "Nombre del ingrediente":"Espuela 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tequila",
+        "name":"Gran Malo",
+        "price":38.0,
+        "Nombre completo":"Gran Malo 750ml",
+        "Descripcion":"Gran Malo 750ml + Hielos",
+        "ingredientes":"{\"Gran Malo 750ml\":1}",
+        "Nombre del ingrediente":"Gran Malo 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tequila",
+        "name":"Azteca 1",
+        "price":25.0,
+        "Nombre completo":"Azteca Silver 1000ml",
+        "Descripcion":"Azteca Silver 1000ml + Hielos",
+        "ingredientes":"{\"Azteca Silver 1000ml\":1}",
+        "Nombre del ingrediente":"Azteca Silver 1000ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tequila",
+        "name":"Azteca 750",
+        "price":21.0,
+        "Nombre completo":"Azteca Silver 750ml",
+        "Descripcion":"Azteca Silver 750ml + Hielos",
+        "ingredientes":"{\"Azteca Silver 750ml\":1}",
+        "Nombre del ingrediente":"Azteca Silver 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tequila",
+        "name":"Rancho",
+        "price":17.0,
+        "Nombre completo":"Rancho 750ml",
+        "Descripcion":"Rancho 750ml + Hielos",
+        "ingredientes":"{\"Rancho 750ml\":1}",
+        "Nombre del ingrediente":"Rancho 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tequila",
+        "name":"Canijo",
+        "price":22.0,
+        "Nombre completo":"Canijo Tamarindo",
+        "Descripcion":"Canijo Tamarindo + Hielos",
+        "ingredientes":"{\"Canijo Tamarindo\":1}",
+        "Nombre del ingrediente":"Canijo Tamarindo",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tequila",
+        "name":"Smirnoff",
+        "price":18.0,
+        "Nombre completo":"Smirnoff",
+        "Descripcion":"Smirnoff + Hielos",
+        "ingredientes":"{\"Smirnoff\":1}",
+        "Nombre del ingrediente":"Smirnoff",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tequila",
+        "name":"Azteca P",
+        "price":3.5,
+        "Nombre completo":"Azteca miniatura 50ml",
+        "Descripcion":"Azteca miniatura 50ml",
+        "ingredientes":"{\"Azteca miniatura 50ml\":1}",
+        "Nombre del ingrediente":"Azteca miniatura 50ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Barbados BB",
+        "price":6.5,
+        "Nombre completo":"Barbados Blue Berry",
+        "Descripcion":"Barbados Blue Berry",
+        "ingredientes":"{\"Barbados Blue Berry\":1}",
+        "Nombre del ingrediente":"Barbados Blue Berry",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Barbados C",
+        "price":6.5,
+        "Nombre completo":"Barbados Cannabis",
+        "Descripcion":"Barbados Cannabis",
+        "ingredientes":"{\"Barbados Cannabis\":1}",
+        "Nombre del ingrediente":"Barbados Cannabis",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Barbados CC",
+        "price":6.5,
+        "Nombre completo":"Barbadados Cotton Candy",
+        "Descripcion":"Barbadados Cotton Candy",
+        "ingredientes":"{\"Barbadados Cotton Candy\":1}",
+        "Nombre del ingrediente":"Barbadados Cotton Candy",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Barbados MD",
+        "price":6.5,
+        "Nombre completo":"Barbados Mythological Drink",
+        "Descripcion":"Barbados Mythological Drink",
+        "ingredientes":"{\"Barbados Mythological Drink\":1}",
+        "Nombre del ingrediente":"Barbados Mythological Drink",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Barbados BB TG",
+        "price":5.5,
+        "Nombre completo":"Barbados Blue Berry PARA LLEVAR",
+        "Descripcion":"Barbados Blue Berry PARA LLEVAR",
+        "ingredientes":"{\"Barbados Blue Berry\":1}",
+        "Nombre del ingrediente":"Barbados Blue Berry",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Barbados C TG",
+        "price":5.5,
+        "Nombre completo":"Barbados Cannabis PARA LLEVAR",
+        "Descripcion":"Barbados Cannabis PARA LLEVAR",
+        "ingredientes":"{\"Barbados Cannabis\":1}",
+        "Nombre del ingrediente":"Barbados Cannabis",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Barbados CC TG",
+        "price":5.5,
+        "Nombre completo":"Barbadados Cotton Candy PARA LLEVAR",
+        "Descripcion":"Barbadados Cotton Candy PARA LLEVAR",
+        "ingredientes":"{\"Barbadados Cotton Candy\":1}",
+        "Nombre del ingrediente":"Barbadados Cotton Candy",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Barbados MD TG",
+        "price":5.5,
+        "Nombre completo":"Barbados Mythological Drink PARA LLEVAR",
+        "Descripcion":"Barbados Mythological Drink PARA LLEVAR",
+        "ingredientes":"{\"Barbados Mythological Drink\":1}",
+        "Nombre del ingrediente":"Barbados Mythological Drink",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Vodka 40",
+        "price":4.0,
+        "Nombre completo":"Vodka 40",
+        "Descripcion":"Vodka 40",
+        "ingredientes":"{\"Vodka 40\":1}",
+        "Nombre del ingrediente":"Vodka 40",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vodka",
+        "name":"Cartago Guarana",
+        "price":6.5,
+        "Nombre completo":"Cartago Guarana",
+        "Descripcion":"Cartago Guarana",
+        "ingredientes":"{\"Cartago Guarana\":1}",
+        "Nombre del ingrediente":"Cartago Guarana",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Ron",
+        "name":"Ron Abuelo",
+        "price":18.0,
+        "Nombre completo":"Ron Abuelo",
+        "Descripcion":"Ron Abuelo",
+        "ingredientes":"{\"Ron Abuelo\":1}",
+        "Nombre del ingrediente":"Ron Abuelo",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Antio 750",
+        "price":21.0,
+        "Nombre completo":"Antioqueño Tapa azul 750ml",
+        "Descripcion":"Antioqueño Tapa azul 750ml+ Hielos",
+        "ingredientes":"{\"Antioqueño Tapa azul 750ml\":1}",
+        "Nombre del ingrediente":"Antioqueño Tapa azul 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Antio 375",
+        "price":12.0,
+        "Nombre completo":"Antioqueño Tapa azul 375ml",
+        "Descripcion":"Antioqueño Tapa azul 375ml+ Hielos",
+        "ingredientes":"{\"Antioqueño Tapa azul 375ml\":1}",
+        "Nombre del ingrediente":"Antioqueño Tapa azul 375ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Zhumir C",
+        "price":6.5,
+        "Nombre completo":"Zhumir Coco Tropical 700ml",
+        "Descripcion":"Zhumir Coco Tropical 700ml+ Hielos",
+        "ingredientes":"{\"Zhumir Coco Tropical 700ml\":1}",
+        "Nombre del ingrediente":"Zhumir Coco Tropical 700ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Zhumir N",
+        "price":6.5,
+        "Nombre completo":"Zhumir Naranjilla 700ml",
+        "Descripcion":"Zhumir Naranjilla 700ml+ Hielos",
+        "ingredientes":"{\"Zhumir Naranjilla 700ml\":1}",
+        "Nombre del ingrediente":"Zhumir Naranjilla 700ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Zhumir N",
+        "price":7.5,
+        "Nombre completo":"Zhumir Mango 700ml",
+        "Descripcion":"Zhumir Mango 700ml+ Hielos",
+        "ingredientes":"{\"Zhumir Mango 700ml\":1}",
+        "Nombre del ingrediente":"Zhumir Mango 700ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Zhumir P",
+        "price":6.5,
+        "Nombre completo":"Zhumir Pink",
+        "Descripcion":"Zhumir Pink+ Hielos",
+        "ingredientes":"{\"Zhumir Pink\":1}",
+        "Nombre del ingrediente":"Zhumir Pink",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Zhumir C TG",
+        "price":5.5,
+        "Nombre completo":"Zhumir Coco Tropical 700ml PARA LLEVAR",
+        "Descripcion":"Zhumir Coco Tropical 700ml PARA LLEVAR",
+        "ingredientes":"{\"Zhumir Coco Tropical 700ml\":1}",
+        "Nombre del ingrediente":"Zhumir Coco Tropical 700ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Zhumir N TG",
+        "price":5.5,
+        "Nombre completo":"Zhumir Naranjilla 700ml PARA LLEVAR",
+        "Descripcion":"Zhumir Naranjilla 700ml PARA LLEVAR",
+        "ingredientes":"{\"Zhumir Naranjilla 700ml\":1}",
+        "Nombre del ingrediente":"Zhumir Naranjilla 700ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Zhumir P TG",
+        "price":5.5,
+        "Nombre completo":"Zhumir Pink PARA LLEVAR",
+        "Descripcion":"Zhumir Pink PARA LLEVAR",
+        "ingredientes":"{\"Zhumir Pink\":1}",
+        "Nombre del ingrediente":"Zhumir Pink",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Zhumir P TG",
+        "price":6.5,
+        "Nombre completo":"Zhumir Mango PARA LLEVAR",
+        "Descripcion":"Zhumir Mango PARA LLEVAR",
+        "ingredientes":"{\"Zhumir Mango 700ml\":1}",
+        "Nombre del ingrediente":"Zhumir Mango 700ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Norteño 750",
+        "price":10.0,
+        "Nombre completo":"Norteño 750ml",
+        "Descripcion":"Norteño 750ml + Hielos",
+        "ingredientes":"{\"Norteño 750ml\":1}",
+        "Nombre del ingrediente":"Norteño 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Norteño B",
+        "price":11.0,
+        "Nombre completo":"Norteño Black 750 ml",
+        "Descripcion":"Norteño Black 750 ml + Hielos",
+        "ingredientes":"{\"Norteño Black 750 ml\":1}",
+        "Nombre del ingrediente":"Norteño Black 750 ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Norteño G",
+        "price":11.0,
+        "Nombre completo":"Norteño Gold 750ml ",
+        "Descripcion":"Norteño Gold 750ml  + Hielos",
+        "ingredientes":"{\"Norteño Gold 750ml \":1}",
+        "Nombre del ingrediente":"Norteño Gold 750ml ",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Aguardiente",
+        "name":"Norteño 375",
+        "price":6.0,
+        "Nombre completo":"Norteño 375ml",
+        "Descripcion":"Norteño 375ml + Hielos",
+        "ingredientes":"{\"Norteño 375ml\":1}",
+        "Nombre del ingrediente":"Norteño 375ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Fraile",
+        "price":6.5,
+        "Nombre completo":"Fraile 1500ml ",
+        "Descripcion":"Fraile 1500ml ",
+        "ingredientes":"{\"Fraile 1500ml \":1}",
+        "Nombre del ingrediente":"Fraile 1500ml ",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Cavic",
+        "price":6.25,
+        "Nombre completo":"Cavic Tinto 1000ml",
+        "Descripcion":"Cavic Tinto 1000ml",
+        "ingredientes":"{\"Cavic Tinto 1000ml\":1}",
+        "Nombre del ingrediente":"Cavic Tinto 1000ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Miraflores",
+        "price":6.75,
+        "Nombre completo":"Miraflores 750ml",
+        "Descripcion":"Miraflores 750ml",
+        "ingredientes":"{\"Miraflores 750ml\":1}",
+        "Nombre del ingrediente":"Miraflores 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Haciendazo",
+        "price":5.5,
+        "Nombre completo":"Haciendazo 1500ml",
+        "Descripcion":"Haciendazo 1500ml",
+        "ingredientes":"{\"Haciendazo 1500ml\":1}",
+        "Nombre del ingrediente":"Haciendazo 1500ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Fraile TG",
+        "price":5.5,
+        "Nombre completo":"Fraile 1500ml PARA LLEVAR",
+        "Descripcion":"Fraile 1500ml PARA LLEVAR",
+        "ingredientes":"{\"Fraile 1500ml \":1}",
+        "Nombre del ingrediente":"Fraile 1500ml ",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Cavic TG",
+        "price":5.0,
+        "Nombre completo":"Cavic Tinto 1000ml PARA LLEVAR",
+        "Descripcion":"Cavic Tinto 1000ml PARA LLEVAR",
+        "ingredientes":"{\"Cavic Tinto 1000ml\":1}",
+        "Nombre del ingrediente":"Cavic Tinto 1000ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Miraflores TG",
+        "price":5.75,
+        "Nombre completo":"Miraflores 750ml PARA LLEVAR",
+        "Descripcion":"Miraflores 750ml PARA LLEVAR",
+        "ingredientes":"{\"Miraflores 750ml\":1}",
+        "Nombre del ingrediente":"Miraflores 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Haciendazo TG",
+        "price":3.5,
+        "Nombre completo":"Haciendazo 1500ml PARA LLEVAR",
+        "Descripcion":"Haciendazo 1500ml PARA LLEVAR",
+        "ingredientes":"{\"Haciendazo 1500ml\":1}",
+        "Nombre del ingrediente":"Haciendazo 1500ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Vino",
+        "name":"Vino Caliente",
+        "price":7.5,
+        "Nombre completo":"Vino Caliente",
+        "Descripcion":"Vino Caliente",
+        "ingredientes":"{\"Haciendazo 1500ml\":1}",
+        "Nombre del ingrediente":"Haciendazo 1500ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Wishy",
+        "name":"OT Black",
+        "price":19.0,
+        "Nombre completo":"Old Times Black 745ml",
+        "Descripcion":"Old Times Black 745ml + Hielos",
+        "ingredientes":"{\"Old Times Black 745ml\":1}",
+        "Nombre del ingrediente":"Old Times Black 745ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Wishy",
+        "name":"OT Red",
+        "price":16.0,
+        "Nombre completo":"Old Time Red 745cc",
+        "Descripcion":"Old Time Red 745cc + Hielos",
+        "ingredientes":"{\"Old Time Red 745cc\":1}",
+        "Nombre del ingrediente":"Old Time Red 745cc",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Wishy",
+        "name":"Johnnie Red",
+        "price":35.0,
+        "Nombre completo":"Johnnie Walker Red 750 ml ",
+        "Descripcion":"Johnnie Walker Red 750 ml  + Hielos",
+        "ingredientes":"{\"Johnnie Walker Red 750 ml \":1}",
+        "Nombre del ingrediente":"Johnnie Walker Red 750 ml ",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Wishy",
+        "name":"OT Miel",
+        "price":10.0,
+        "Nombre completo":"Old Times Miel 750ml",
+        "Descripcion":"Old Times Miel 750ml + Hielos",
+        "ingredientes":"{\"Old Times Miel 750ml\":1}",
+        "Nombre del ingrediente":"Old Times Miel 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Wishy",
+        "name":"OT Manzana",
+        "price":10.0,
+        "Nombre completo":"Old Times Manzana 750ml",
+        "Descripcion":"Old Times Manzana 750ml + Hielos",
+        "ingredientes":"{\"Old Times Manzana 750ml\":1}",
+        "Nombre del ingrediente":"Old Times Manzana 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Wishy",
+        "name":"Buchanans",
+        "price":78.0,
+        "Nombre completo":"Buchanans",
+        "Descripcion":"Buchanans + Hielos",
+        "ingredientes":"{\"Buchanans\":1}",
+        "Nombre del ingrediente":"Buchanans",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Wishy",
+        "name":"Something Special",
+        "price":25.0,
+        "Nombre completo":"Something Special",
+        "Descripcion":"Something Special + Hielos",
+        "ingredientes":"{\"Something Special\":1}",
+        "Nombre del ingrediente":"Something Special",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Wishy",
+        "name":"John Morris P",
+        "price":3.5,
+        "Nombre completo":"John Morris Petit",
+        "Descripcion":"John Morris Petit",
+        "ingredientes":"{\"John Morris Petit\":1}",
+        "Nombre del ingrediente":"John Morris Petit",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Licor de Hierbas",
+        "name":"Gluk",
+        "price":22.0,
+        "Nombre completo":"Gluksmaister litro",
+        "Descripcion":"Gluksmaister litro + Hielos",
+        "ingredientes":"{\"Gluksmaister litro\":1}",
+        "Nombre del ingrediente":"Gluksmaister litro",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Licor de Hierbas",
+        "name":"Jager 1",
+        "price":45.0,
+        "Nombre completo":"Jagermaister 1L",
+        "Descripcion":"Jagermaister 1L + Hielos",
+        "ingredientes":"{\"Jagermaister 1L\":1}",
+        "Nombre del ingrediente":"Jagermaister 1L",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Licor de Hierbas",
+        "name":"Jager P",
+        "price":4.0,
+        "Nombre completo":"Jagermeister Miniatura",
+        "Descripcion":"Jagermeister Miniatura",
+        "ingredientes":"{\"Jagermeister Miniatura\":1}",
+        "Nombre del ingrediente":"Jagermeister Miniatura",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Varios",
+        "name":"Four Loko B",
+        "price":5.5,
+        "Nombre completo":"Four Loko Blue ",
+        "Descripcion":"Four Loko Blue ",
+        "ingredientes":"{\"Four Loko Blue \":1}",
+        "Nombre del ingrediente":"Four Loko Blue ",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Varios",
+        "name":"Four Loko G",
+        "price":5.5,
+        "Nombre completo":"Four loko Gold ",
+        "Descripcion":"Four loko Gold ",
+        "ingredientes":"{\"Four loko Gold \":1}",
+        "Nombre del ingrediente":"Four loko Gold ",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Varios",
+        "name":"Four Loko R",
+        "price":5.5,
+        "Nombre completo":"Four Loko Red",
+        "Descripcion":"Four Loko Red",
+        "ingredientes":"{\"Four Loko Red\":1}",
+        "Nombre del ingrediente":"Four Loko Red",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Varios",
+        "name":"Four Loko W",
+        "price":5.5,
+        "Nombre completo":"Four Loko Withe",
+        "Descripcion":"Four Loko Withe",
+        "ingredientes":"{\"Four Loko Withe\":1}",
+        "Nombre del ingrediente":"Four Loko Withe",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Varios",
+        "name":"Jelly",
+        "price":1.0,
+        "Nombre completo":"Jelly Four loko",
+        "Descripcion":"Jelly Four loko",
+        "ingredientes":"{\"Jelly Four loko\":1}",
+        "Nombre del ingrediente":"Jelly Four loko",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Gomita Switch",
+        "price":0.25,
+        "Nombre completo":"Gelatina Switch",
+        "Descripcion":"Gelatina Switch",
+        "ingredientes":"{\"Gelatina Switch\":1}",
+        "Nombre del ingrediente":"Gelatina Switch",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch BB",
+        "price":4.5,
+        "Nombre completo":"Switch Bongo Bongo",
+        "Descripcion":"Switch Bongo Bongo",
+        "ingredientes":"{\"Switch Bongo Bongo\":1}",
+        "Nombre del ingrediente":"Switch Bongo Bongo",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch D",
+        "price":4.5,
+        "Nombre completo":"Switch Daiquiri",
+        "Descripcion":"Switch Daiquiri",
+        "ingredientes":"{\"Switch Daiquiri\":1}",
+        "Nombre del ingrediente":"Switch Daiquiri",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch HD",
+        "price":4.5,
+        "Nombre completo":"Switch Harta Demencia",
+        "Descripcion":"Switch Harta Demencia",
+        "ingredientes":"{\"Switch Harta Demencia\":1}",
+        "Nombre del ingrediente":"Switch Harta Demencia",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch M",
+        "price":4.5,
+        "Nombre completo":"Switch Maracuya",
+        "Descripcion":"Switch Maracuya",
+        "ingredientes":"{\"Switch Maracuya\":1}",
+        "Nombre del ingrediente":"Switch Maracuya",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch T",
+        "price":4.5,
+        "Nombre completo":"Switch Tamarindo",
+        "Descripcion":"Switch Tamarindo",
+        "ingredientes":"{\"Switch Tamarindo\":1}",
+        "Nombre del ingrediente":"Switch Tamarindo",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch BB TG",
+        "price":3.0,
+        "Nombre completo":"Switch Bongo Bongo PARA LLEVAR",
+        "Descripcion":"Switch Bongo Bongo PARA LLEVAR",
+        "ingredientes":"{\"Switch Bongo Bongo\":1}",
+        "Nombre del ingrediente":"Switch Bongo Bongo",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch D TG",
+        "price":3.0,
+        "Nombre completo":"Switch Daiquiri PARA LLEVAR",
+        "Descripcion":"Switch Daiquiri PARA LLEVAR",
+        "ingredientes":"{\"Switch Daiquiri\":1}",
+        "Nombre del ingrediente":"Switch Daiquiri",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch HD TG",
+        "price":3.0,
+        "Nombre completo":"Switch Harta Demencia PARA LLEVAR",
+        "Descripcion":"Switch Harta Demencia PARA LLEVAR",
+        "ingredientes":"{\"Switch Harta Demencia\":1}",
+        "Nombre del ingrediente":"Switch Harta Demencia",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch M TG",
+        "price":3.0,
+        "Nombre completo":"Switch Maracuya PARA LLEVAR",
+        "Descripcion":"Switch Maracuya PARA LLEVAR",
+        "ingredientes":"{\"Switch Maracuya\":1}",
+        "Nombre del ingrediente":"Switch Maracuya",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Switch",
+        "name":"Switch T TG",
+        "price":3.0,
+        "Nombre completo":"Switch Tamarindo PARA LLEVAR",
+        "Descripcion":"Switch Tamarindo PARA LLEVAR",
+        "ingredientes":"{\"Switch Tamarindo\":1}",
+        "Nombre del ingrediente":"Switch Tamarindo",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Varios",
+        "name":"RTD",
+        "price":5.5,
+        "Nombre completo":"RTD",
+        "Descripcion":"RTD",
+        "ingredientes":"{\"RTD\":1}",
+        "Nombre del ingrediente":"RTD",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Varios",
+        "name":"RTD TG",
+        "price":3.5,
+        "Nombre completo":"RTD PARA LLEVAR",
+        "Descripcion":"RTD PARA LLEVAR",
+        "ingredientes":"{\"RTD\":1}",
+        "Nombre del ingrediente":"RTD",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cubata",
+        "name":"Cubata B",
+        "price":4.5,
+        "Nombre completo":"Cubata Berrylicious",
+        "Descripcion":"Cubata Berrylicious",
+        "ingredientes":"{\"Cubata Berrylicious\":1}",
+        "Nombre del ingrediente":"Cubata Berrylicious",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cubata",
+        "name":"Cubata G",
+        "price":4.5,
+        "Nombre completo":"Cubata Guarana",
+        "Descripcion":"Cubata Guarana",
+        "ingredientes":"{\"Cubata Guarana\":1}",
+        "Nombre del ingrediente":"Cubata Guarana",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cubata",
+        "name":"Cubata PC",
+        "price":4.5,
+        "Nombre completo":"Cubata Piña Paradice",
+        "Descripcion":"Cubata Piña Paradice",
+        "ingredientes":"{\"Cubata Piña Paradice\":1}",
+        "Nombre del ingrediente":"Cubata Piña Paradice",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cubata",
+        "name":"Cubata B TG",
+        "price":3.0,
+        "Nombre completo":"Cubata Berrylicious PARA LLEVAR",
+        "Descripcion":"Cubata Berrylicious PARA LLEVAR",
+        "ingredientes":"{\"Cubata Berrylicious\":1}",
+        "Nombre del ingrediente":"Cubata Berrylicious",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cubata",
+        "name":"Cubata G TG",
+        "price":3.0,
+        "Nombre completo":"Cubata Guarana PARA LLEVAR",
+        "Descripcion":"Cubata Guarana PARA LLEVAR",
+        "ingredientes":"{\"Cubata Guarana\":1}",
+        "Nombre del ingrediente":"Cubata Guarana",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cubata",
+        "name":"Cubata PC TG",
+        "price":3.0,
+        "Nombre completo":"Cubata Piña Paradice PARA LLEVAR",
+        "Descripcion":"Cubata Piña Paradice PARA LLEVAR",
+        "ingredientes":"{\"Cubata Piña Paradice\":1}",
+        "Nombre del ingrediente":"Cubata Piña Paradice",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Canelazo amazonico",
+        "price":5.5,
+        "Nombre completo":"Canelazo Amazonico",
+        "Descripcion":"Canelazo Amazonico",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Canelazo Frutos rojos",
+        "price":6.0,
+        "Nombre completo":"Canelazo Frutos rojos",
+        "Descripcion":"Canelazo Frutos rojos",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Canelazo amazonico 500",
+        "price":3.0,
+        "Nombre completo":"Canelazo amazonico 500",
+        "Descripcion":"Canelazo amazonico 500",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"Canelazo frutos rojos 500",
+        "price":3.5,
+        "Nombre completo":"Canelazo frutos rojos 500",
+        "Descripcion":"Canelazo frutos rojos 500",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Monster",
+        "price":3.5,
+        "Nombre completo":"Monster",
+        "Descripcion":"Monster",
+        "ingredientes":"{\"Monster\":1}",
+        "Nombre del ingrediente":"Monster",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Redbull",
+        "price":3.0,
+        "Nombre completo":"Redbull",
+        "Descripcion":"Redbull",
+        "ingredientes":"{\"Redbull\":1}",
+        "Nombre del ingrediente":"Redbull",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Gatorade G",
+        "price":1.5,
+        "Nombre completo":"Gatorade G",
+        "Descripcion":"Gatorade G",
+        "ingredientes":"{\"Gatorade G\":1}",
+        "Nombre del ingrediente":"Gatorade G",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Gatorade P",
+        "price":1.0,
+        "Nombre completo":"Gatorade P",
+        "Descripcion":"Gatorade P",
+        "ingredientes":"{\"Gatorade P\":1}",
+        "Nombre del ingrediente":"Gatorade P",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Vive 100",
+        "price":1.5,
+        "Nombre completo":"Vive 100",
+        "Descripcion":"Vive 100",
+        "ingredientes":"{\"Vive 100\":1}",
+        "Nombre del ingrediente":"Vive 100",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Agua G",
+        "price":1.25,
+        "Nombre completo":"Agua G",
+        "Descripcion":"Agua G",
+        "ingredientes":"{\"Agua G\":1}",
+        "Nombre del ingrediente":"Agua G",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Agua P",
+        "price":0.75,
+        "Nombre completo":"Agua P",
+        "Descripcion":"Agua P",
+        "ingredientes":"{\"Agua P\":1}",
+        "Nombre del ingrediente":"Agua P",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Sprite 1",
+        "price":1.75,
+        "Nombre completo":"Sprite 1",
+        "Descripcion":"Sprite 1",
+        "ingredientes":"{\"Sprite 1\":1}",
+        "Nombre del ingrediente":"Sprite 1",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Coca Cola 1",
+        "price":1.75,
+        "Nombre completo":"Coca Cola 1",
+        "Descripcion":"Coca Cola 1",
+        "ingredientes":"{\"Coca Cola 1\":1}",
+        "Nombre del ingrediente":"Coca Cola 1",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Coca Cola 1,5",
+        "price":2.5,
+        "Nombre completo":"Coca Cola 1,5",
+        "Descripcion":"Coca Cola 1,5",
+        "ingredientes":"{\"Coca Cola 1,5\":1}",
+        "Nombre del ingrediente":"Coca Cola 1,5",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Cifrut",
+        "price":0.75,
+        "Nombre completo":"Cifrut",
+        "Descripcion":"Cifrut",
+        "ingredientes":"{\"Cifrut\":1}",
+        "Nombre del ingrediente":"Cifrut",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tabacos",
+        "name":"Lark",
+        "price":0.5,
+        "Nombre completo":"Lark",
+        "Descripcion":"Lark",
+        "ingredientes":"{\"Lark\":1}",
+        "Nombre del ingrediente":"Lark",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tabacos",
+        "name":"Marlboro",
+        "price":0.5,
+        "Nombre completo":"Marlboro",
+        "Descripcion":"Marlboro",
+        "ingredientes":"{\"Marlboro\":1}",
+        "Nombre del ingrediente":"Marlboro",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tabacos",
+        "name":"Media Lark",
+        "price":4.5,
+        "Nombre completo":"Media Lark",
+        "Descripcion":"Media Lark",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Tabacos",
+        "name":"Media Marlboro",
+        "price":4.5,
+        "Nombre completo":"Media Marlboro",
+        "Descripcion":"Media Marlboro",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Picadita de Carne",
+        "price":2.5,
+        "Nombre completo":"Picadita de Carne",
+        "Descripcion":"Picadita de Carne",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Picadita de Pollo",
+        "price":2.5,
+        "Nombre completo":"Picadita de Pollo",
+        "Descripcion":"Picadita de Pollo",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Doriloco de Carne",
+        "price":2.5,
+        "Nombre completo":"Doriloco de Carne",
+        "Descripcion":"Doriloco de Carne",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Doriloco de Pollo",
+        "price":2.5,
+        "Nombre completo":"Doriloco de Pollo",
+        "Descripcion":"Doriloco de Pollo",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Hielos",
+        "price":0.5,
+        "Nombre completo":"Hielos",
+        "Descripcion":"Hielos",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Limon",
+        "price":0.5,
+        "Nombre completo":"Limon",
+        "Descripcion":"Limon",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Chamoyada",
+        "price":2.0,
+        "Nombre completo":"Chamoyada",
+        "Descripcion":"Chamoyada",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Canguil",
+        "price":1.0,
+        "Nombre completo":"Canguil",
+        "Descripcion":"Canguil",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Shot",
+        "name":"Shot de Tequila",
+        "price":1.5,
+        "Nombre completo":"Shot de Tequila",
+        "Descripcion":"Shot de Tequila",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Shot",
+        "name":"Shot de Whisky",
+        "price":1.5,
+        "Nombre completo":"Shot de Whisky",
+        "Descripcion":"Shot de Whisky",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Shot",
+        "name":"Shot de Hierbas",
+        "price":1.5,
+        "Nombre completo":"Shot de Hierbas",
+        "Descripcion":"Shot de Hierbas",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Shot",
+        "name":"Shot de Vodka",
+        "price":1.5,
+        "Nombre completo":"Shot de Vodka",
+        "Descripcion":"Shot de Vodka",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Shot",
+        "name":"Shot Canelazo",
+        "price":0.75,
+        "Nombre completo":"Shot Canelazo",
+        "Descripcion":"Shot Canelazo",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"V220 G",
+        "price":1.5,
+        "Nombre completo":"V220 grande",
+        "Descripcion":"V220 grande",
+        "ingredientes":"{\"V220 grande\":1}",
+        "Nombre del ingrediente":"V220 grande",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"V220 P",
+        "price":1.0,
+        "Nombre completo":"V220 pequeño",
+        "Descripcion":"V220 pequeño",
+        "ingredientes":"{\"V220 pequeño\":1}",
+        "Nombre del ingrediente":"V220 pequeño",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Dulces",
+        "name":"Menta",
+        "price":0.1,
+        "Nombre completo":"Menta",
+        "Descripcion":"Menta",
+        "ingredientes":"{\"Menta\":1}",
+        "Nombre del ingrediente":"Menta",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Dulces",
+        "name":"Trident",
+        "price":0.15,
+        "Nombre completo":"Trident",
+        "Descripcion":"Trident",
+        "ingredientes":"{\"Trident\":1}",
+        "Nombre del ingrediente":"Trident",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Dulces",
+        "name":"Trident Pack",
+        "price":0.75,
+        "Nombre completo":"Trident Pack",
+        "Descripcion":"Trident Pack",
+        "ingredientes":"{\"Trident Pack\":1}",
+        "Nombre del ingrediente":"Trident Pack",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Dulces",
+        "name":"Chupete",
+        "price":0.25,
+        "Nombre completo":"Chupete",
+        "Descripcion":"Chupete",
+        "ingredientes":"{\"Chupete\":1}",
+        "Nombre del ingrediente":"Chupete",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Bebidas",
+        "name":"Guitig",
+        "price":1.75,
+        "Nombre completo":"Guitig",
+        "Descripcion":"Guitig",
+        "ingredientes":"{\"Guitig\":1}",
+        "Nombre del ingrediente":"Guitig",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Varios",
+        "name":"Coco Loko",
+        "price":6.0,
+        "Nombre completo":"Coco Loko",
+        "Descripcion":"Coco Loko",
+        "ingredientes":"{\"Coco Loko\":1}",
+        "Nombre del ingrediente":"Coco Loko",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Dulces",
+        "name":"Manicho",
+        "price":0.75,
+        "Nombre completo":"Manicho",
+        "Descripcion":"Manicho",
+        "ingredientes":"{\"Manicho\":1}",
+        "Nombre del ingrediente":"Manicho",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P casa 1",
+        "price":8.5,
+        "Nombre completo":"Promoción casa 1",
+        "Descripcion":"Servir 2 Micheladas Siembra 1Lt",
+        "ingredientes":"{\"Siembra 1lt\":2}",
+        "Nombre del ingrediente":"Siembra 1lt",
+        "Catidad":2.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P casa 2",
+        "price":9.0,
+        "Nombre completo":"Promoción casa 2",
+        "Descripcion":"Servir 1 Michelada Siembra + 1 Michelada init 500ml + picadita ",
+        "ingredientes":"{\"Siembra 1lt\":1,\"Inti 500ml\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P casa 3",
+        "price":9.0,
+        "Nombre completo":"Promoción casa 3",
+        "Descripcion":"Servir Paloma 1 Lt + picadita",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P casa 4",
+        "price":5.0,
+        "Nombre completo":"Promoción casa 4",
+        "Descripcion":"Servir 1 Promo michelada 1,5$ + picadita",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P casa 5",
+        "price":10.0,
+        "Nombre completo":"Promoción casa 5",
+        "Descripcion":"Servir 2 picaditas + 1 Michelada preparada",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P casa 6",
+        "price":10.0,
+        "Nombre completo":"Promoción casa 6",
+        "Descripcion":"Servir 1 Pitufo + 1 Granizado",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P cerveza 1",
+        "price":10.0,
+        "Nombre completo":"Promoción cerveza 1",
+        "Descripcion":"Servir 3 Pilsener 1Lt",
+        "ingredientes":"{\"Pilsener 1 Lt\":3}",
+        "Nombre del ingrediente":"Pilsener 1 Lt",
+        "Catidad":3.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P cerveza 2",
+        "price":10.0,
+        "Nombre completo":"Promoción cerveza 2",
+        "Descripcion":"Servir 3 Club 1 Lt",
+        "ingredientes":"{\"Club 850ml\":3}",
+        "Nombre del ingrediente":"Club 850ml",
+        "Catidad":3.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P cerveza 3",
+        "price":7.5,
+        "Nombre completo":"Promoción cerveza 3",
+        "Descripcion":"Servir 3 Siembra 1 Lt",
+        "ingredientes":"{\"Siembra 1lt\":3}",
+        "Nombre del ingrediente":"Siembra 1lt",
+        "Catidad":3.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P cerveza 4",
+        "price":11.5,
+        "Nombre completo":"Promoción cerveza 4",
+        "Descripcion":"Servir 6 corona 330ml",
+        "ingredientes":"{\"Corona 330ml\":6}",
+        "Nombre del ingrediente":"Corona 330ml",
+        "Catidad":6.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P cerveza 5",
+        "price":8.0,
+        "Nombre completo":"Promoción cerveza 5",
+        "Descripcion":"Servir 6 coronita 210ml",
+        "ingredientes":"{\"Coronita 210ml\":6}",
+        "Nombre del ingrediente":"Coronita 210ml",
+        "Catidad":6.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P tequila 1",
+        "price":60.0,
+        "Nombre completo":"Promoción tequila 1",
+        "Descripcion":"Servir 2 Gran Malo",
+        "ingredientes":"{\"Gran Malo 750ml\":2}",
+        "Nombre del ingrediente":"Gran Malo 750ml",
+        "Catidad":2.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P tequila 2",
+        "price":25.0,
+        "Nombre completo":"Promoción tequila 2",
+        "Descripcion":"Servir 1 Azteca 750ml + hielo + limon + 2 picaditas",
+        "ingredientes":"{\"Azteca Silver 750ml\":1}",
+        "Nombre del ingrediente":"Azteca Silver 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P tequila 3",
+        "price":25.0,
+        "Nombre completo":"Promoción tequila 3",
+        "Descripcion":"Servir 1 Canijo + hielo + limon + 2 picaditas",
+        "ingredientes":"{\"Canijo Tamarindo\":1}",
+        "Nombre del ingrediente":"Canijo Tamarindo",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P aguardiente 1",
+        "price":20.0,
+        "Nombre completo":"Promoción aguardiente 1",
+        "Descripcion":"Servir 2 antioqueno 375ml",
+        "ingredientes":"{\"Antioqueño Tapa azul 375ml\":2}",
+        "Nombre del ingrediente":"Antioqueño Tapa azul 375ml",
+        "Catidad":2.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P aguardiente 2",
+        "price":12.0,
+        "Nombre completo":"Promoción aguardiente 2",
+        "Descripcion":"Servir 2 Zhumir",
+        "ingredientes":"{\"Zhumir Naranjilla 700ml\":2}",
+        "Nombre del ingrediente":"Zhumir Naranjilla 700ml",
+        "Catidad":2.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P aguardiente 3",
+        "price":12.0,
+        "Nombre completo":"Promoción aguardiente 3",
+        "Descripcion":"Servir 2 Norteno 375 + 1 V220 grande + 2 mentas",
+        "ingredientes":"{\"Norteño 750ml\":1}",
+        "Nombre del ingrediente":"Norteño 750ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P vino 1",
+        "price":12.0,
+        "Nombre completo":"Promoción vino 1",
+        "Descripcion":"Servir 1 Fraile + 1 Cavic",
+        "ingredientes":"{\"Fraile 1500ml\":1,\"Cavic Tinto 1000ml\":1}",
+        "Nombre del ingrediente":"Cavic Tinto 1000ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P vino 2",
+        "price":14.0,
+        "Nombre completo":"Promoción vino 2",
+        "Descripcion":"Servir 2 Miraflores + 1 Cola 1Lt",
+        "ingredientes":"{\"Miraflores 750ml\":2}",
+        "Nombre del ingrediente":"Miraflores 750ml",
+        "Catidad":2.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P vino 3",
+        "price":12.0,
+        "Nombre completo":"Promoción vino 3",
+        "Descripcion":"Servir 3 Haciendazos",
+        "ingredientes":"{\"Haciendazo 1500ml\":3}",
+        "Nombre del ingrediente":"Haciendazo 1500ml",
+        "Catidad":3.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P vino 4",
+        "price":10.0,
+        "Nombre completo":"Promoción vino 4",
+        "Descripcion":"Servir 1 Fraile + 1 Haciendazo",
+        "ingredientes":"{\"Fraile 1500ml\":1,\"Haciendazo 1500ml\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P varios 1",
+        "price":11.0,
+        "Nombre completo":"Promoción varios 1",
+        "Descripcion":"Servir 2 Barbados",
+        "ingredientes":"{\"Barbados Blue Berry\":2}",
+        "Nombre del ingrediente":"Barbados Blue Berry",
+        "Catidad":2.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P varios 2",
+        "price":12.0,
+        "Nombre completo":"Promoción varios 2",
+        "Descripcion":"Servir 3 Switchs",
+        "ingredientes":"{\"Switch Bongo Bongo\":3}",
+        "Nombre del ingrediente":"Switch Bongo Bongo",
+        "Catidad":3.0
+    },
+    {
+        "Tipo":"Promocion",
+        "name":"P varios 3",
+        "price":11.5,
+        "Nombre completo":"Promoción varios 3",
+        "Descripcion":"Servir 3 RTD's",
+        "ingredientes":"{\"RTD\":3}",
+        "Nombre del ingrediente":"RTD",
+        "Catidad":3.0
+    },
+    {
+        "Tipo":"Snacks",
+        "name":"Dorito",
+        "price":1.25,
+        "Nombre completo":"Dorito",
+        "Descripcion":"Dorito",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Snacks",
+        "name":"Snacks",
+        "price":1.25,
+        "Nombre completo":"Snacks",
+        "Descripcion":"Snacks",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Comida",
+        "name":"Hot dog",
+        "price":1.75,
+        "Nombre completo":"Hot dog",
+        "Descripcion":"Hot dog",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"J pitufo p",
+        "price":12.0,
+        "Nombre completo":"Jarra de pitufo pequeña",
+        "Descripcion":"Jarra de pitufo pequeña",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"J pitufo g",
+        "price":18.0,
+        "Nombre completo":"Jarra de pitufo Grande",
+        "Descripcion":"Jarra de pitufo Grande",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"J paloma p",
+        "price":12.0,
+        "Nombre completo":"Jarra de paloma pequeña",
+        "Descripcion":"Jarra de paloma pequeña",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
+        "name":"J paloma g",
+        "price":18.0,
+        "Nombre completo":"Jarra de paloma grande",
+        "Descripcion":"Jarra de paloma grande",
+        "ingredientes":"{\"\":1}",
+        "Nombre del ingrediente":null,
+        "Catidad":1.0
+    }
+]
