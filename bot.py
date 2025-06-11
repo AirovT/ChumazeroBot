@@ -82,20 +82,13 @@ def register_batch_orders_to_sheets(orders, context=None):
         all_products = []
 
         for order in orders:
-            print(f"DEBUG - Tipo de created_at: {type(order.created_at)}")
-            print(f"DEBUG - Valor original: {order.created_at}")
-            
             # Paso 1: Determinar si es naive o aware
             if order.created_at.tzinfo is None:
-                print("DEBUG - DateTime es naive (sin zona horaria) - ASUNTO: ES HORA LOCAL")
                 # CORRECCIÓN: Ya está en hora local, solo agregar zona horaria
                 created_at = TIMEZONE.localize(order.created_at)
             else:
-                print("DEBUG - DateTime es aware (con zona horaria)")
                 # Convertir directamente a Guayaquil
                 created_at = order.created_at.astimezone(TIMEZONE)
-            
-            print(f"DEBUG - Valor convertido: {created_at}")
                     
             # Formatear para Sheets
             fecha_str = created_at.strftime('%d/%m/%Y')
