@@ -82,7 +82,25 @@ def register_batch_orders_to_sheets(orders, context=None):
         all_products = []
 
         for order in orders:
-            created_at = order.created_at.astimezone(TIMEZONE)
+            # created_at = order.created_at.astimezone(TIMEZONE)
+            # DIAGNÓSTICO: Verificar el tipo de dato original
+            print(f"DEBUG - Tipo de created_at: {type(order.created_at)}")
+            print(f"DEBUG - Valor original: {order.created_at}")
+            
+            # Paso 1: Determinar si es naive o aware
+            if order.created_at.tzinfo is None:
+                print("DEBUG - DateTime es naive (sin zona horaria)")
+                # Asumir que está en UTC y convertir a Guayaquil
+                utc_time = order.created_at.replace(tzinfo=pytz.utc)
+                created_at = utc_time.astimezone(TIMEZONE)
+            else:
+                print("DEBUG - DateTime es aware (con zona horaria)")
+                # Convertir directamente a Guayaquil
+                created_at = order.created_at.astimezone(TIMEZONE)
+            
+            print(f"DEBUG - Valor convertido: {created_at}")
+            
+            # Formatear para Sheets
             fecha_str = created_at.strftime('%d/%m/%Y')
             hora_str = created_at.strftime('%H:%M')
             dia_semana = DIAS_ESPANOL[created_at.strftime('%A')]
@@ -100,6 +118,7 @@ def register_batch_orders_to_sheets(orders, context=None):
                     order.custom_id,
                     fecha_str,
                     hora_str,
+                    producto['Tipo'],
                     producto['Nombre_completo'],
                     producto['cantidad'],
                     producto['precio_unitario'] * producto['cantidad'],
@@ -349,13 +368,9 @@ async def gasto_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Determinar estado según método de pago
         estado = "Pagado" if metodo == "contado" else "Pendiente"
         
-        # Mapeo de días en español
-        dia_semana = DIAS_ESPANOL[now.strftime('%A')]
-        mes = MESES_ESPANOL[now.month]
-
         # Calcular campos temporales adicionales
         dia_semana = DIAS_ESPANOL[now.strftime('%A')]
-        semana_iso = str(now.isocalendar()[1])  # Semana ISO
+        semana_iso = now.isocalendar()[1]  # Semana ISO
         mes = MESES_ESPANOL[now.month]
 
         # Crear fila con ID y estructura completa
@@ -373,7 +388,23 @@ async def gasto_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             mes                   # Estado
         ]
         
-        egresos_sheet.append_row(row)
+        # Insertar con interpretación de formato
+        egresos_sheet.append_row(row, value_input_option='USER_ENTERED')
+        
+        # Formatear columnas de fecha y hora después de insertar
+        last_row = len(egresos_sheet.col_values(1))  # Obtener última fila insertada
+        egresos_sheet.format(f'F{last_row}', {
+            "numberFormat": {
+                "type": "DATE",
+                "pattern": "dd/MM/yyyy"
+            }
+        })
+        egresos_sheet.format(f'G{last_row}', {
+            "numberFormat": {
+                "type": "TIME",
+                "pattern": "HH:mm"
+            }
+        })
         
         await update.message.reply_text(
             f"✅ Gasto registrado (ID: {gasto_id}):\n"
@@ -852,8 +883,8 @@ def process_order(order_text, user, custom_id,discount_code=None):
                 "nombre": product.name,
                 "cantidad": quantity,
                 "precio_unitario": product.price,
-                "entregado": 0,
                 "Meser@": user,
+                "Tipo":product.tipo,
                 "Nombre_completo": product.nombre_completo,
                 "Descripcion": product.descripcion
             })
