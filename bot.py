@@ -78,15 +78,15 @@ def register_batch_orders_to_sheets(orders, context=None):
         
         batch_data = []
         inventory_alerts = []
-        
         # Primero: Recopilar todos los productos vendidos
         all_products = []
+
         for order in orders:
             created_at = order.created_at.astimezone(TIMEZONE)
             fecha_str = created_at.strftime('%d/%m/%Y')
             hora_str = created_at.strftime('%H:%M')
             dia_semana = DIAS_ESPANOL[created_at.strftime('%A')]
-            semana_iso = str(created_at.isocalendar()[1])
+            semana_iso = created_at.isocalendar()[1]
             nombre_mes = MESES_ESPANOL[created_at.month]
 
             unique_id = f"{order.custom_id}|{fecha_str}|{hora_str}"
@@ -135,9 +135,29 @@ def register_batch_orders_to_sheets(orders, context=None):
                 if alert_data:
                     inventory_alerts.extend(alert_data)
         
-        if batch_data:
-            sheet.append_rows(batch_data)
-            print(f"✅ Batch: {len(batch_data)} registros insertados")
+        # if batch_data:
+        #     sheet.append_rows(batch_data)
+        #     print(f"✅ Batch: {len(batch_data)} registros insertados")
+            if batch_data:
+                # SOLUCIÓN CLAVE: Insertar como USER_ENTERED con formato numérico
+                sheet.append_rows(batch_data, value_input_option='USER_ENTERED')
+                print(f"✅ Batch: {len(batch_data)} registros insertados")
+
+                # Forzar formato de fecha en la columna B
+                sheet.format('B2:B', {
+                    "numberFormat": {
+                        "type": "DATE",
+                        "pattern": "dd/MM/yyyy"  # Patrón local
+                    }
+                })
+                
+                # Forzar formato de hora en la columna C
+                sheet.format('C2:C', {
+                    "numberFormat": {
+                        "type": "TIME",
+                        "pattern": "HH:mm"  # Patrón de 24 horas
+                    }
+                })
 
             # Enviar alertas de inventario si hay contexto
             if context and inventory_alerts:
