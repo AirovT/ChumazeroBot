@@ -34,7 +34,7 @@ TIMEZONE = pytz.timezone("America/Guayaquil")
 PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
 GERENCIA_CHAT_ID =   -4775103529  # ⬅️ Este es el ID correcto
 MAIN_GROUP_ID =      -1002366423301  # ⬅️ Este es el ID correcto
-
+INVENTARIO = -4834916229
 # ##################CLONES #####################
 # PRODUCTION_CHAT_ID = -1002606763522  # ⬅️ Este es el ID correcto
 # GERENCIA_CHAT_ID =   -4775103529  # ⬅️ Este es el ID correcto
@@ -47,7 +47,6 @@ DESCUENTO_CODE, DESCUENTO_TYPE, DESCUENTO_VALUE, DESCUENTO_DATE, DESCUENTO_USES 
 
 DESACTIVAR_CODE, CONFIRMAR_ELIMINAR = range(2)
 
-ADMIN_IDS = [-4834916229]  # IDs de Telegram de administradores
 ################################################## GOOGLE SHEET #######################################
 GSHEETS = initialize_sheets()
 DIAS_ESPANOL = {
@@ -816,7 +815,7 @@ def update_inventory(product_name, quantity_sold):
     finally:
         session.close()
 
-async def send_inventory_alert(context, alert_data):
+async def send_inventory_alert(context: ContextTypes.DEFAULT_TYPE, alert_data):
     """Envía alerta de inventario bajo a administradores"""
     try:
         # Asegurarnos que alert_data es un diccionario
@@ -832,16 +831,15 @@ async def send_inventory_alert(context, alert_data):
             f"¡Es necesario reponer stock inmediatamente!"
         )
         
-        for admin_id in ADMIN_IDS:
-            try:
-                await context.bot.send_message(
-                    chat_id=admin_id,
-                    text=message,
-                    parse_mode='Markdown'
-                )
-                await asyncio.sleep(0.3)  # Pequeña pausa para evitar bloqueos
-            except Exception as e:
-                print(f"Error enviando alerta a admin {admin_id}: {str(e)}")
+        try:
+            await context.bot.send_message(
+                chat_id=INVENTARIO,
+                text=message,
+                parse_mode='Markdown'
+            )
+            await asyncio.sleep(0.3)  # Pequeña pausa para evitar bloqueos
+        except Exception as e:
+            print(f"Error enviando alerta a admin {INVENTARIO}: {str(e)}")
     except Exception as e:
         print(f"❌ Error crítico en send_inventory_alert: {str(e)}")
 
