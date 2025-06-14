@@ -1108,7 +1108,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # 3. Registrar TODOS los pedidos en Sheets (BATCH)
     try:
         # Función optimizada para registro masivo
-        subirdt(update, context)
+        await subirdt(update, context)
         
         # Actualizar estado de sincronización
         for order in pedidos_pagados:
