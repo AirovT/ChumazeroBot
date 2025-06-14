@@ -984,7 +984,7 @@ def process_order(order_text, user, custom_id,discount_code=None):
                 "precio_unitario": product.price,
                 "Meser@": user,
                 "Tipo":product.tipo,
-                "Servicio":product.Servicio,
+                "Servicio":product.servicio,
                 "Nombre_completo": product.nombre_completo,
                 "Descripcion": product.descripcion
             })
