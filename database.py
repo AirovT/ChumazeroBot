@@ -16,6 +16,7 @@ class Product(Base):
     nombre_completo = Column(String)  
     descripcion = Column(String)  
     ingredients = Column(JSON)
+    servicio = Column(String)
 
 class Order(Base):
     __tablename__ = 'DEUDORES'
@@ -81,7 +82,8 @@ def initialize_products():
                     tipo=producto.get('Tipo', ''),
                     nombre_completo=producto.get('Nombre completo', ''),
                     descripcion=producto.get('Descripcion', ''),
-                    ingredients=producto.get("ingredientes", {})
+                    ingredients=producto.get("ingredientes", {}),
+                    servicio = producto.get('Servicio','')
                 )
                 session.add(new_product)
         

@@ -19,7 +19,10 @@ import requests  # Añade esto para obtener el clima
 from typing import Dict  # Si no está presente
 import asyncio
 from gspread.utils import rowcol_to_a1  # Asegúrate de tener esta importación
+from cachetools import TTLCache
 
+# Cache de inventario (dura 30 segundos)
+inventory_cache = TTLCache(maxsize=100, ttl=30)
 PEDIDO_CONFIRM = 1
 
 # Configuración
@@ -61,6 +64,36 @@ MESES_ESPANOL = {
 
 def normalize_name(name):
     return re.sub(r'\s+', ' ', name).strip().lower()
+
+def get_cached_inventory():
+    """Obtiene inventario desde caché o Google Sheets"""
+    try:
+        # Verificar si hay caché válido
+        if 'inventory_data' in inventory_cache:
+            return inventory_cache['inventory_data']
+        
+        # Leer desde Sheets si no hay caché
+        inventory_sheet = GSHEETS.worksheet('Inventario')
+        inventory_data = inventory_sheet.get_all_records()
+        
+        # Crear mapa para búsqueda rápida
+        inventory_map = {}
+        for i, record in enumerate(inventory_data, start=2):
+            norm_name = normalize_name(record['Producto'])
+            inventory_map[norm_name] = {
+                'row': i,
+                'stock': record['Stock'],
+                'minimo': record['Mínimo'],
+                'ultima_alerta': record.get('Ultima_alerta', '')
+            }
+        
+        # Guardar en caché
+        inventory_cache['inventory_data'] = (inventory_data, inventory_map)
+        return inventory_data, inventory_map
+        
+    except Exception as e:
+        print(f"❌ Error obteniendo inventario: {str(e)}")
+        return [], {}
 
 def register_batch_orders_to_sheets(orders, context=None):
     """Registra múltiples pedidos en Google Sheets evitando duplicados"""
@@ -118,7 +151,8 @@ def register_batch_orders_to_sheets(orders, context=None):
                     "",
                     dia_semana,
                     semana_iso,
-                    nombre_mes
+                    nombre_mes,
+                    producto['Servicio'],
                 ])
                 
                 # Acumular productos para procesamiento posterior
@@ -139,11 +173,12 @@ def register_batch_orders_to_sheets(orders, context=None):
                     grouped_products[name] = product['quantity']
             
             # Procesar cada grupo de productos
-            for product_name, total_quantity in grouped_products.items():
-                alert_data = update_inventory(product_name, total_quantity)
+            if grouped_products:
+                # Procesar TODOS los productos en una sola operación
+                alert_data = update_inventory_batch(grouped_products)
                 if alert_data:
                     inventory_alerts.extend(alert_data)
-        
+                    
         # if batch_data:
         #     sheet.append_rows(batch_data)
         #     print(f"✅ Batch: {len(batch_data)} registros insertados")
@@ -180,27 +215,93 @@ def register_batch_orders_to_sheets(orders, context=None):
         print(f"❌ Error batch Sheets: {str(e)}")
         return False, []
 
-async def send_inventory_alert(context, alert_data):
-    """Envía alerta de inventario bajo a administradores"""
-    message = (
-        f"⚠️ *ALERTA DE INVENTARIO BAJO* ⚠️\n\n"
-        f"Producto: {alert_data['producto']}\n"
-        f"Stock: {alert_data['nuevo_stock']}\n"
-        f"Mínimo requerido: {alert_data['min_required']}\n\n"
-        f"¡Es necesario reponer stock inmediatamente!"
-    )
-    
-    for admin_id in ADMIN_IDS:
-        try:
-            await context.bot.send_message(
-                chat_id=admin_id,
-                text=message,
-                parse_mode='Markdown'
-            )
-            # Pequeña pausa para evitar bloqueos
-            await asyncio.sleep(0.3)
-        except Exception as e:
-            print(f"Error enviando alerta a admin {admin_id}: {str(e)}")
+def update_inventory_batch(grouped_products):
+    """Actualiza inventario para múltiples productos en una sola operación"""
+    try:
+        session = Session()
+        # 1. Obtener datos de inventario desde caché
+        _, inventory_map = get_cached_inventory()
+        
+        alertas = []
+        updates = []
+        today = datetime.now(TIMEZONE).strftime('%d/%m/%Y')
+        
+        # 2. Procesar todos los productos
+        for product_name, total_quantity in grouped_products.items():
+            # Buscar producto en DB
+            product = session.query(Product).filter(
+                Product.nombre_completo == product_name
+            ).first()
+            
+            if not product:
+                print(f"⚠️ Producto no encontrado en DB: {product_name}")
+                continue
+            
+            # Obtener ingredientes
+            try:
+                ingredients_dict = product.ingredients
+                if isinstance(ingredients_dict, str):
+                    ingredients_dict = json.loads(ingredients_dict)
+            except (TypeError, json.JSONDecodeError) as e:
+                print(f"Error procesando ingredientes: {product.ingredients} - {str(e)}")
+                continue
+            
+            # 3. Procesar cada ingrediente
+            for ingrediente, cantidad in ingredients_dict.items():
+                norm_ingred = normalize_name(ingrediente)
+                
+                if norm_ingred not in inventory_map:
+                    print(f"⏭️ Ingrediente no registrado: {ingrediente}. Se omite.")
+                    continue
+                    
+                inv_data = inventory_map[norm_ingred]
+                cantidad_usada = cantidad * total_quantity
+                nuevo_stock = inv_data['stock'] - cantidad_usada
+                
+                # Preparar actualización
+                updates.append({
+                    'row': inv_data['row'],
+                    'col': 2,  # Columna Stock
+                    'value': nuevo_stock
+                })
+                
+                # Verificar alerta
+                if nuevo_stock < inv_data['minimo'] and inv_data['ultima_alerta'] != today:
+                    updates.append({
+                        'row': inv_data['row'],
+                        'col': 4,  # Columna Ultima_alerta
+                        'value': today
+                    })
+                    alertas.append({
+                        'producto': ingrediente,
+                        'nuevo_stock': nuevo_stock,
+                        'min_required': inv_data['minimo']
+                    })
+        
+        # 4. Aplicar actualizaciones en lote
+        if updates:
+            inventory_sheet = GSHEETS.worksheet('Inventario')
+            batch_updates = []
+            for update in updates:
+                cell = rowcol_to_a1(update['row'], update['col'])
+                batch_updates.append({
+                    'range': cell,
+                    'values': [[update['value']]]
+                })
+            inventory_sheet.batch_update(batch_updates)
+            
+            # Limpiar caché después de modificar
+            inventory_cache.clear()
+        
+        return alertas
+        
+    except Exception as e:
+        print(f"❌ Error en batch update: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return []
+    finally:
+        session.close()
 
 async def reponer_stock(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Añade stock al inventario: /reponer Pilsener 10"""
@@ -226,6 +327,8 @@ async def reponer_stock(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     f"✅ Stockizado:\n"
                     f"{product_name}: {current_stock} → {new_stock}"
                 )
+                # LIMPIAR CACHÉ DESPUÉS DE ACTUALIZAR
+                inventory_cache.clear()
                 return
         
         await update.message.reply_text(f"❌ Producto no encontrado: {product_name}")
@@ -617,9 +720,11 @@ def update_inventory(product_name, quantity_sold):
             print(f"Error procesando ingredientes: {product.ingredients} - {str(e)}")
             return None
         
-        # 3. Obtener datos de inventario desde Google Sheets
-        inventory_sheet = GSHEETS.worksheet('Inventario')
-        inventory_data = inventory_sheet.get_all_records()
+        # # 3. Obtener datos de inventario desde Google Sheets
+        # inventory_sheet = GSHEETS.worksheet('Inventario')
+        # inventory_data = inventory_sheet.get_all_records()
+
+        inventory_data, inventory_map = get_cached_inventory()
         
         # Crear diccionario para búsqueda rápida
         inventory_map = {}
@@ -688,6 +793,7 @@ def update_inventory(product_name, quantity_sold):
         
         # 6. Aplicar actualizaciones en lote
         if updates:
+            inventory_sheet = GSHEETS.worksheet('Inventario')
             batch_updates = []
             for update in updates:
                 cell = rowcol_to_a1(update['row'], update['col'])
@@ -696,6 +802,9 @@ def update_inventory(product_name, quantity_sold):
                     'values': [[update['value']]]
                 })
             inventory_sheet.batch_update(batch_updates)
+
+            # Actualizar caché después de modificar
+            inventory_cache.clear()
         
         return final_alertas if final_alertas else None
         
@@ -875,6 +984,7 @@ def process_order(order_text, user, custom_id,discount_code=None):
                 "precio_unitario": product.price,
                 "Meser@": user,
                 "Tipo":product.tipo,
+                "Servicio":product.Servicio,
                 "Nombre_completo": product.nombre_completo,
                 "Descripcion": product.descripcion
             })
