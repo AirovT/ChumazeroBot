@@ -519,7 +519,7 @@
     {
         "Tipo":"Tequila",
         "name":"Smirnoff",
-        "price":18.0,
+        "price":21.0,
         "Nombre completo":"Smirnoff",
         "Descripcion":"Smirnoff + Hielos",
         "ingredientes":"{\"Smirnoff\":1}",
