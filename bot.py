@@ -1357,9 +1357,6 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     first_line = lines[0].strip() if lines else ""
     
     try:
-        # Regex mejorado para capturar código de descuento
-        # match = re.match(r"(?i)^(pedido|p)\s*(\d+)(?:\s+([a-zA-Z0-9]+))?", first_line)
-        # Regex nuevo para prueba con inclusion de mesa
         match = re.match(r"(?i)^(pedido|p)\s*(\d+)(?:\s+m\s*(\d+))?(?:\s+([a-zA-Z0-9]+))?", first_line)
 
         if not match:
@@ -1368,7 +1365,6 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         custom_id = int(match.group(2))
         mesa = int(match.group(3)) if match.group(3) else None  # Extraer mesa
-        # discount_code = match.group(3).upper() if match.group(3) else None  # Inicialización correcta
         discount_code = match.group(4).upper() if match.group(4) else None  # Descuento
 
         # Si el mensaje es "Pedido X pagado" o "PX pagado", ignóralo
@@ -1419,25 +1415,13 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
     
     try:
         if choice == '1':  # Sobrescribir
-            # Eliminar el pedido existente antes de crear el nuevo
-            if existing_order:
-                session.delete(existing_order)
-                session.commit()
-            
-            # Procesar con el MISMO ID
-            response = process_order(
-                pending_data['text'], 
-                update.message.from_user.username, 
-                custom_id,  # Mantener el mismo ID
-                pending_data.get('discount_code'),
-                pending_data.get('mesa')
-            )
+            # OBTENER EL PEDIDO EXISTENTE (CORRECCIÓN CLAVE)
             existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
             was_paid = False
-
+            
+            # Notificar cancelación si estaba pagado
             if existing_order and existing_order.status == "pagado":
                 was_paid = True
-                # ENVIAR NOTIFICACIÓN DE CANCELACIÓN
                 try:
                     msg_cancel = (
                         f"🚨 **PEDIDO CANCELADO**\n\n"
@@ -1451,16 +1435,31 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
                     )
                 except Exception as e:
                     print(f"Error al notificar cancelación: {str(e)}")
-            # Procesar nuevo pedido
-            response = process_order(pending_data['text'], update.message.from_user.username, custom_id)
             
-            # ENVIAR NUEVO PEDIDO SI ES PAGADO
+            # Eliminar pedido existente si existe
+            if existing_order:
+                session.delete(existing_order)
+                session.commit()
+            
+            # Procesar nuevo pedido (SOLO UNA VEZ)
+            response = process_order(
+                pending_data['text'], 
+                update.message.from_user.username, 
+                custom_id,
+                pending_data.get('discount_code'),
+                pending_data.get('mesa')
+            )
+            
+            # Notificar nuevo pedido si el anterior estaba pagado
             if was_paid:
                 try:
                     new_order = session.query(Order).filter(Order.custom_id == custom_id).first()
                     if new_order:
                         msg_produccion = f"🚨 **PEDIDO ACTUALIZADO**\n\n"
                         msg_produccion += f"🆔 Pedido: {custom_id}\n"
+                        if new_order.mesa:
+                            msg_produccion += f"🪑 Mesa: {new_order.mesa}\n"
+                        msg_produccion += "🍺 Productos:\n"
                         for producto in new_order.products:
                             msg_produccion += f"  {producto['cantidad']} x {producto['Descripcion']}\n"
                         
@@ -1472,12 +1471,6 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
                     print(f"Error al enviar actualización: {str(e)}")
             
             await update.message.reply_text(f"✅ Pedido {custom_id} actualizado!\n{response}")
-            # if existing_order:
-            #     session.delete(existing_order)
-            #     session.commit()
-            
-            # response = process_order(pending_data['text'], update.message.from_user.username, custom_id)
-            # await update.message.reply_text(f"✅ Pedido {custom_id} actualizado!\n{response}")
         
         elif choice == '2':  # Siguiente ID disponible (CORREGIDO)
             next_id = custom_id + 1
