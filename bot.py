@@ -1161,6 +1161,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
         total_ventas = sum(p.total for p in pedidos_pagados)
         total_efectivo = sum(p.efectivo for p in pedidos_pagados)
         total_transferencia = sum(p.transferencia for p in pedidos_pagados)
+        total_pedidos = len(pedidos_pagados)
 
         # Texto y PDF
         hora_inicio = primer_pedido.created_at.strftime('%d/%m/%Y %H:%M')
@@ -1169,6 +1170,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
         respuesta += f"💰 Total: ${total_ventas:.2f}\n"
         respuesta += f"💵 Efectivo: ${total_efectivo:.2f}\n"
         respuesta += f"📲 Transferencia: ${total_transferencia:.2f}\n"
+        respuesta += f"🍺 Total de pedidos: {total_pedidos}\n"
         respuesta += "🍺 Productos vendidos:\n"
 
         # PDF
@@ -1239,7 +1241,7 @@ async def cierre_caja(update: Update, context: ContextTypes.DEFAULT_TYPE):
         productos_vendidos = {}
         for pedido in pedidos_pagados:
             for producto in pedido.products:
-                nombre = producto["Descripcion"]
+                nombre = producto["Nombre_completo"]
                 cantidad = producto["cantidad"]
                 productos_vendidos[nombre] = productos_vendidos.get(nombre, 0) + cantidad
 
