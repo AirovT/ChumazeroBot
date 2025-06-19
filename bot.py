@@ -147,7 +147,7 @@ def register_batch_orders_to_sheets(orders, context=None):
                     order.fpago,
                     order.discount_code or "N/A",
                     order.mesero,
-                    "",
+                    order.mesa,
                     dia_semana,
                     semana_iso,
                     nombre_mes,
@@ -920,7 +920,7 @@ def get_next_order_id():
         session.close()
 
 # Función para procesar pedidos
-def process_order(order_text, user, custom_id,discount_code=None):
+def process_order(order_text, user, custom_id,discount_code=None,mesa=None):
     session = Session()
     try:
         lines = order_text.split("\n")
@@ -1029,7 +1029,8 @@ def process_order(order_text, user, custom_id,discount_code=None):
             created_at=datetime.now(TIMEZONE),
             discount_code=discount_code,
             discount_amount=discount_amount,
-            mesero = user
+            mesero = user,
+            mesa = mesa
         )
         session.add(new_order)
         session.commit()
@@ -1359,40 +1360,36 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     try:
         # Regex mejorado para capturar código de descuento
-        match = re.match(r"(?i)^(pedido|p)\s*(\d+)(?:\s+([a-zA-Z0-9]+))?", first_line)
+        # match = re.match(r"(?i)^(pedido|p)\s*(\d+)(?:\s+([a-zA-Z0-9]+))?", first_line)
+        # Regex nuevo para prueba con inclusion de mesa
+        match = re.match(r"(?i)^(pedido|p)\s*(\d+)(?:\s+m\s*(\d+))?(?:\s+([a-zA-Z0-9]+))?", first_line)
+
         if not match:
-            await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nP1 CLIENTE10\n2 Michelada Club")
+            await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nP1 m 4 CLIENTE10\n2 Michelada Club")
             return ConversationHandler.END
         
         custom_id = int(match.group(2))
-        discount_code = match.group(3).upper() if match.group(3) else None  # Inicialización correcta
-    
+        mesa = int(match.group(3)) if match.group(3) else None  # Extraer mesa
+        # discount_code = match.group(3).upper() if match.group(3) else None  # Inicialización correcta
+        discount_code = match.group(4).upper() if match.group(4) else None  # Descuento
+
         # Si el mensaje es "Pedido X pagado" o "PX pagado", ignóralo
         if re.search(r"(?i)(pedido|p)\s*\d+\s+pagado", text):
-            return ConversationHandler.END
-        
-        # Usar regex para detectar "Pedido X" o "PX"
-        match = re.match(r"(?i)^(pedido|p)\s*(\d+)", text.split("\n")[0])
-        if not match:
-            await update.message.reply_text("❌ Formato incorrecto. Ejemplo:\nP1\n2 Michelada Club")
             return ConversationHandler.END
         
         # Extraer el ID (ej: "P1" → 1, "Pedido 2" → 2)
         custom_id = int(match.group(2))  # El grupo 2 captura el número
         context.user_data['pending_order'] = {
             'text': text,
-            'custom_id': custom_id
+            'custom_id': custom_id,
+            'mesa': mesa,
+            'discount_code': discount_code
         }
         
         # Verificar si el ID ya existe
         session = Session()
         existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
         session.close()
-
-        match = re.match(r"(?i)^(pedido|p)\s*(\d+)(?:\s+(.*))?", first_line)
-        if match:
-            custom_id = int(match.group(2))
-            discount_code = match.group(3).strip() if match.group(3) else None
 
         if existing_order:
             await update.message.reply_text(
@@ -1510,8 +1507,9 @@ async def ver_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         respuesta = f"📋 **PEDIDO {pedido_id}**\n"
         respuesta += f"📅 Fecha: {pedido.created_at.strftime('%d/%m/%Y %H:%M')}\n"
         respuesta += f"🔄 Estado: {pedido.status.upper()}\n"
-        # Por esto:
         respuesta += f"👨🏻‍💼 Atendido por: {(pedido.mesero or 'SIN ASIGNAR').upper()}\n"
+        if pedido.mesa:
+            respuesta += f"🪑 Mesa: {pedido.mesa}\n"
         respuesta += f"👉 Descuento de: {(pedido.discount_code or 'SIN DESCUENTO').upper()}\n"
         respuesta += "--------------------------------\n"
         
@@ -1713,7 +1711,11 @@ async def handle_pedido_pagado(update: Update, context: ContextTypes.DEFAULT_TYP
             # Construir mensaje para producción
             msg_produccion = f"🚨 **NUEVO PEDIDO PAGADO ({metodo_pago.upper()})**\n"
             msg_produccion += f"🆔 Pedido: {order_id}\n"
+            if order.mesa:  # Mostrar mesa si existe
+                msg_produccion += f"🪑 Mesa: {order.mesa}\n"
             msg_produccion += "🍺 Productos:\n"
+
+
             
             for producto in order.products:
                 msg_produccion += f"\t\t\t\t\t\t {producto['cantidad']} x {producto['Descripcion']}\n"

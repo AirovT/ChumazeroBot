@@ -19,7 +19,7 @@ class Product(Base):
     servicio = Column(String)
 
 class Order(Base):
-    __tablename__ = 'DEUDORES'
+    __tablename__ = 'Ordenes'
     id = Column(Integer, primary_key=True)
     custom_id = Column(Integer, unique=True)
     products = Column(JSON)
@@ -33,6 +33,7 @@ class Order(Base):
     discount_amount = Column(Float, default=0.0)
     mesero = Column(String, default="no")
     synced_to_sheets = Column(Boolean, default=False)
+    mesa = Column(Integer, nullable=True)  # Nuevo campo para el número de mesa
 
 class Discount(Base):
     __tablename__ = 'discounts'
