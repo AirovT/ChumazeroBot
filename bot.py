@@ -1424,12 +1424,51 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
     try:
         if choice == '1':  # Sobrescribir
             existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
-            if existing_order:
-                session.delete(existing_order)
-                session.commit()
-            
+            was_paid = False
+
+            if existing_order and existing_order.status == "pagado":
+                was_paid = True
+                # ENVIAR NOTIFICACIÓN DE CANCELACIÓN
+                try:
+                    msg_cancel = (
+                        f"🚨 **PEDIDO CANCELADO**\n\n"
+                        f"🆔 Pedido {custom_id} ha sido modificado\n"
+                        f"❌ Por favor ignoren el anterior"
+                    )
+                    await context.bot.send_message(
+                        chat_id=PRODUCTION_CHAT_ID,
+                        text=msg_cancel,
+                        parse_mode='Markdown'
+                    )
+                except Exception as e:
+                    print(f"Error al notificar cancelación: {str(e)}")
+            # Procesar nuevo pedido
             response = process_order(pending_data['text'], update.message.from_user.username, custom_id)
+            
+            # ENVIAR NUEVO PEDIDO SI ES PAGADO
+            if was_paid:
+                try:
+                    new_order = session.query(Order).filter(Order.custom_id == custom_id).first()
+                    if new_order:
+                        msg_produccion = f"🚨 **PEDIDO ACTUALIZADO**\n\n"
+                        msg_produccion += f"🆔 Pedido: {custom_id}\n"
+                        for producto in new_order.products:
+                            msg_produccion += f"  {producto['cantidad']} x {producto['Descripcion']}\n"
+                        
+                        await context.bot.send_message(
+                            chat_id=PRODUCTION_CHAT_ID,
+                            text=msg_produccion
+                        )
+                except Exception as e:
+                    print(f"Error al enviar actualización: {str(e)}")
+            
             await update.message.reply_text(f"✅ Pedido {custom_id} actualizado!\n{response}")
+            # if existing_order:
+            #     session.delete(existing_order)
+            #     session.commit()
+            
+            # response = process_order(pending_data['text'], update.message.from_user.username, custom_id)
+            # await update.message.reply_text(f"✅ Pedido {custom_id} actualizado!\n{response}")
         
         elif choice == '2':  # Siguiente ID disponible (CORREGIDO)
             next_id = custom_id + 1
@@ -1601,6 +1640,20 @@ async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pedido = session.query(Order).filter(Order.custom_id == pedido_id).first()
         
         if pedido:
+            try:
+                msg_produccion = (
+                    f"🚨 **PEDIDO ELIMINADO**\n\n"
+                    f"🆔 Pedido {pedido_id} ha sido eliminado\n"
+                    f"❌ Por favor no lo preparen"
+                )
+                await context.bot.send_message(
+                    chat_id=PRODUCTION_CHAT_ID,
+                    text=msg_produccion,
+                    parse_mode='Markdown'
+                )
+            except Exception as e:
+                print(f"Error al notificar producción: {str(e)}")
+
             session.delete(pedido)
             session.commit()
             await update.message.reply_text(f"✅ Pedido {pedido_id} eliminado permanentemente")
