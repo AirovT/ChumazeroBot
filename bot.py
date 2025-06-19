@@ -1402,7 +1402,7 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             return PEDIDO_CONFIRM
         else:
-            response = process_order(text, update.message.from_user.username, custom_id, discount_code)
+            response = process_order(text, update.message.from_user.username, custom_id, discount_code, mesa)
             await update.message.reply_text(response)
             return ConversationHandler.END
             
