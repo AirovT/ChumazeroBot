@@ -930,7 +930,7 @@ def process_order(order_text, user, custom_id,discount_code=None,mesa=None):
             return "❌ No hay productos en el pedido."
         
         # Obtener ID persistente
-        custom_id = get_next_order_id()
+        # custom_id = get_next_order_id()
 
         total = 0.0
         products_list = []
@@ -1404,7 +1404,7 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if 'pending_order' not in context.user_data:  # <-- Nueva validación
-        await update.message.reply_text("❌ La sesión expiró iniciando nuevamente. \nIngrese nuevamente el comando")
+        await update.message.reply_text("⚠️ La sesión anterior fue interrumpida.. \nIngrese nuevamente el comando")
         return ConversationHandler.END
     
     choice = update.message.text
@@ -1473,7 +1473,8 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
             await update.message.reply_text(f"✅ Pedido {custom_id} actualizado!\n{response}")
         
         elif choice == '2':  # Siguiente ID disponible (CORREGIDO)
-            next_id = custom_id + 1
+            next_id = custom_id
+            session = Session()
             while True:
                 existing = session.query(Order).filter(Order.custom_id == next_id).first()
                 if not existing:
@@ -1522,7 +1523,7 @@ conv_handler = ConversationHandler(
         ]
     },
     fallbacks=[],  # Sin manejador de timeout
-    conversation_timeout=600  # 5 minutos (solo cierra la conversación en silencio)
+    conversation_timeout=120
 )
 
 # --- COMANDO PARA VER DETALLES DE UN PEDIDO ---
@@ -1640,7 +1641,7 @@ async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
     session = Session()
     try:
         pedido = session.query(Order).filter(Order.custom_id == pedido_id).first()
-        
+
         if pedido:
             # Notificar producción SOLO si estaba pagado
             if pedido.status == "pagado":
@@ -1660,6 +1661,11 @@ async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             session.delete(pedido)
             session.commit()
+
+            if 'pending_order' in context.user_data:
+                del context.user_data['pending_order']
+            await context.application.update_persistence().flush()  # Forzar persistencia
+            
             await update.message.reply_text(f"✅ Pedido {pedido_id} eliminado permanentemente")
         else:
             await update.message.reply_text(f"❌ Pedido {pedido_id} no encontrado")
