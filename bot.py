@@ -937,10 +937,6 @@ def process_order(order_text, user, custom_id,discount_code=None,mesa=None):
         errores = []
         sugerencias_globales = []
         
-        # Validar ID duplicado primero
-        if session.query(Order).filter(Order.custom_id == custom_id).first():
-            return "❌ Este ID de pedido ya existe."
-        
         # Procesar TODOS los productos primero
         for idx, item in enumerate(items, 1):
             # Validar formato "cantidad nombre"
@@ -1412,7 +1408,7 @@ async def handle_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if 'pending_order' not in context.user_data:  # <-- Nueva validación
-        await update.message.reply_text("❌ No hay pedido en proceso. Usa 'P1' para empezar.")
+        await update.message.reply_text("❌ La sesión expiró iniciando nuevamente. \nIngrese nuevamente el comando")
         return ConversationHandler.END
     
     choice = update.message.text
@@ -1423,6 +1419,19 @@ async def handle_pedido_confirm(update: Update, context: ContextTypes.DEFAULT_TY
     
     try:
         if choice == '1':  # Sobrescribir
+            # Eliminar el pedido existente antes de crear el nuevo
+            if existing_order:
+                session.delete(existing_order)
+                session.commit()
+            
+            # Procesar con el MISMO ID
+            response = process_order(
+                pending_data['text'], 
+                update.message.from_user.username, 
+                custom_id,  # Mantener el mismo ID
+                pending_data.get('discount_code'),
+                pending_data.get('mesa')
+            )
             existing_order = session.query(Order).filter(Order.custom_id == custom_id).first()
             was_paid = False
 
@@ -1520,7 +1529,7 @@ conv_handler = ConversationHandler(
         ]
     },
     fallbacks=[],  # Sin manejador de timeout
-    conversation_timeout=300  # 5 minutos (solo cierra la conversación en silencio)
+    conversation_timeout=600  # 5 minutos (solo cierra la conversación en silencio)
 )
 
 # --- COMANDO PARA VER DETALLES DE UN PEDIDO ---
@@ -1640,19 +1649,21 @@ async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
         pedido = session.query(Order).filter(Order.custom_id == pedido_id).first()
         
         if pedido:
-            try:
-                msg_produccion = (
-                    f"🚨 **PEDIDO ELIMINADO**\n\n"
-                    f"🆔 Pedido {pedido_id} ha sido eliminado\n"
-                    f"❌ Por favor no lo preparen"
-                )
-                await context.bot.send_message(
-                    chat_id=PRODUCTION_CHAT_ID,
-                    text=msg_produccion,
-                    parse_mode='Markdown'
-                )
-            except Exception as e:
-                print(f"Error al notificar producción: {str(e)}")
+            # Notificar producción SOLO si estaba pagado
+            if pedido.status == "pagado":
+                try:
+                    msg_produccion = (
+                        f"🚨 **PEDIDO ELIMINADO**\n\n"
+                        f"🆔 Pedido {pedido_id} ha sido eliminado\n"
+                        f"❌ Por favor no lo preparen"
+                    )
+                    await context.bot.send_message(
+                        chat_id=PRODUCTION_CHAT_ID,
+                        text=msg_produccion,
+                        parse_mode='Markdown'
+                    )
+                except Exception as e:
+                    print(f"Error al notificar producción: {str(e)}")
 
             session.delete(pedido)
             session.commit()
