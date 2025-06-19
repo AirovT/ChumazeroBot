@@ -1664,7 +1664,7 @@ async def eliminar_pedido(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
             if 'pending_order' in context.user_data:
                 del context.user_data['pending_order']
-            await context.application.update_persistence().flush()  # Forzar persistencia
+            await context.application.update_persistence()
             
             await update.message.reply_text(f"✅ Pedido {pedido_id} eliminado permanentemente")
         else:
