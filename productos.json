@@ -508,7 +508,7 @@
     {
         "Tipo":"Tequila",
         "name":"Canijo",
-        "price":22.0,
+        "price":25.0,
         "Nombre completo":"Canijo Tamarindo",
         "Descripcion":"Canijo Tamarindo + Hielos",
         "ingredientes":"{\"Canijo Tamarindo\":1}",
@@ -684,7 +684,7 @@
     {
         "Tipo":"Aguardiente",
         "name":"Zhumir C",
-        "price":6.5,
+        "price":7.0,
         "Nombre completo":"Zhumir Coco Tropical 700ml",
         "Descripcion":"Zhumir Coco Tropical 700ml+ Hielos",
         "ingredientes":"{\"Zhumir Coco Tropical 700ml\":1}",
@@ -695,7 +695,7 @@
     {
         "Tipo":"Aguardiente",
         "name":"Zhumir N",
-        "price":6.5,
+        "price":7.0,
         "Nombre completo":"Zhumir Naranjilla 700ml",
         "Descripcion":"Zhumir Naranjilla 700ml+ Hielos",
         "ingredientes":"{\"Zhumir Naranjilla 700ml\":1}",
@@ -706,7 +706,7 @@
     {
         "Tipo":"Aguardiente",
         "name":"Zhumir M",
-        "price":6.5,
+        "price":7.0,
         "Nombre completo":"Zhumir Mango 700ml",
         "Descripcion":"Zhumir Mango 700ml+ Hielos",
         "ingredientes":"{\"Zhumir Mango 700ml\":1}",
@@ -717,7 +717,7 @@
     {
         "Tipo":"Aguardiente",
         "name":"Zhumir P",
-        "price":6.5,
+        "price":7.0,
         "Nombre completo":"Zhumir Pink",
         "Descripcion":"Zhumir Pink+ Hielos",
         "ingredientes":"{\"Zhumir Pink\":1}",
@@ -816,7 +816,7 @@
     {
         "Tipo":"Vino",
         "name":"Fraile",
-        "price":6.5,
+        "price":7.0,
         "Nombre completo":"Fraile 1500ml ",
         "Descripcion":"Fraile 1500ml ",
         "ingredientes":"{\"Fraile 1500ml \":1}",
@@ -827,7 +827,7 @@
     {
         "Tipo":"Vino",
         "name":"Cavic",
-        "price":6.25,
+        "price":6.5,
         "Nombre completo":"Cavic Tinto 1000ml",
         "Descripcion":"Cavic Tinto 1000ml",
         "ingredientes":"{\"Cavic Tinto 1000ml\":1}",
@@ -838,7 +838,7 @@
     {
         "Tipo":"Vino",
         "name":"Miraflores",
-        "price":6.75,
+        "price":7.0,
         "Nombre completo":"Miraflores 750ml",
         "Descripcion":"Miraflores 750ml",
         "ingredientes":"{\"Miraflores 750ml\":1}",
@@ -849,7 +849,7 @@
     {
         "Tipo":"Vino",
         "name":"Haciendazo",
-        "price":5.5,
+        "price":6.0,
         "Nombre completo":"Haciendazo 1500ml",
         "Descripcion":"Haciendazo 1500ml",
         "ingredientes":"{\"Haciendazo 1500ml\":1}",
@@ -893,7 +893,7 @@
     {
         "Tipo":"Vino",
         "name":"Haciendazo TG",
-        "price":3.5,
+        "price":4.0,
         "Nombre completo":"Haciendazo 1500ml",
         "Descripcion":"Haciendazo 1500ml PARA LLEVAR",
         "ingredientes":"{\"Haciendazo 1500ml\":1}",
