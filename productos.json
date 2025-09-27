@@ -67,6 +67,17 @@
     },
     {
         "Tipo":"Coctel",
+        "name":"M Club 330 tg",
+        "price":2.9,
+        "Nombre completo":"Michelada Club 330ml",
+        "Descripcion":"Michelada Club 330ml",
+        "ingredientes":"{\"Club 330ml\":1}",
+        "Servicio":"Servir",
+        "Nombre del ingrediente":"Club 330ml",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Coctel",
         "name":"Turbo",
         "price":5.5,
         "Nombre completo":"Turbo michelada antioqueño",
@@ -365,7 +376,7 @@
     {
         "Tipo":"Cerveza",
         "name":"Club 850 TG",
-        "price":3.8,
+        "price":4.0,
         "Nombre completo":"Club 850ml",
         "Descripcion":"Club 850ml PARA LLEVAR",
         "ingredientes":"{\"Club 850ml\":1}",
@@ -1262,6 +1273,28 @@
         "ingredientes":"{\"Cubata Piña Paradice\":1}",
         "Servicio":"Servir",
         "Nombre del ingrediente":"Cubata Piña Paradice",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cubata",
+        "name":"Cubata mg",
+        "price":4.5,
+        "Nombre completo":"Cubata mango",
+        "Descripcion":"Cubata mango",
+        "ingredientes":"{\"Cubata mango\":1}",
+        "Servicio":"Servir",
+        "Nombre del ingrediente":"Cubata mango",
+        "Catidad":1.0
+    },
+    {
+        "Tipo":"Cubata",
+        "name":"Cubata my",
+        "price":4.5,
+        "Nombre completo":"Cubata maracuya",
+        "Descripcion":"Cubata maracuya",
+        "ingredientes":"{\"Cubata maracuya\":1}",
+        "Servicio":"Servir",
+        "Nombre del ingrediente":"Cubata maracuya",
         "Catidad":1.0
     },
     {
